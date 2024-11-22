@@ -1,5 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem;
 
+import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
