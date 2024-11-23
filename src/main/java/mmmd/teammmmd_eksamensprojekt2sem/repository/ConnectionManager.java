@@ -18,9 +18,13 @@ public class ConnectionManager {
     public ConnectionManager() {
     }
 
-    public Connection getConnection() throws SQLException {
+    public synchronized Connection getConnection() throws SQLException {
+        /*
+        Synchronized: Kun én thread kan tilgå metoden af gangen for at sikre korrekt resultat ved delte resurser.
+        thread: Mindste enhed af udførelse i et program. Kan køre i samspil med andre threads samtidigt.
+         */
         if (connection == null) {
-            connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+                connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
         }
         return connection;
     }
