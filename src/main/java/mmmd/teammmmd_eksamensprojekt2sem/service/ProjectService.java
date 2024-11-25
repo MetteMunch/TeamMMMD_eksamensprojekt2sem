@@ -1,4 +1,5 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
@@ -7,5 +8,20 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
+    }
+
+    /*
+    #####################################
+    #           CRUD Project            #
+    #####################################
+     */
+    public void createProject(Project project) {
+        /*
+        Daniel - DanielJensenKEA
+         */
+        projectRepository.createProject(project);
+    }
+    public void setProjectID(Project project) {
+        projectRepository.setProjectID(project);
     }
 }

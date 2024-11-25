@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Project</title>
+</head>
+<body>
+<h1>Create Project</h1>
+
+<form action="project/create_project" method="post">
+    <!--String title, string description, int customer, Date orderDate, Date Delivery, string linkagreement, int companyrep, int status -->
+    <label class="projectTitle" for="projectTitle">Project Title: </label>
+    <input type="text" id="projectTitle" name="projectTitle" required>
+    <br>
+    <label class="projectDescription" for="projectDescription">Project Description: </label>
+    <input type="text" id="projectDescription" name="projectDescription" required>
+    <br>
+    <label class="customer" for="customer">Project Customer: </label>
+    <input type="text" id="customer" name="customer">
+    <br>
+    <label class="orderDate" for="orderDate">Order Date: </label>
+    <input type="date" id="orderDate" name="orderDate" required>
+    <br>
+    <label class="deliveryDate" for="deliveryDate">Order Date: </label>
+    <input type="date" id="deliveryDate" name="deliveryDate" required>
+    <br>
+    <label class="linkAgreement" for="linkAgreement">Link Agreement: </label>
+    <input type="text" id="linkAgreement" name="linkAgreement">
+    <br>
+    <label class="companyRep" for="companyRep">Company rep.: </label>
+    <input type="text" id="companyRep" name="companyRep">
+    <br>
+    <label class="status" for="status">Company rep.: </label>
+    <input type="text" id="status" name="status">
+    <br>
+    <button type="submit">Create Project</button>
+</form>
+
+</body>
+</html>
