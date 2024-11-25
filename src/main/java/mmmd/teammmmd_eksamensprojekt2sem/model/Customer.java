@@ -11,6 +11,14 @@ public class Customer {
         this.repName = repName;
     }
 
+    public int getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
+    }
+
     public String getCompanyName() {
         return companyName;
     }
