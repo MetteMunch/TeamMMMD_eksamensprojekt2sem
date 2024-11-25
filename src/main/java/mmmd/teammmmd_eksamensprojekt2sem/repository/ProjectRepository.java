@@ -1,4 +1,5 @@
 package mmmd.teammmmd_eksamensprojekt2sem.repository;
+
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -31,10 +32,10 @@ public class ProjectRepository {
          */
         String sql = "INSERT INTO project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status)" +
                 "VALUES(?,?,?,?,?,?,?,?)";
-        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, project.getProjectTitle());
             ps.setString(2, project.getProjectDescription());
-            ps.setInt(3,project.getCustomer());
+            ps.setInt(3, project.getCustomer());
             ps.setDate(4, project.getOrderDate());
             ps.setDate(5, project.getDeliveryDate());
             ps.setString(6, project.getLinkAgreement());
@@ -42,33 +43,41 @@ public class ProjectRepository {
             ps.setInt(8, project.getStatus());
 
             ps.executeUpdate();
-        }catch(SQLException e) {
+            System.out.println("Successfully created project: " + project.getProjectTitle());
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    /*
+        #####################################
+        #           Helper Methods          #
+        #####################################
+     */
 
 
     public void setProjectID(Project project) {
         /*
         Daniel - DanielJensenKEA
          */
-        String sql ="SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
+        String sql = "SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
         int projectIDFromDB = -1;
 
-        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, project.getProjectTitle());
             ps.setDate(2, project.getOrderDate());
 
-            try(ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     projectIDFromDB = rs.getInt(1);
                     project.setID(projectIDFromDB);
+                    System.out.println("Successfully created project: " + project.getProjectTitle() + " with ID: " + project.getID());
                 } else {
-                    throw new IllegalArgumentException("No project found with title: "+project.getProjectTitle()+" and order date: "+project.getOrderDate()+". PROJECT REPOSITORY LINE 45.");
+                    throw new IllegalArgumentException("No project found with title: " + project.getProjectTitle() + " and order date: " + project.getOrderDate() + ". PROJECT REPOSITORY LINE 45.");
                 }
             }
 
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

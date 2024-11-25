@@ -34,6 +34,7 @@ public class ProjectController {
         Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
         projectService.createProject(project);
         projectService.setProjectID(project);
+        //TODO: List of available customers dropdown OR CREATE new - customer, List of available employees internal, List of available enums for status:
 
         /*
         TODO: , korriger redirect
