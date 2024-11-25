@@ -15,6 +15,7 @@ public class ConnectionManager {
     private String dbUser;
     @Value("${spring.datasource.password}")
     private String dbPassword;
+
     public ConnectionManager() {
     }
 
