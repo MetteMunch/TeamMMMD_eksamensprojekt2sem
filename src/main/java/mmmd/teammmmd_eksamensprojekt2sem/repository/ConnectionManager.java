@@ -9,10 +9,13 @@ import java.sql.SQLException;
 @Component
 public class ConnectionManager {
     private Connection connection;
+
     @Value("${spring.datasource.url}")
     private String dbUrl;
+
     @Value("${spring.datasource.username}")
     private String dbUser;
+
     @Value("${spring.datasource.password}")
     private String dbPassword;
 

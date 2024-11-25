@@ -1,6 +1,7 @@
 package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ProjectController {
 
     private final ProjectService projectService;
+
 
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
