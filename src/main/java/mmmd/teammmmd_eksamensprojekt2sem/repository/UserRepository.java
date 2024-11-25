@@ -18,13 +18,16 @@ public class UserRepository {
         this.dbConnection = connectionManager.getConnection();
     }
 
-    public void testConnection() {
+    //Fiktiv metode til test af forbindelse til DB plus for at teste test
+    public int testForespørgselTilDB(String role) {
+        int result = 0;
         String SQL = "SELECT fullName FROM employee INNER JOIN employeerole ON employee.role = employeerole.roleID WHERE employeerole.roleTitle = ?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
-            ps.setString(1, "Project Manager");
+            ps.setString(1,role);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    result ++;
                     String fullName = rs.getString("fullName");
                     System.out.println(fullName);
                 }
@@ -35,6 +38,7 @@ public class UserRepository {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+         return result;
 
     }
 }
