@@ -7,7 +7,7 @@
 <body>
 <h1>Create Project</h1>
 
-<form action="project/create_project" method="post">
+<form action="/project/create_project" method="post">
     <!--String title, string description, int customer, Date orderDate, Date Delivery, string linkagreement, int companyrep, int status -->
     <label class="projectTitle" for="projectTitle">Project Title: </label>
     <input type="text" id="projectTitle" name="projectTitle" required>
@@ -16,7 +16,11 @@
     <input type="text" id="projectDescription" name="projectDescription" required>
     <br>
     <label class="customer" for="customer">Project Customer: </label>
-    <input type="text" id="customer" name="customer">
+    <select id="customer" name="customer" required>
+        <option value="" disabled selected>Select Customer</option>
+        <option value="">Internal Project</option>
+        <option th:each="customer : ${customers}" th:value="${customer.getCustomerID()}" th:text="${customer.getCompanyName()+' | '+customer.getRepName()}"></option>
+    </select>
     <br>
     <label class="orderDate" for="orderDate">Order Date: </label>
     <input type="date" id="orderDate" name="orderDate" required>

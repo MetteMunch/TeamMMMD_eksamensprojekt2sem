@@ -24,16 +24,16 @@ public class ProjectController {
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
     }
-    @GetMapping("get-customers") //TODO: Demo kode
+    @GetMapping("/get-customers") //TODO: Demo kode
     public String getCustomers(Model model) {
         model.addAttribute("listofcustomers", projectService.getListOfCurrentCustomers());
         return "customers"; //Husk at slette html
     }
-    @GetMapping("show-create-customer")
+    @GetMapping("/show-create-customer")
     public String showCreateCustomer() {
         return "createCustomer";
     }
-    @PostMapping("create-customer")
+    @PostMapping("/create-customer")
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
@@ -63,9 +63,13 @@ public class ProjectController {
         /*
         TODO:korriger redirect
          */
-        return "redirect://";
+        return "redirect:/success";
     }
-    @GetMapping("show_create_project")
+    @GetMapping("/success")
+    public String showSuccess() {
+        return "succes";
+    }
+    @GetMapping("/show_create_project")
     public String showCreateProject(Model model) {
         model.addAttribute("PMEmployees", projectService.findPMEmployees());
         model.addAttribute("BCEmployees", projectService.findBCEmployees());
