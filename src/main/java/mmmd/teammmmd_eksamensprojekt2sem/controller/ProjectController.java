@@ -32,6 +32,9 @@ public class ProjectController {
         Daniel - DanielJensenKEA
          */
         Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
+        //Find customer()
+        //Find companyRep ( Business Consultants + Project Managers
+        //linkagreement optional
         projectService.createProject(project);
         projectService.setProjectID(project);
         //TODO: List of available customers dropdown OR CREATE new - customer, List of available employees internal, List of available enums for status:
