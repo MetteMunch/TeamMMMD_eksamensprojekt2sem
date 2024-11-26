@@ -35,7 +35,7 @@ public class ProjectRepository {
          */
         String sql = "INSERT INTO project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status)" +
                 "VALUES(?,?,?,?,?,?,?,?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, project.getProjectTitle());
             ps.setString(2, project.getProjectDescription());
             ps.setInt(3, project.getCustomer());
@@ -60,7 +60,7 @@ public class ProjectRepository {
     public List<Status> fetchAllStatus() {
         String sql ="SELECT statusID, status FROM status";
         List<Status> statusFromDB = new ArrayList<>();
-        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             try(ResultSet rs = ps.executeQuery()) {
                 while(rs.next()) {
                     Status status = new Status(rs.getInt(1), rs.getString(2));
@@ -79,7 +79,7 @@ public class ProjectRepository {
         //Project Managers(role code 1)
         List<Employee> employeesFromDBPM = new ArrayList<>();
         String sql = "SELECT employeeID, fullName, username, password, role FROM employee WHERE role=1";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Employee emp = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3),
@@ -100,7 +100,7 @@ public class ProjectRepository {
         //Business Consultants(role code 2)
         List<Employee> employeesFromDBBC = new ArrayList<>();
         String sql = "SELECT employeeID, fullName, username, password, role FROM employee WHERE role=2";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Employee emp = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3),
@@ -121,7 +121,7 @@ public class ProjectRepository {
         String sql = "SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
         int projectIDFromDB = -1;
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, project.getProjectTitle());
             ps.setDate(2, project.getOrderDate());
 
