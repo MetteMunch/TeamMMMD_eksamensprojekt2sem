@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Update</title>
+</head>
+<body>
+<form action="/project/updateProject" method="post">
+
+    <input type="hidden" id="projectID" name="projectID" th:value="${projectID}">
+    <!--String title, string description, int customer, Date orderDate, Date Delivery, string linkagreement, int companyrep, int status -->
+    <label class="projectTitle" for="projectTitle">Project Title: </label>
+    <input type="text" id="projectTitle" name="projectTitle" th:value="${projectTitle}"required>
+    <br>
+
+    <label class="projectDescription" for="projectDescription">Project Description: </label>
+    <input type="text" id="projectDescription" name="projectDescription" th:value="${projectDescription}" required>
+    <br>
+
+    <label class="customer" for="customer">Project Customer: </label>
+    <select id="customer" name="customer" required>
+        <option value="" disabled>Select Customer</option>
+        <option value="99">Internal Project</option>
+        <option th:each="customer : ${projectCustomer}" th:value="${customer.getCustomerID()}" th:text="${customer.getCompanyName()+' | '+customer.getRepName()}"
+        th:selected="${customer.getCustomerID() == projectCurrentCustomer}"></option>
+    </select>
+    <br>
+
+    <label class="orderDate" for="orderDate">Order Date: </label>
+    <input type="date" id="orderDate" name="orderDate" th:value="${projectOrderDate}" required>
+    <br>
+
+    <label class="deliveryDate" for="deliveryDate">Order Date: </label>
+    <input type="date" id="deliveryDate" name="deliveryDate" th:value="${projectDeliveryDate}" required>
+    <br>
+
+    <label class="linkAgreement" for="linkAgreement">Link Agreement: </label>
+    <input type="text" id="linkAgreement" name="linkAgreement" th:value="${projectLinkAgreement}" placeholder="Leave empty if no agreement">
+    <br>
+
+    <label class="companyRep" for="companyRep">Company rep.: </label>
+    <select id="companyRep" name="companyRep" required>
+        <option value="" disabled>Select a Company Representative</option>
+        <!--Project managers -->
+        <option value="" disabled>---Project Managers---</option>
+        <option th:each="pm : ${projectPMEmployees}"
+                th:value="${pm.getEmployeeID()}"
+                th:text="${pm.getFullName()}"
+                th:selected="${pm.getEmployeeID() == projectCompanyRep }">
+
+        </option>
+
+        <!--Business consultants -->
+        <option value="" disabled>---Business Consultants---</option>
+        <option th:each="bc : ${projectBCEmployees}"
+                th:value="${bc.getEmployeeID()}"
+                th:text="${bc.getFullName()}"
+                th:selected="${bc.getEmployeeID() == projectCompanyRep}"
+        ></option>
+    </select>
+    <br>
+
+    <label class="status" for="status">Status: </label>
+    <select id="status" name="status" required>
+        <option value="" disabled selected>Select Project Status</option>
+        <option th:each="status : ${projectStatusAll}"
+                th:value="${status.getStatusID()}"
+                th:text="${status.getStatus()}"
+                th:selected="${status.getStatusID() == projectStatus}"
+        ></option>
+    </select>
+    <br>
+
+    <button type="submit">Update Project</button>
+</form>
+
+</body>
+</html>

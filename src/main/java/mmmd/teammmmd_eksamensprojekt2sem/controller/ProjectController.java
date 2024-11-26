@@ -6,10 +6,7 @@ import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -45,7 +42,7 @@ public class ProjectController {
     #           CRUD Project            #
     #####################################
      */
-    @PostMapping("/create_project")
+    @PostMapping("/create_project") //CREATE
     public String createProjectAction(@RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
                                       @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status, RedirectAttributes redirectAttributes) {
@@ -79,11 +76,40 @@ public class ProjectController {
 
         return "createProjectForm";
     }
-    @GetMapping("/show_all_projects")
+    @GetMapping("/show_all_projects") //READ
     public String showAllProjects(Model model) {
         model.addAttribute("projects", projectService.showAllProjects());
         return "showAllProjectsTest";
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
+    }
+    @GetMapping("/{name}/edit") //UPDATE - Action button
+    public String goToEditProject(@PathVariable String name, Model model) {
+        Project project = projectService.fetchSpecificProject(name);
+        model.addAttribute("projectID", project.getID());
+        model.addAttribute("projectTitle", project.getProjectTitle());
+        model.addAttribute("projectDescription", project.getProjectDescription());
+        model.addAttribute("projectCurrentCustomer", project.getCustomer());
+        model.addAttribute("projectCustomer", projectService.getListOfCurrentCustomers());
+        model.addAttribute("projectOrderDate", project.getOrderDate());
+        model.addAttribute("projectDeliveryDate", project.getDeliveryDate());
+        model.addAttribute("projectLinkAgreement", project.getLinkAgreement());
+        model.addAttribute("projectCompanyRep", project.getCompanyRep());
+        model.addAttribute("projectPMEmployees", projectService.findPMEmployees());
+        model.addAttribute("projectBCEmployees", projectService.findBCEmployees());
+        model.addAttribute("projectStatus", project.getStatus());
+        model.addAttribute("projectStatusAll", projectService.fetchAllStatus());
+        return "updateProject";
+    }
+    @PostMapping("/updateProject")
+    public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
+                                @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
+                                @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
+        //Update()
+        //Redirect
+        Project project = new Project(projectID,projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
+        projectService.updateProject(project);
+        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
+
     }
 
 }

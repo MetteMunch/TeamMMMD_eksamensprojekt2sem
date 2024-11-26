@@ -125,7 +125,43 @@ public class ProjectRepository {
         return listOfProjects;
     }
     public void updateProject(Project project) {
+        String sql="UPDATE project SET projectTitle=?, projectDescription=?, customer=?, orderDate=?, " +
+                "deliveryDate=?, linkAgreement=?, companyRep=?, status=? WHERE projectID=?";
+        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, project.getProjectTitle());
+            ps.setString(2, project.getProjectDescription());
+            ps.setInt(3,project.getCustomer());
+            ps.setDate(4, project.getOrderDate());
+            ps.setDate(5, project.getDeliveryDate());
+            ps.setString(6, project.getLinkAgreement());
+            ps.setInt(7, project.getCompanyRep());
+            ps.setInt(8, project.getStatus());
+            ps.setInt(9, project.getID());
+            ps.executeUpdate();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public Project fetchSpecificProject(String projectTitle) {
+        String sql="SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status FROM project WHERE projectTitle=?";
+        Project project = null;
+        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, projectTitle);
+            try(ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    project = new Project(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4),
+                            rs.getDate(5), rs.getDate(6), rs.getString(7), rs.getInt(8), rs.getInt(9));
+                    return project;
+                }
+            }
 
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        if (project == null) {
+            throw new IllegalArgumentException("No project found with title: "+projectTitle);
+        }
+        return project;
     }
 
     /*

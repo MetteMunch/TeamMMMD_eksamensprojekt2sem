@@ -38,6 +38,12 @@ public class ProjectService {
     public List<Project> showAllProjects() {
         return projectRepository.showAllProjects();
     }
+    public void updateProject(Project project) {
+        projectRepository.updateProject(project);
+    }
+    public Project fetchSpecificProject(String projectTitle) {
+        return projectRepository.fetchSpecificProject(projectTitle);
+    }
 
     public List<Status> fetchAllStatus() {
         return projectRepository.fetchAllStatus();
