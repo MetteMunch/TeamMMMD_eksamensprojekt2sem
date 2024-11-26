@@ -17,7 +17,20 @@ public class Project {
     private int status;
 
     public Project(String projectTitle, String projectDescription, int customer, Date orderDate, Date deliveryDate, String linkAgreement, int companyRep, int status) {
-        ID = -1; //Vi retter ID til korrekte id ved lookup i DB.
+        ID = -1; //Vi retter ID til korrekte id ved lookup i DB. Kun relevant ved createProject()
+        this.projectTitle = projectTitle;
+        this.projectDescription = projectDescription;
+        this.customer = customer;
+        this.orderDate = orderDate;
+        this.deliveryDate = deliveryDate;
+        this.linkAgreement = linkAgreement;
+        this.companyRep = companyRep;
+        this.status = status;
+    }
+
+    public Project(int ID, String projectTitle, String projectDescription, int customer, Date orderDate, Date deliveryDate, String linkAgreement, int companyRep, int status) {
+        //Denne constructor bruges, når vi henter projektet fra databasen direkte.
+        this.ID = ID;
         this.projectTitle = projectTitle;
         this.projectDescription = projectDescription;
         this.customer = customer;

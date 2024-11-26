@@ -20,7 +20,6 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
     }
@@ -56,10 +55,8 @@ public class ProjectController {
         projectService.createProject(project); // Projekt oprettes i DB
         projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
 
-        /*
-        TODO:korriger redirect
-         */
-        return "redirect:/project/success";
+        //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
+        return "redirect:/project/success"; //TODO:korriger redirect til Project Manager dashboard, når denne er færdig
     }
     @GetMapping("/success")
     public String showSuccess() {
@@ -72,8 +69,13 @@ public class ProjectController {
         model.addAttribute("statusobjects", projectService.fetchAllStatus());
         model.addAttribute("customers", projectService.getListOfCurrentCustomers());
 
-
         return "createProjectForm";
+    }
+    @GetMapping("/show_all_projects")
+    public String showAllProjects(Model model) {
+        model.addAttribute("projects", projectService.showAllProjects());
+        return "showAllProjectsTest";
+        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
 
 }

@@ -18,7 +18,7 @@
     <label class="customer" for="customer">Project Customer: </label>
     <select id="customer" name="customer" required>
         <option value="" disabled selected>Select Customer</option>
-        <option value="">Internal Project</option>
+        <option value="99">Internal Project</option>
         <option th:each="customer : ${customers}" th:value="${customer.getCustomerID()}" th:text="${customer.getCompanyName()+' | '+customer.getRepName()}"></option>
     </select>
     <br>
@@ -42,7 +42,6 @@
         <option value="" disabled>---Business Consultants---</option>
         <option th:each="bc : ${BCEmployees}" th:value="${bc.getEmployeeID()}" th:text="${bc.getFullName()}"></option>
     </select>
-
     <br>
     <label class="status" for="status">Status: </label>
     <select id="status" name="status" required>

@@ -35,6 +35,9 @@ public class ProjectService {
          */
         projectRepository.createProject(project);
     }
+    public List<Project> showAllProjects() {
+        return projectRepository.showAllProjects();
+    }
 
     public List<Status> fetchAllStatus() {
         return projectRepository.fetchAllStatus();

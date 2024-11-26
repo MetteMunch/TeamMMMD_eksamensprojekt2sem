@@ -106,6 +106,24 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
+    public List<Project> showAllProjects() {
+        String sql ="SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status" +
+                " FROM project";
+        List<Project> listOfProjects = new ArrayList<>();
+        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try(ResultSet rs = ps.executeQuery()) {
+                while(rs.next()) {
+                    Project project = new Project(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4),
+                            rs.getDate(5), rs.getDate(6), rs.getString(7), rs.getInt(8), rs.getInt(9));
+
+                    listOfProjects.add(project);
+                }
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return listOfProjects;
+    }
 
     /*
         #####################################
