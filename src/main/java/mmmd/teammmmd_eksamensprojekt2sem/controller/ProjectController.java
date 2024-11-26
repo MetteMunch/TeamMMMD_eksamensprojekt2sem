@@ -52,7 +52,7 @@ public class ProjectController {
         /*
         Daniel - DanielJensenKEA
          */
-        if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) {
+        if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) { //returnerer true, hvis navnet allerede eksisterer i DB.
             redirectAttributes.addFlashAttribute("titleAlreadyExistsError", "The selected project title already exists. " +
                     "Please select another title for this project.");
             return "redirect:/project/show_create_project";
