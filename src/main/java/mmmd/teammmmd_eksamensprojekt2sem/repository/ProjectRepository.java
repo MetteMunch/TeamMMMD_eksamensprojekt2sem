@@ -1,5 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.repository;
 
+import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Repository
@@ -54,7 +57,47 @@ public class ProjectRepository {
         #           Helper Methods          #
         #####################################
      */
+    public List<Employee> findPMEmployees() {
+        /*
+        Daniel - DanielJensenKEA
+         */
+        //Project Managers(role code 1)
+        List<Employee> employeesFromDBPM = new ArrayList<>();
+        String sql = "SELECT employeeID, fullName, username, password, role FROM employee WHERE role=1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3),
+                            rs.getString(4), rs.getInt(5));
+                    employeesFromDBPM.add(emp);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employeesFromDBPM;
+    }
 
+    public List<Employee> findBCEmployees() {
+        /*
+        Daniel - DanielJensenKEA
+         */
+        //Business Consultants(role code 2)
+        List<Employee> employeesFromDBBC = new ArrayList<>();
+        String sql = "SELECT employeeID, fullName, username, password, role FROM employee WHERE role=2";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3),
+                            rs.getString(4), rs.getInt(5));
+                    employeesFromDBBC.add(emp);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employeesFromDBBC;
+    }
 
     public void setProjectID(Project project) {
         /*

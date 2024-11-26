@@ -1,7 +1,10 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProjectService {
@@ -23,5 +26,8 @@ public class ProjectService {
     }
     public void setProjectID(Project project) {
         projectRepository.setProjectID(project);
+    }
+    public List<Employee> findBCPMEmployees() {
+        return projectRepository.findBCPMEmployees();
     }
 }
