@@ -70,6 +70,7 @@ public class ProjectController {
         model.addAttribute("PMEmployees", projectService.findPMEmployees());
         model.addAttribute("BCEmployees", projectService.findBCEmployees());
         model.addAttribute("statusobjects", projectService.fetchAllStatus());
+        model.addAttribute("customers", projectService.getListOfCurrentCustomers());
 
 
         return "createProjectForm";
