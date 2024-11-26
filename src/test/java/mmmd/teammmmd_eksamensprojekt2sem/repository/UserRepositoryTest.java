@@ -30,7 +30,6 @@ public class UserRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-
     }
 
     @AfterEach
