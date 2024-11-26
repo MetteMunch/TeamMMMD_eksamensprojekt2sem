@@ -119,7 +119,6 @@ public class ProjectController {
         Project project = new Project(projectID,projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
         projectService.updateProject(project);
         return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
-
     }
 
 }
