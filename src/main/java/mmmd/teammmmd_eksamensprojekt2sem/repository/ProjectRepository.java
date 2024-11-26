@@ -23,7 +23,7 @@ public class ProjectRepository {
     public List<Customer> getListOfCurrentCustomers() {
         String sql = "SELECT customerID, companyName, repName FROM customer";
         List<Customer> customersToReturn = new ArrayList<>();
-        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             try(ResultSet rs = ps.executeQuery()) {
                 while(rs.next()) {
                     int customerID = rs.getInt(1);
@@ -42,7 +42,7 @@ public class ProjectRepository {
 
     public void createCustomer(Customer customer) {
         String sql="INSERT INTO customer(companyName, repName) VALUES(?,?)";
-        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, customer.getCompanyName());
             ps.setString(2, customer.getRepName());
             ps.executeUpdate();
@@ -56,7 +56,7 @@ public class ProjectRepository {
     public int lookUpCustomerIDFromDB(Customer customer) {
         String sql="SELECT customerID FROM customer WHERE companyName=? AND repName=?";
         int customerIDFromDB = -1;
-        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, customer.getCompanyName());
             ps.setString(2, customer.getRepName());
             try(ResultSet rs = ps.executeQuery()) {
