@@ -25,6 +25,9 @@ public class ProjectRepository {
         this.dbConnection = connectionManager.getConnection();
     }
     public List<Customer> getListOfCurrentCustomers() {
+        /*
+        Daniel - DanielJensenKEA
+         */
         String sql = "SELECT customerID, companyName, repName FROM customer";
         List<Customer> customersToReturn = new ArrayList<>();
         try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
@@ -45,6 +48,9 @@ public class ProjectRepository {
     }
 
     public void createCustomer(Customer customer) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         String sql="INSERT INTO customer(companyName, repName) VALUES(?,?)";
         try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, customer.getCompanyName());
@@ -58,6 +64,9 @@ public class ProjectRepository {
         }
     }
     public int lookUpCustomerIDFromDB(Customer customer) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         String sql="SELECT customerID FROM customer WHERE companyName=? AND repName=?";
         int customerIDFromDB = -1;
         try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
@@ -107,6 +116,9 @@ public class ProjectRepository {
         }
     }
     public List<Project> showAllProjects() { //READ
+        /*
+        Daniel - DanielJensenKEA
+         */
         String sql ="SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status" +
                 " FROM project";
         List<Project> listOfProjects = new ArrayList<>();
@@ -125,6 +137,9 @@ public class ProjectRepository {
         return listOfProjects;
     }
     public void updateProject(Project project) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         String sql="UPDATE project SET projectTitle=?, projectDescription=?, customer=?, orderDate=?, " +
                 "deliveryDate=?, linkAgreement=?, companyRep=?, status=? WHERE projectID=?";
         try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
@@ -143,6 +158,9 @@ public class ProjectRepository {
         }
     }
     public Project fetchSpecificProject(String projectTitle) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         String sql="SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status FROM project WHERE projectTitle=?";
         Project project = null;
         try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
@@ -170,6 +188,9 @@ public class ProjectRepository {
         #####################################
      */
     public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         String sql ="SELECT projectTitle FROM project WHERE LOWER (projectTitle)=LOWER(?)";
         try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, projectTitle);
@@ -186,6 +207,9 @@ public class ProjectRepository {
         return false;
     }
     public List<Status> fetchAllStatus() {
+        /*
+        Daniel - DanielJensenKEA
+         */
         String sql ="SELECT statusID, status FROM status";
         List<Status> statusFromDB = new ArrayList<>();
         try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {

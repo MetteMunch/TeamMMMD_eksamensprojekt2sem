@@ -28,10 +28,16 @@ public class ProjectController {
     }
     @GetMapping("/show-create-customer")
     public String showCreateCustomer() {
+        /*
+        Daniel - DanielJensenKEA
+         */
         return "createCustomer";
     }
     @PostMapping("/create-customer")
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
         return "succes"; //TODO slet html, bare til verifikation
@@ -69,6 +75,9 @@ public class ProjectController {
     }
     @GetMapping("/show_create_project")
     public String showCreateProject(Model model) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         model.addAttribute("PMEmployees", projectService.findPMEmployees());
         model.addAttribute("BCEmployees", projectService.findBCEmployees());
         model.addAttribute("statusobjects", projectService.fetchAllStatus());
@@ -78,12 +87,18 @@ public class ProjectController {
     }
     @GetMapping("/show_all_projects") //READ
     public String showAllProjects(Model model) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         model.addAttribute("projects", projectService.showAllProjects());
         return "showAllProjectsTest";
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
     @GetMapping("/{name}/edit") //UPDATE - button
     public String goToEditProject(@PathVariable String name, Model model) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         Project project = projectService.fetchSpecificProject(name);
         model.addAttribute("projectID", project.getID());
         model.addAttribute("projectTitle", project.getProjectTitle());
@@ -104,6 +119,9 @@ public class ProjectController {
     public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
                                 @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
                                 @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         //Update()
         //Redirect
         Project project = new Project(projectID,projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);

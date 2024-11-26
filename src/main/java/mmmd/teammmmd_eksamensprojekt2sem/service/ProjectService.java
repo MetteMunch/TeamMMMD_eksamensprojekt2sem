@@ -36,28 +36,52 @@ public class ProjectService {
         projectRepository.createProject(project);
     }
     public List<Project> showAllProjects() {
+        /*
+        Daniel - DanielJensenKEA
+         */
         return projectRepository.showAllProjects();
     }
     public void updateProject(Project project) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         projectRepository.updateProject(project);
     }
     public Project fetchSpecificProject(String projectTitle) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         return projectRepository.fetchSpecificProject(projectTitle);
     }
 
     public List<Status> fetchAllStatus() {
+        /*
+        Daniel - DanielJensenKEA
+         */
         return projectRepository.fetchAllStatus();
     }
     public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         return projectRepository.checkIfProjectNameAlreadyExists(projectTitle);
     }
     public void setProjectID(Project project) {
+        /*
+        Daniel - DanielJensenKEA
+         */
         projectRepository.setProjectID(project);
     }
     public List<Employee> findPMEmployees() {
+        /*
+        Daniel - DanielJensenKEA
+         */
         return projectRepository.findPMEmployees();
     }
     public List<Employee> findBCEmployees() {
+        /*
+        Daniel - DanielJensenKEA
+         */
         return projectRepository.findBCEmployees();
     }
 }
