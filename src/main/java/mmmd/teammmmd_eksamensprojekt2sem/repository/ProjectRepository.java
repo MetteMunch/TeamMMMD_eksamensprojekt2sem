@@ -84,7 +84,7 @@ public class ProjectRepository {
     #           CRUD Project            #
     #####################################
      */
-    public void createProject(Project project) {
+    public void createProject(Project project) { //CREATE
         /*
         Daniel - DanielJensenKEA
          */
@@ -106,7 +106,7 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
-    public List<Project> showAllProjects() {
+    public List<Project> showAllProjects() { //READ
         String sql ="SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status" +
                 " FROM project";
         List<Project> listOfProjects = new ArrayList<>();
@@ -124,12 +124,31 @@ public class ProjectRepository {
         }
         return listOfProjects;
     }
+    public void updateProject(Project project) {
+
+    }
 
     /*
         #####################################
         #           Helper Methods          #
         #####################################
      */
+    public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
+        String sql ="SELECT projectTitle FROM project WHERE LOWER (projectTitle)=LOWER(?)";
+        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, projectTitle);
+            try(ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    if (projectTitle.equals(rs.getString(1))) {
+                        return true;
+                    }
+                }
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public List<Status> fetchAllStatus() {
         String sql ="SELECT statusID, status FROM status";
         List<Status> statusFromDB = new ArrayList<>();

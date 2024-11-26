@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1>Create Project</h1>
+<div th:if="${titleAlreadyExistsError}">
+    <p th:text="${titleAlreadyExistsError}" style="color:red"></p>
+</div>
 
 <form action="/project/create_project" method="post">
     <!--String title, string description, int customer, Date orderDate, Date Delivery, string linkagreement, int companyrep, int status -->

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 
@@ -47,18 +48,25 @@ public class ProjectController {
     @PostMapping("/create_project")
     public String createProjectAction(@RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
-                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
+                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status, RedirectAttributes redirectAttributes) {
         /*
         Daniel - DanielJensenKEA
          */
-        Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
-        projectService.createProject(project); // Projekt oprettes i DB
-        projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
-
-        //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
-        return "redirect:/project/success"; //TODO:korriger redirect til Project Manager dashboard, når denne er færdig
+        if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) {
+            redirectAttributes.addFlashAttribute("titleAlreadyExistsError", "The selected project title already exists. " +
+                    "Please select another title for this project.");
+            return "redirect:/project/show_create_project";
+        }
+        else {
+            Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
+            projectService.createProject(project); // Projekt oprettes i DB
+            projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
+            //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
+            //TODO: Tilføj gå tilbage eller return to PM Dashboard i html
+            return "redirect:/project/success"; //TODO:korriger redirect til Project Manager dashboard, når denne er færdig
+        }
     }
-    @GetMapping("/success")
+    @GetMapping("/success") //TODO: Udelukkende til demokode for at se om metode eksekveres korrekt med redirect. Slet når ikke længere nødvendig sammen med html fil.
     public String showSuccess() {
         return "succes";
     }

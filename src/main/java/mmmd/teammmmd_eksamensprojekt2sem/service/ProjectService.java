@@ -42,6 +42,9 @@ public class ProjectService {
     public List<Status> fetchAllStatus() {
         return projectRepository.fetchAllStatus();
     }
+    public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
+        return projectRepository.checkIfProjectNameAlreadyExists(projectTitle);
+    }
     public void setProjectID(Project project) {
         projectRepository.setProjectID(project);
     }
