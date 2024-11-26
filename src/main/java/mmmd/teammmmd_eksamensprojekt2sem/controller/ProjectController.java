@@ -82,7 +82,7 @@ public class ProjectController {
         return "showAllProjectsTest";
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
-    @GetMapping("/{name}/edit") //UPDATE - Action button
+    @GetMapping("/{name}/edit") //UPDATE - button
     public String goToEditProject(@PathVariable String name, Model model) {
         Project project = projectService.fetchSpecificProject(name);
         model.addAttribute("projectID", project.getID());
@@ -100,7 +100,7 @@ public class ProjectController {
         model.addAttribute("projectStatusAll", projectService.fetchAllStatus());
         return "updateProject";
     }
-    @PostMapping("/updateProject")
+    @PostMapping("/updateProject") //UPDATE
     public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
                                 @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
                                 @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
