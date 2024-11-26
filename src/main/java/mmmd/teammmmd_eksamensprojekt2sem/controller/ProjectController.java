@@ -21,32 +21,14 @@ public class ProjectController {
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
     }
-    @GetMapping("/get-customers") //TODO: Demo kode
-    public String getCustomers(Model model) {
-        model.addAttribute("listofcustomers", projectService.getListOfCurrentCustomers());
-        return "customers"; //Husk at slette html
-    }
-    @GetMapping("/show-create-customer")
-    public String showCreateCustomer() {
-        /*
-        Daniel - DanielJensenKEA
-         */
-        return "createCustomer";
-    }
-    @PostMapping("/create-customer")
-    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
-        /*
-        Daniel - DanielJensenKEA
-         */
-        Customer customer = new Customer(companyName, repName);
-        projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
-        return "succes"; //TODO slet html, bare til verifikation
-    }
 
     /*
     #####################################
     #           CRUD Project            #
     #####################################
+     */
+    /*
+    ###########---CREATE---###########
      */
     @PostMapping("/create_project") //CREATE
     public String createProjectAction(@RequestParam String projectTitle, @RequestParam String projectDescription,
@@ -85,7 +67,10 @@ public class ProjectController {
 
         return "createProjectForm";
     }
-    @GetMapping("/show_all_projects") //READ
+    /*
+    ###########---READ---###########
+     */
+    @GetMapping("/show_all_projects")
     public String showAllProjects(Model model) {
         /*
         Daniel - DanielJensenKEA
@@ -94,7 +79,7 @@ public class ProjectController {
         return "showAllProjectsTest";
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
-    @GetMapping("/{name}/edit") //UPDATE - button
+    @GetMapping("/{name}/edit") //button
     public String goToEditProject(@PathVariable String name, Model model) {
         /*
         Daniel - DanielJensenKEA
@@ -107,7 +92,10 @@ public class ProjectController {
         model.addAttribute("projectStatusAll", projectService.fetchAllStatus());
         return "updateProject";
     }
-    @PostMapping("/updateProject") //UPDATE
+    /*
+    ###########---UPDATE---###########
+     */
+    @PostMapping("/updateProject")
     public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
                                 @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
                                 @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
@@ -119,6 +107,32 @@ public class ProjectController {
         Project project = new Project(projectID,projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
         projectService.updateProject(project);
         return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
+    }
+    /*
+    #####################################
+    #           Customers               #
+    #####################################
+     */
+    @GetMapping("/get-customers") //TODO: Demo kode
+    public String getCustomers(Model model) {
+        model.addAttribute("listofcustomers", projectService.getListOfCurrentCustomers());
+        return "customers"; //Husk at slette html
+    }
+    @GetMapping("/show-create-customer")
+    public String showCreateCustomer() {
+        /*
+        Daniel - DanielJensenKEA
+         */
+        return "createCustomer";
+    }
+    @PostMapping("/create-customer")
+    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
+        /*
+        Daniel - DanielJensenKEA
+         */
+        Customer customer = new Customer(companyName, repName);
+        projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
+        return "succes"; //TODO slet html, bare til verifikation
     }
 
 }

@@ -17,6 +17,11 @@ public class ProjectService {
     public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
+    /*
+    #####################################
+    #           Customer Methods        #
+    #####################################
+     */
     public List<Customer> getListOfCurrentCustomers() {
         return projectRepository.getListOfCurrentCustomers();
     }
@@ -47,6 +52,10 @@ public class ProjectService {
          */
         projectRepository.updateProject(project);
     }
+
+    /*
+    ###########---LOOKUP METHODS---###########
+     */
     public Project fetchSpecificProject(String projectTitle) {
         /*
         Daniel - DanielJensenKEA
@@ -72,6 +81,9 @@ public class ProjectService {
          */
         projectRepository.setProjectID(project);
     }
+    /*
+    ###########---EMPLOYEE METHODS---###########
+     */
     public List<Employee> findPMEmployees() {
         /*
         Daniel - DanielJensenKEA

@@ -24,6 +24,12 @@ public class ProjectRepository {
     public ProjectRepository(ConnectionManager connectionManager) throws SQLException {
         this.dbConnection = connectionManager.getConnection();
     }
+
+    /*
+    #####################################
+    #           CRUD Customer           #
+    #####################################
+     */
     public List<Customer> getListOfCurrentCustomers() {
         /*
         Daniel - DanielJensenKEA
@@ -46,7 +52,6 @@ public class ProjectRepository {
         }
         return customersToReturn;
     }
-
     public void createCustomer(Customer customer) {
         /*
         Daniel - DanielJensenKEA
@@ -93,6 +98,9 @@ public class ProjectRepository {
     #           CRUD Project            #
     #####################################
      */
+    /*
+    ###########---CREATE PROJECT---###########
+     */
     public void createProject(Project project) { //CREATE
         /*
         Daniel - DanielJensenKEA
@@ -115,6 +123,9 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
+    /*
+    ###########---READ PROJECT---###########
+     */
     public List<Project> showAllProjects() { //READ
         /*
         Daniel - DanielJensenKEA
@@ -136,6 +147,9 @@ public class ProjectRepository {
         }
         return listOfProjects;
     }
+    /*
+    ###########---UPDATE PROJECT---###########
+     */
     public void updateProject(Project project) {
         /*
         Daniel - DanielJensenKEA
@@ -157,6 +171,16 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
+    /*
+    ###########---DELETE PROJECT---###########
+     */
+
+
+    /*
+       #####################################
+       #           Helper Methods          #
+       #####################################
+    */
     public Project fetchSpecificProject(String projectTitle) {
         /*
         Daniel - DanielJensenKEA
@@ -181,12 +205,6 @@ public class ProjectRepository {
         }
         return project;
     }
-
-    /*
-        #####################################
-        #           Helper Methods          #
-        #####################################
-     */
     public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
         /*
         Daniel - DanielJensenKEA
@@ -206,6 +224,31 @@ public class ProjectRepository {
         }
         return false;
     }
+    public void setProjectID(Project project) {
+        /*
+        Daniel - DanielJensenKEA
+         */
+        String sql = "SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
+        int projectIDFromDB = -1;
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, project.getProjectTitle());
+            ps.setDate(2, project.getOrderDate());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    projectIDFromDB = rs.getInt(1);
+                    project.setID(projectIDFromDB);
+                    System.out.println("Successfully created project: " + project.getProjectTitle() + " with ID: " + project.getID());
+                } else {
+                    throw new IllegalArgumentException("No project found with title: " + project.getProjectTitle() + " and order date: " + project.getOrderDate() + ". PROJECT REPOSITORY LINE 45.");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public List<Status> fetchAllStatus() {
         /*
         Daniel - DanielJensenKEA
@@ -224,6 +267,12 @@ public class ProjectRepository {
         }
         return statusFromDB;
     }
+    /*
+        #####################################
+        #          Employee Methods         #
+        #####################################
+     */
+
     public List<Employee> findPMEmployees() {
         /*
         Daniel - DanielJensenKEA
@@ -266,31 +315,7 @@ public class ProjectRepository {
         return employeesFromDBBC;
     }
 
-    public void setProjectID(Project project) {
-        /*
-        Daniel - DanielJensenKEA
-         */
-        String sql = "SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
-        int projectIDFromDB = -1;
 
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            ps.setString(1, project.getProjectTitle());
-            ps.setDate(2, project.getOrderDate());
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    projectIDFromDB = rs.getInt(1);
-                    project.setID(projectIDFromDB);
-                    System.out.println("Successfully created project: " + project.getProjectTitle() + " with ID: " + project.getID());
-                } else {
-                    throw new IllegalArgumentException("No project found with title: " + project.getProjectTitle() + " and order date: " + project.getOrderDate() + ". PROJECT REPOSITORY LINE 45.");
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 }
