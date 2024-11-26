@@ -13,13 +13,12 @@ import java.util.List;
 
 @Repository
 public class ProjectRepository {
-    private ConnectionManager connectionManager;
-    private Connection connection;
+
+    private final Connection dbConnection;
 
     @Autowired
     public ProjectRepository(ConnectionManager connectionManager) throws SQLException {
-        this.connectionManager = connectionManager;
-        connection = connectionManager.getConnection();
+        this.dbConnection = connectionManager.getConnection();
     }
     public List<Customer> getListOfCurrentCustomers() {
         String sql = "SELECT customerID, companyName, repName FROM customer";
