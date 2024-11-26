@@ -7,6 +7,7 @@ import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -51,6 +52,9 @@ public class ProjectService {
         Daniel - DanielJensenKEA
          */
         projectRepository.updateProject(project);
+    }
+    public void deleteProject(Project project) throws SQLException {
+        projectRepository.deleteProject(project);
     }
 
     /*

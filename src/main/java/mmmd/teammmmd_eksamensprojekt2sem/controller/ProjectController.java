@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
+import java.sql.SQLException;
 
 @RequestMapping("/project")
 @Controller
@@ -106,6 +107,15 @@ public class ProjectController {
         //Redirect
         Project project = new Project(projectID,projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
         projectService.updateProject(project);
+        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
+    }
+    /*
+    ###########---DELETE---###########
+     */
+    @PostMapping("/{name}/delete") //Button
+    public String deleteProject(@PathVariable String name) throws SQLException {
+        Project project = projectService.fetchSpecificProject(name);
+        projectService.deleteProject(project);
         return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
     }
     /*

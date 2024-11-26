@@ -174,6 +174,28 @@ public class ProjectRepository {
     /*
     ###########---DELETE PROJECT---###########
      */
+    public void deleteProject(Project project) throws SQLException {
+        /*
+        Daniel - DanielJensenKEA
+         */
+        String sql="DELETE FROM project WHERE projectID=?";
+        try {
+            dbConnection.setAutoCommit(false);
+            try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+                ps.setInt(1, project.getID());
+                int rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 0) {
+                    throw new SQLException("No project found with ID: "+project.getID());
+                }
+            }
+            dbConnection.commit();
+        }catch(SQLException e) {
+            dbConnection.rollback();
+            e.printStackTrace();
+        } finally {
+            dbConnection.setAutoCommit(true);
+        }
+    }
 
 
     /*
