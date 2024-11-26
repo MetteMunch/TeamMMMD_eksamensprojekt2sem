@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customers</title>
+</head>
+<body>
+<h1>Customers</h1>
+<!--TEMPLATE TIL DEMO - SKAL IKKE BRUGES -->
+<label for="customers">Customers:</label>
+<select id="customers" name="customers">
+    <option value="">Select an existing customer</option>
+    <option th:each="customer : ${listofcustomers}"
+            th:value="${customer}"
+            th:text="${customer.getCompanyName()+'('+customer.getRepName()+')'}">
+    </option>
+</select>
+
+
+</body>
+</html>
