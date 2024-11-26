@@ -28,7 +28,17 @@
     <input type="text" id="linkAgreement" name="linkAgreement">
     <br>
     <label class="companyRep" for="companyRep">Company rep.: </label>
-    <input type="text" id="companyRep" name="companyRep">
+    <select id="companyRep" name="companyRep" required>
+        <option value="" disabled selected>Select a Company Representative</option>
+        <!--Project managers -->
+        <option value="" disabled>---Project Managers---</option>
+        <option th:each="pm : ${PMEmployees}" th:value="${pm.getEmployeeID()}" th:text="${pm.getFullName()}"></option>
+
+        <!--Business consultants -->
+        <option value="" disabled>---Business Consultants---</option>
+        <option th:each="bc : ${BCEmployees}" th:value="${bc.getEmployeeID()}" th:text="${bc.getFullName()}"></option>
+    </select>
+
     <br>
     <label class="status" for="status">Status: </label>
     <input type="text" id="status" name="status">
