@@ -41,7 +41,10 @@
 
     <br>
     <label class="status" for="status">Status: </label>
-    <input type="text" id="status" name="status">
+    <select id="status" name="status" required>
+        <option value="" disabled selected>Select Project Status</option>
+        <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}" th:text="${status.getStatus()}"></option>
+    </select>
     <br>
     <button type="submit">Create Project</button>
 </form>

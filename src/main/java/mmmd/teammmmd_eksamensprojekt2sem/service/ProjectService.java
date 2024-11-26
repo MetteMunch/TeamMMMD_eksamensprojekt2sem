@@ -1,6 +1,7 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,10 @@ public class ProjectService {
         Daniel - DanielJensenKEA
          */
         projectRepository.createProject(project);
+    }
+
+    public List<Status> fetchAllStatus() {
+        return projectRepository.fetchAllStatus();
     }
     public void setProjectID(Project project) {
         projectRepository.setProjectID(project);

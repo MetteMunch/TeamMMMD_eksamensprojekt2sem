@@ -36,6 +36,7 @@ public class ProjectController {
         //Find customer() - Branched
         //Find companyRep ( Business Consultants + Project Managers (X)
         //linkagreement optional
+        //status text - what should the project start with (x)
         projectService.createProject(project); // Projekt oprettes i DB
         projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
         //TODO: List of available customers dropdown OR CREATE new - customer, List of available employees internal, List of available enums for status:
@@ -49,6 +50,7 @@ public class ProjectController {
     public String showCreateProject(Model model) {
         model.addAttribute("PMEmployees", projectService.findPMEmployees());
         model.addAttribute("BCEmployees", projectService.findBCEmployees());
+        model.addAttribute("statusobjects", projectService.fetchAllStatus());
 
 
         return "createProjectForm";

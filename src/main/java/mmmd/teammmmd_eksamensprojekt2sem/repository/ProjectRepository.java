@@ -2,6 +2,7 @@ package mmmd.teammmmd_eksamensprojekt2sem.repository;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -57,6 +58,21 @@ public class ProjectRepository {
         #           Helper Methods          #
         #####################################
      */
+    public List<Status> fetchAllStatus() {
+        String sql ="SELECT statusID, status FROM status";
+        List<Status> statusFromDB = new ArrayList<>();
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+            try(ResultSet rs = ps.executeQuery()) {
+                while(rs.next()) {
+                    Status status = new Status(rs.getInt(1), rs.getString(2));
+                    statusFromDB.add(status);
+                }
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return statusFromDB;
+    }
     public List<Employee> findPMEmployees() {
         /*
         Daniel - DanielJensenKEA
