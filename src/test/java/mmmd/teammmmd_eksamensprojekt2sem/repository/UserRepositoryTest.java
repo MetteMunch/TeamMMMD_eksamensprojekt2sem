@@ -43,9 +43,17 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void testForespørgselTilDB() {
-        int actualNumberOfPosts = userRepository.testForespørgselTilDB("Project Manager");
-        int expectedNumberOfPosts = 2;
-        assertEquals(expectedNumberOfPosts,actualNumberOfPosts);
+    public void validateLoginPositiveResult() throws Exception {
+        boolean expectedResult = true;
+        boolean actualResult = userRepository.validateLogin("johnwa","password123");
+        assertEquals(expectedResult,actualResult);
     }
+
+    @Test
+    public void validateLoginNegativeResult() throws Exception {
+        boolean expectedresult = false;
+        boolean actualResult = userRepository.validateLogin("johnwa","pass123");
+        assertEquals(expectedresult,actualResult);
+    }
+
 }

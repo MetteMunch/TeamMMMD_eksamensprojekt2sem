@@ -18,27 +18,23 @@ public class UserRepository {
         this.dbConnection = connectionManager.getConnection();
     }
 
-    //Fiktiv metode til test af forbindelse til DB plus for at teste test
-    public int testForespørgselTilDB(String role) {
-        int result = 0;
-        String SQL = "SELECT fullName FROM employee INNER JOIN employeerole ON employee.role = employeerole.roleID WHERE employeerole.roleTitle = ?";
+    //LOGIN METHODS - USER STORY ISSUE 22 - CREATED BY: Mette,
 
-        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
-            ps.setString(1,role);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    result ++;
-                    String fullName = rs.getString("fullName");
-                    System.out.println(fullName);
+    public boolean validateLogin(String username, String password) throws SQLException {
+        boolean result = false;
+        String SQL = "SELECT password FROM employee WHERE username =?";
+
+        try(PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setString(1,username);
+            try(ResultSet rs = ps.executeQuery()) {
+                if(rs.next()) {
+                    String dbPassword = rs.getString("password");
+                    result = dbPassword.equals(password);
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
-         return result;
-
+        return result;
     }
+
+
 }
