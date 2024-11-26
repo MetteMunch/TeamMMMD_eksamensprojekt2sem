@@ -27,7 +27,10 @@ public class ProjectService {
     public void setProjectID(Project project) {
         projectRepository.setProjectID(project);
     }
-    public List<Employee> findBCPMEmployees() {
-        return projectRepository.findBCPMEmployees();
+    public List<Employee> findPMEmployees() {
+        return projectRepository.findPMEmployees();
+    }
+    public List<Employee> findBCEmployees() {
+        return projectRepository.findBCEmployees();
     }
 }

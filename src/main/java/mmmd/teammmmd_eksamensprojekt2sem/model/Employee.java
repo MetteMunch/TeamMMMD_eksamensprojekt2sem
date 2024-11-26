@@ -6,7 +6,6 @@ public class Employee {
     private String username;
     private String password;
     private int role;
-    private String roleToString;
 
     public Employee(int employeeID, String fullName, String username, String password, int role) {
         this.employeeID = employeeID;
@@ -14,7 +13,6 @@ public class Employee {
         this.username = username;
         this.password = password;
         this.role = role;
-        roleToString="";
     }
 
 
