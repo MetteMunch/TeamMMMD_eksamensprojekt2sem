@@ -53,10 +53,6 @@ public class ProjectController {
         Daniel - DanielJensenKEA
          */
         Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
-        //Find customer() - Branched
-        //Find companyRep ( Business Consultants + Project Managers (X)
-        //linkagreement optional
-        //status text - what should the project start with (x)
         projectService.createProject(project); // Projekt oprettes i DB
         projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
 
