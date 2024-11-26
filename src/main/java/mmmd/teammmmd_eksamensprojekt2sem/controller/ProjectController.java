@@ -63,7 +63,7 @@ public class ProjectController {
         /*
         TODO:korriger redirect
          */
-        return "redirect:/success";
+        return "redirect:/project/success";
     }
     @GetMapping("/success")
     public String showSuccess() {
