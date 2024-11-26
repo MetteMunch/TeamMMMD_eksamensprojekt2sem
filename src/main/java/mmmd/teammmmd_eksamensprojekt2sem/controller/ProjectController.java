@@ -100,18 +100,10 @@ public class ProjectController {
         Daniel - DanielJensenKEA
          */
         Project project = projectService.fetchSpecificProject(name);
-        model.addAttribute("projectID", project.getID());
-        model.addAttribute("projectTitle", project.getProjectTitle());
-        model.addAttribute("projectDescription", project.getProjectDescription());
-        model.addAttribute("projectCurrentCustomer", project.getCustomer());
+        model.addAttribute("project", project);
         model.addAttribute("projectCustomer", projectService.getListOfCurrentCustomers());
-        model.addAttribute("projectOrderDate", project.getOrderDate());
-        model.addAttribute("projectDeliveryDate", project.getDeliveryDate());
-        model.addAttribute("projectLinkAgreement", project.getLinkAgreement());
-        model.addAttribute("projectCompanyRep", project.getCompanyRep());
         model.addAttribute("projectPMEmployees", projectService.findPMEmployees());
         model.addAttribute("projectBCEmployees", projectService.findBCEmployees());
-        model.addAttribute("projectStatus", project.getStatus());
         model.addAttribute("projectStatusAll", projectService.fetchAllStatus());
         return "updateProject";
     }
