@@ -39,10 +39,9 @@ public class ProjectController {
         //status text - what should the project start with (x)
         projectService.createProject(project); // Projekt oprettes i DB
         projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
-        //TODO: List of available customers dropdown OR CREATE new - customer, List of available employees internal, List of available enums for status:
 
         /*
-        TODO: , korriger redirect
+        TODO:korriger redirect
          */
         return "redirect://";
     }
