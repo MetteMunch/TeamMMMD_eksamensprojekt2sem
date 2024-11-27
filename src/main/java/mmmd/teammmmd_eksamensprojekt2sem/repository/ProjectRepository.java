@@ -118,7 +118,7 @@ public class ProjectRepository {
             ps.setInt(8, project.getStatus());
 
             ps.executeUpdate();
-            System.out.println("Successfully created project: " + project.getProjectTitle());
+            System.out.println("Successfully created project: " + project.getProjectTitle()); //todo: delete
         } catch (SQLException e) {
             e.printStackTrace();
         }
