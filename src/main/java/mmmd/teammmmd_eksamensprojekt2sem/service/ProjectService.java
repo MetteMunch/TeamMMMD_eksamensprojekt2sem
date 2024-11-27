@@ -11,4 +11,9 @@ public class ProjectService {
     public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
+
+    public void createSubproject (int subprojectID, String subprojectTitle, String subprojectDescription) {
+        projectRepository.createSubproject(subprojectID, subprojectTitle, subprojectDescription);
+    }
+
 }
