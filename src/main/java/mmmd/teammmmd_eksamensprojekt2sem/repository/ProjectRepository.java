@@ -1,7 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.repository;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Subproject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
