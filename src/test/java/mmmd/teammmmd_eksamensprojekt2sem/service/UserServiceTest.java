@@ -26,10 +26,14 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this); // Dette Initialiser mocks og injecter mocks
+        //Når vi benytter @MockBean sammen med @SpringBootTest, @WebMvcTest så behøver ovenstående ikke kaldes i setUp, da
+        //Spring selv håndterer mocking (se test af Controller klassen / integrationstest)
     }
 
     @AfterEach
     void tearDown() {
+        //Mockito rydder automatisk selv op efter mocks, så ikke nødvendigt med noget her. Hvis vi havde åbnet ressourcer,
+        //som filer, databaser eller netværksforbindelser, så ville vi frigøre / lukke dem her
     }
 
     @Test
