@@ -35,9 +35,6 @@ public class ProjectController {
     public String createProjectAction(@RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
                                       @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status, RedirectAttributes redirectAttributes) {
-        /*
-        Daniel - DanielJensenKEA
-         */
         if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) { //returnerer true, hvis navnet allerede eksisterer i DB.
             redirectAttributes.addFlashAttribute("titleAlreadyExistsError", "The selected project title already exists. " +
                     "Please select another title for this project.");
@@ -58,9 +55,6 @@ public class ProjectController {
     }
     @GetMapping("/show_create_project")
     public String showCreateProject(Model model) {
-        /*
-        Daniel - DanielJensenKEA
-         */
         model.addAttribute("PMEmployees", projectService.findPMEmployees());
         model.addAttribute("BCEmployees", projectService.findBCEmployees());
         model.addAttribute("statusobjects", projectService.fetchAllStatus());
@@ -73,9 +67,6 @@ public class ProjectController {
      */
     @GetMapping("/show_all_projects")
     public String showAllProjects(Model model) {
-        /*
-        Daniel - DanielJensenKEA
-         */
         model.addAttribute("projects", projectService.showAllProjects());
         return "showAllProjectsTest";
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
@@ -85,9 +76,6 @@ public class ProjectController {
      */
     @GetMapping("/{name}/edit") //button
     public String goToEditProject(@PathVariable String name, Model model) {
-        /*
-        Daniel - DanielJensenKEA
-         */
         Project project = projectService.fetchSpecificProject(name);
         model.addAttribute("project", project);
         model.addAttribute("projectCustomer", projectService.getListOfCurrentCustomers());
@@ -101,11 +89,6 @@ public class ProjectController {
     public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
                                 @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
                                 @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
-        /*
-        Daniel - DanielJensenKEA
-         */
-        //Update()
-        //Redirect
         Project project = new Project(projectID,projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
         projectService.updateProject(project);
         return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
@@ -127,20 +110,14 @@ public class ProjectController {
     @GetMapping("/get-customers") //TODO: Demo kode
     public String getCustomers(Model model) {
         model.addAttribute("listofcustomers", projectService.getListOfCurrentCustomers());
-        return "customers"; //Husk at slette html
+        return "customers"; //Husk at slette html //TODO: Slette html
     }
     @GetMapping("/show-create-customer")
     public String showCreateCustomer() {
-        /*
-        Daniel - DanielJensenKEA
-         */
         return "createCustomer";
     }
     @PostMapping("/create-customer")
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
-        /*
-        Daniel - DanielJensenKEA
-         */
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
         return "succes"; //TODO slet html, bare til verifikation
