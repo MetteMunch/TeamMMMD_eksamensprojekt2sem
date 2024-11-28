@@ -24,11 +24,11 @@ public class ProjectService {
     }
 
     //*******CRUD --- SUBPROJECT******//
-    public void createSubproject(String subprojectTitle, String subprojectDescription, int projectID, int statusID) {
-        projectRepository.createSubProject(subprojectTitle, subprojectDescription, projectID, statusID);
+    public void createSubproject(SubProject subProject) {
+        projectRepository.createSubProject(subProject);
     }
 
-    public boolean checkIfSubProjectNameAlreadyExists(String subProjectTitle) {
+    public boolean checkIfSubProjectNameAlreadyExists(int projectID, String subProjectTitle) {
         return projectRepository.checkIfSubProjectNameAlreadyExists(subProjectTitle);
     }
 

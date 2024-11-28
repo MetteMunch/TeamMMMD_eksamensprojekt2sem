@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create SubProject</title>
+  <link rel="stylesheet" href="">
+</head>
+
+<body>
+<h2>Create a SubProject</h2>
+<form th:action="@{/create_subproject/{projectID}(projectID=${project.id})}" method="post">
+    <label for="subProjectTitle">Subproject Title:</label>
+    <input type="text" id="subProjectTitle" name="subProjectTitle" placeholder="Enter subproject title" required>
+
+    <label for="subProjectDescription">Subproject Description:</label>
+    <textarea id="subProjectDescription" name="subProjectDescription" placeholder="Enter description"></textarea>
+
+    <label for="statusID">Status:</label>
+    <select id="statusID" name="statusID">
+        <option value="1">Pending</option>
+        <option value="2">In Progress</option>
+        <option value="3">Completed</option>
+    </select>
+
+    <button type="submit">Create Subproject</button>
+</form>
+
+</body>
+</html>
