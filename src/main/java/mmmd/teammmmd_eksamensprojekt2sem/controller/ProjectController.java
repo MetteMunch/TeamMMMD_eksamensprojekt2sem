@@ -68,7 +68,7 @@ public class ProjectController {
     @GetMapping("/show_all_projects")
     public String showAllProjects(Model model) {
         model.addAttribute("projects", projectService.showAllProjects());
-        return "showAllProjectsTest";
+        return "showAllProjectsTest"; //TODO: Husk at rette showAllProjectsTest() ved sletning af demo html.
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
     /*
