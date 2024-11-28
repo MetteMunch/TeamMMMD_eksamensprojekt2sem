@@ -2,8 +2,8 @@ package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +15,13 @@ import java.sql.SQLException;
 public class UserController {
 
     private final UserService userService;
+    private final ProjectService projectService;
     private HttpSession session;
 
 
-    public UserController(UserService userService, HttpSession session) {
+    public UserController(UserService userService, ProjectService projectService, HttpSession session) {
         this.userService = userService;
+        this.projectService = projectService;
         this.session = session;
     }
 
@@ -77,11 +79,10 @@ public class UserController {
         Se redirectUserLoginAttributes() dokumentation i koden.
          */
 
+        model.addAttribute("projects",projectService.showAllProjectsSpecificEmployee(employeeID));
+        model.addAttribute("employee",userService.getEmployee(employeeID);
 
-
-        return null;
-
-
+        return "employeeDashboard";
     }
 
 

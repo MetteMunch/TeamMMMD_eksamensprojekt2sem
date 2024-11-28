@@ -64,6 +64,10 @@ public class ProjectService {
     public void setProjectID(Project project) {
         projectRepository.setProjectID(project);
     }
+
+    public List<Project> showAllProjectsSpecificEmployee(int employeeID) {
+        return projectRepository.showAllProjectsSpecificEmployee(employeeID);
+    }
     /*
     ###########---EMPLOYEE METHODS---###########
      */

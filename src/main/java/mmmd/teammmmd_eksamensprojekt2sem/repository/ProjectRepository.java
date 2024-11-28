@@ -7,10 +7,7 @@ import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,8 +134,8 @@ public class ProjectRepository {
     }
 
     public List<Project> showAllProjectsSpecificEmployee(int employeeID) {
-        String SQL = "SELECT DISTINCT project.projectID, projectTitle, customer.companyName, \n" +
-                "orderDate, deliveryDate, linkAgreement, employee.fullName AS companyRep, status.status FROM project\n" +
+        String SQL = "SELECT DISTINCT project.projectID, projectTitle, project.projectDescription, project.customer, customer.companyName, \n" +
+                "orderDate, deliveryDate, linkAgreement, project.companyRep, employee.fullName AS companyRepName, project.status, status.status FROM project\n" +
                 "INNER JOIN customer ON customer.customerID = project.customer\n" +
                 "INNER JOIN status ON status.statusID = project.status\n" +
                 "INNER JOIN subproject ON subproject.projectID = project.projectID\n" +
@@ -147,13 +144,33 @@ public class ProjectRepository {
 
         List<Project> listOfProjectsSpecificEmployee = new ArrayList<>();
 
-        try(PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
-            try (ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, employeeID);
+            ResultSet rs = ps.executeQuery();
 
+            while (rs.next()) {
+                int projectID = rs.getInt(1);
+                String projectTitle = rs.getString(2);
+                String projectDescription = rs.getString(3);
+                int customerID = rs.getInt(4);
+                String customerName = rs.getString(5);
+                Date orderDate = rs.getDate(6);
+                Date agreedDeliveryDate = rs.getDate(7);
+                String linkAgreement = rs.getString(8);
+                int companyRep = rs.getInt(9);
+                String companyRepName = rs.getString(10);
+                int projectStatusID = rs.getInt(11);
+                String projectStatus = rs.getString(12);
+                Project project = new Project(projectID,projectTitle,projectDescription,customerID,orderDate,agreedDeliveryDate,linkAgreement,companyRep,projectStatusID);
+                project.setCompanyRepString(companyRepName);
+                project.setCustomerNameString(customerName);
+                project.setStatusString(projectStatus);
+
+                listOfProjectsSpecificEmployee.add(project);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-
         return listOfProjectsSpecificEmployee;
     }
 

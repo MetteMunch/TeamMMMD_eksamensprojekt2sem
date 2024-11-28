@@ -1,6 +1,7 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
 
 import jakarta.servlet.http.HttpSession;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,14 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-
     }
 
     public boolean validateLogin(String username, String password) throws SQLException {
         return userRepository.validateLogin(username, password);
+    }
+
+    public Employee getEmployee(int employeeID) {
+        return userRepository.getEmployee(employeeID);
     }
 
     public int getEmployeeIDFromDB(String username) throws SQLException {
