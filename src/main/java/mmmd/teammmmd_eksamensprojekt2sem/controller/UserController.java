@@ -6,10 +6,7 @@ import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
@@ -26,6 +23,10 @@ public class UserController {
         this.session = session;
     }
 
+    /*
+    ###########---LOGIN---###########
+     */
+
     @GetMapping("/loginpage")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
@@ -34,23 +35,24 @@ public class UserController {
         return "login";
 
     }
-@PostMapping("/loginvalidation")
+
+    @PostMapping("/loginvalidation")
     public String loginValidation(HttpServletRequest request, @RequestParam String username, @RequestParam String password) throws SQLException {
         String returnStatement;
 
-        if (userService.validateLogin(username,password)) {
+        if (userService.validateLogin(username, password)) {
             session = request.getSession();
             int employeeID = userService.getEmployeeIDFromDB(username);
-            session.setAttribute("employeeID",employeeID); // Brugerens unikke employeeID gemmes i sessionen, så vi kan sikre, at
+            session.setAttribute("employeeID", employeeID); // Brugerens unikke employeeID gemmes i sessionen, så vi kan sikre, at
             //brugeren ikke tilgår Endpoints, som tilhører andre brugere ved at skrive dette direkte i url
 
             if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
                 System.out.println("test udskrift - brugeren er manager");
-                returnStatement = "redirect:/user/projectmanager/"+employeeID; //Jeg kender ikke korrekt sti/Get Endpoint endnu
+                returnStatement = "redirect:/user/projectmanager/" + employeeID; //Jeg kender ikke korrekt sti/Get Endpoint endnu
 
             } else {
                 System.out.println("test udskrift - brugeren er ikke manager");
-                returnStatement = "redirect:/user/employee/"+employeeID; //Jeg kender ikke korrekt sti/Get Endpoint endnu
+                returnStatement = "redirect:/user/employee/" + employeeID; //Jeg kender ikke korrekt sti/Get Endpoint endnu
             }
         } else {
             System.out.println("test udskrift - brugeren kunne ikke valideres");
@@ -58,6 +60,37 @@ public class UserController {
         }
         return returnStatement;
     }
+
+    /*
+    ###########---EMPLOYEE---###########
+     */
+
+    @GetMapping("/employee/{employeeID}")
+    public String showEmployeeDashboard(@PathVariable int employeeID, Model model) {
+        String redirect = userService.redirectUserLoginAttributes(session,employeeID);
+        if (redirect != null) {
+            return redirect;
+        }
+        /*
+        redirectUserLoginAttributes() returnerer en string(html/endpoint. Hvis if-blokken i denne metode
+        ikke opfyldes, så returnerer metoden null og vi fortsætter /{userID}s metodeflow.
+        Se redirectUserLoginAttributes() dokumentation i koden.
+         */
+
+
+
+        return null;
+
+
+    }
+
+
+
+
+
+    /*
+    ###########---MANAGER---###########
+     */
 
 
 }
