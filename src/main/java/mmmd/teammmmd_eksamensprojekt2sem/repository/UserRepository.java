@@ -19,7 +19,6 @@ public class UserRepository {
         this.dbConnection = connectionManager.getConnection();
     }
 
-    //LOGIN METHODS - CREATED BY: Mette,
 
     public boolean validateLogin(String username, String password) throws SQLException {
         boolean result = false;
