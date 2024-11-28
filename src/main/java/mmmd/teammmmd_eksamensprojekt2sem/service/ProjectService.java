@@ -54,6 +54,9 @@ public class ProjectService {
     public Project fetchSpecificProject(String projectTitle) {
         return projectRepository.fetchSpecificProject(projectTitle);
     }
+    public Customer fetchInternalProjectCustomer() {
+        return projectRepository.fetchInternalProjectCustomer();
+    }
 
     public List<Status> fetchAllStatus() {
         return projectRepository.fetchAllStatus();
