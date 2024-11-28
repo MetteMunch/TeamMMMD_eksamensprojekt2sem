@@ -101,6 +101,7 @@ VALUES ('John Wales', 'johnwa', 'password123', 1),        -- Project Manager
 INSERT INTO Customer (companyName, repName)
 VALUES ('TechCorp', 'Emily White'),
        ('Innovate Solutions', 'David Green');
+INSERT INTO Customer(customerID, companyName, repName) VALUES(99, 'Internal Project', Internal);
 
 INSERT INTO Status (status)
 VALUES ('Pending'),
