@@ -91,7 +91,7 @@ public class ProjectController {
                                 @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
         Project project = new Project(projectID,projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
         projectService.updateProject(project);
-        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
+        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard. Husk at korriger i ProjectControllerTest også.
     }
     /*
     ###########---DELETE---###########

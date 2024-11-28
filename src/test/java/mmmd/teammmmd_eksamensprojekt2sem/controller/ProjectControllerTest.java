@@ -114,6 +114,24 @@ public class ProjectControllerTest {
                 .andExpect(model().attribute("projectBCEmployees", projectService.findBCEmployees()))
                 .andExpect(model().attribute("projectStatusAll", projectService.fetchAllStatus()));
     }
+    @Test
+    void updateProjectAction() throws Exception {
+        mockMvc.perform(post(requestMapping+"/updateProject")
+                        .param("projectID", String.valueOf(project.getID()))
+                        .param("projectTitle", project.getProjectTitle())
+                        .param("projectDescription", project.getProjectDescription())
+                        .param("customer", String.valueOf(project.getCustomer()))
+                        .param("orderDate", String.valueOf(project.getOrderDate()))
+                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
+                        .param("linkAgreement", project.getLinkAgreement())
+                        .param("companyRep", String.valueOf(project.getCompanyRep()))
+                        .param("status", String.valueOf(project.getStatus())))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(requestMapping+"/success")); //Ændre mig til korrekte html redirect
+    }
+
+
 
 
 
