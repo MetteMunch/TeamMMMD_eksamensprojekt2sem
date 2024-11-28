@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @ActiveProfiles("testh2")
-public class ProjectRepository {
+public class ProjectRepositoryIntegrationTest {
     @Autowired
     private ProjectRepository projectRepository;
 
