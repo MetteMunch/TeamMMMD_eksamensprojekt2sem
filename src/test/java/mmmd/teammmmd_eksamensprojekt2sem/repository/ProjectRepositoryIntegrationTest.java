@@ -175,5 +175,47 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertEquals(actualSizeAfterDeletion, expectedSizeAfterDeletion);
     }
+    @Test
+    void fetchSpecificProject() {
+        //Arrange
+        Project newProject = new Project("Project Title Test", "Project Description",
+                1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
+                2, 1 );
+
+        //Act
+        projectRepository.createProject(newProject);
+        Project fetchProject = projectRepository.fetchSpecificProject(newProject.getProjectTitle());
+        //Assert
+        assertNotNull(fetchProject);
+        assertEquals("Project Title Test", fetchProject.getProjectTitle());
+        assertEquals("Project Description", fetchProject.getProjectDescription());
+    }
+    @Test
+    void checkIfProjectNameAlreadyExists() {
+        //Arrange
+        Project newProject = new Project("Project Title Test", "Project Description",
+                1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
+                2, 1 );
+        //Act
+        projectRepository.createProject(newProject);
+        projectRepository.setProjectID(newProject);
+
+        //Assert
+        assertTrue(projectRepository.checkIfProjectNameAlreadyExists(newProject.getProjectTitle()));
+    }
+    @Test
+    void checkIfProjectNameAlreadyExistsFail() {
+        //Arrange
+        Project newProject = new Project("Project Title Test", "Project Description",
+                1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
+                2, 1 );
+        //Act
+        projectRepository.createProject(newProject);
+        projectRepository.setProjectID(newProject);
+
+        //Assert
+        assertFalse(projectRepository.checkIfProjectNameAlreadyExists(newProject.getProjectTitle()+" 2")); //Indsætter +2 for: Project Title Test 2
+    }
+
 
 }
