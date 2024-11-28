@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All projects</title>
+</head>
+<body>
+<!--TEMPLATE TIL EKSEMPELVISNING DEMO - SLET NÅR DEN IKKE ER NØDVENDIG MERE -->
+<table>
+<thead>
+<tr>
+    <th>Project ID</th>
+    <th>Project Title</th>
+    <th>Project Description</th>
+    <th>Project Customer</th>
+    <th>Project Order Date</th>
+    <th>Project Delivery Date</th>
+    <th>Project Link Agreement</th>
+    <th>Project Company Rep</th>
+    <th>Project Status</th>
+</tr>
+</thead>
+<tbody th:each="project : ${projects}">
+<tr>
+    <td th:text="${project.getID()}"></td>
+    <td th:text="${project.getProjectTitle()}"></td>
+    <td th:text="${project.getProjectDescription()}"></td>
+    <td th:text="${project.getCustomer()}"></td>
+    <td th:text="${project.getOrderDate()}"></td>
+    <td th:text="${project.getDeliveryDate()}"></td>
+    <td> <a th:href="${project.getLinkAgreement()}" target="_blank" th:text="${project.getLinkAgreement()}"></a></td>
+    <td th:text="${project.getCompanyRep()}"></td>
+    <td th:text="${project.getStatus()}"></td>
+    <td>
+        <form th:action="@{/project/{name}/delete(name=${project.getProjectTitle})}" method="post">
+            <button type="submit">Delete</button>
+
+        </form>
+    </td>
+</tr>
+</tbody>
+</table>
+
+
+</body>
+</html>
