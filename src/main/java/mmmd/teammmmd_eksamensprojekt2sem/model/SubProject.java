@@ -6,12 +6,20 @@ public class SubProject {
     String subProjectDescription;
     int projectID;
     int statusID;
+    String status;
 
     public SubProject (String subprojectTitle, String subprojectDescription, int projectID, int statusID) {
         this.subProjectTitle = subprojectTitle;
         this.subProjectDescription = subprojectDescription;
         this.projectID = projectID;
         this.statusID = statusID;
+    }
+
+    public SubProject (String subprojectTitle, String subprojectDescription, int projectID, String status) {
+        this.subProjectTitle = subprojectTitle;
+        this.subProjectDescription = subprojectDescription;
+        this.projectID = projectID;
+        this.status = status;
     }
 
     public String getSubProjectTitle() {
@@ -28,6 +36,10 @@ public class SubProject {
 
     public int getStatusID() {
         return statusID;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public void setSubProjectTitle(String subProjectTitle) {

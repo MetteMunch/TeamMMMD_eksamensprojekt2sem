@@ -143,6 +143,13 @@ public class ProjectController {
         projectService.deleteSubProject(subProjectID);
         return "redirect:/project/" + employeeID;
     }
+
+    @GetMapping("/show_all_subprojects")
+    public String showAllSubProjects(Model model) {
+        model.addAttribute("subProjects", projectService.showAllSubProjects());
+        return "showAllSubProjectsTest";
+        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
+    }
 }
 
 

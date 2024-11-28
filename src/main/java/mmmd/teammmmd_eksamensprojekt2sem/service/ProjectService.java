@@ -28,6 +28,10 @@ public class ProjectService {
         projectRepository.createSubProject(subprojectTitle, subprojectDescription, projectID, statusID);
     }
 
+    public boolean checkIfSubProjectNameAlreadyExists(String subProjectTitle) {
+        return projectRepository.checkIfSubProjectNameAlreadyExists(subProjectTitle);
+    }
+
     public List<SubProject> showListOfSpecificSubProject(int subProjectID) {
         return projectRepository.showListOfSpecificSubProject(subProjectID);
     }
@@ -38,6 +42,10 @@ public class ProjectService {
 
     public void deleteSubProject(int subProjectID) {
         projectRepository.deleteSubproject(subProjectID);
+    }
+
+    public List<SubProject> showAllSubProjects() {
+        return projectRepository.showAllSubProjects();
     }
 
     /*

@@ -44,6 +44,41 @@ public class ProjectRepository {
         }
     }
 
+    public boolean checkIfSubProjectNameAlreadyExists(String subProjectTitle) {
+        String sql = "SELECT subProjectTitle FROM subProject WHERE LOWER(subProjectTitle) = LOWER(?)";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, subProjectTitle);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    if (subProjectTitle.equals(rs.getString(1))) {
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<SubProject> showAllSubProjects() { //READ
+        String sql = "SELECT subProjectTitle, subProjectDescription, projectID, status.status FROM subProject\n" +
+        "INNER JOIN Status ON subProject.status = status.statusID";
+        List<SubProject> listOfSubProjects = new ArrayList<>();
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    SubProject subProject = new SubProject(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4));
+
+                    listOfSubProjects.add(subProject);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listOfSubProjects;
+    }
+
     public List<SubProject> showListOfSpecificSubProject(int projectID) {
         List<SubProject> listOfSubProjects = new ArrayList<>();
 
@@ -89,9 +124,9 @@ public class ProjectRepository {
     public List<Customer> getListOfCurrentCustomers() {
         String sql = "SELECT customerID, companyName, repName FROM customer";
         List<Customer> customersToReturn = new ArrayList<>();
-        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            try(ResultSet rs = ps.executeQuery()) {
-                while(rs.next()) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
                     int customerID = rs.getInt(1);
                     String companyName = rs.getString(2);
                     String repName = rs.getString(3);
@@ -100,43 +135,45 @@ public class ProjectRepository {
                     customersToReturn.add(customer);
                 }
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return customersToReturn;
     }
+
     public void createCustomer(Customer customer) {
-        String sql="INSERT INTO customer(companyName, repName) VALUES(?,?)";
-        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+        String sql = "INSERT INTO customer(companyName, repName) VALUES(?,?)";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, customer.getCompanyName());
             ps.setString(2, customer.getRepName());
             ps.executeUpdate();
 
             customer.setCustomerID(lookUpCustomerIDFromDB(customer));
 
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     public int lookUpCustomerIDFromDB(Customer customer) {
-        String sql="SELECT customerID FROM customer WHERE companyName=? AND repName=?";
+        String sql = "SELECT customerID FROM customer WHERE companyName=? AND repName=?";
         int customerIDFromDB = -1;
-        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, customer.getCompanyName());
             ps.setString(2, customer.getRepName());
-            try(ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     customerIDFromDB = rs.getInt(1);
                 }
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         if (customerIDFromDB != -1) {
             return customerIDFromDB;
         } else {
-            throw new IllegalArgumentException("No valid customer with the following company name: "+customer.getCompanyName()+" and rep. name: "+customer.getRepName()+".");
+            throw new IllegalArgumentException("No valid customer with the following company name: " + customer.getCompanyName() + " and rep. name: " + customer.getRepName() + ".");
         }
     }
 
@@ -167,37 +204,39 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
+
     /*
     ###########---READ PROJECT---###########
      */
     public List<Project> showAllProjects() { //READ
-        String sql ="SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status" +
+        String sql = "SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status" +
                 " FROM project";
         List<Project> listOfProjects = new ArrayList<>();
-        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            try(ResultSet rs = ps.executeQuery()) {
-                while(rs.next()) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
                     Project project = new Project(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4),
                             rs.getDate(5), rs.getDate(6), rs.getString(7), rs.getInt(8), rs.getInt(9));
 
                     listOfProjects.add(project);
                 }
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return listOfProjects;
     }
+
     /*
     ###########---UPDATE PROJECT---###########
      */
     public void updateProject(Project project) {
-        String sql="UPDATE project SET projectTitle=?, projectDescription=?, customer=?, orderDate=?, " +
+        String sql = "UPDATE project SET projectTitle=?, projectDescription=?, customer=?, orderDate=?, " +
                 "deliveryDate=?, linkAgreement=?, companyRep=?, status=? WHERE projectID=?";
-        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, project.getProjectTitle());
             ps.setString(2, project.getProjectDescription());
-            ps.setInt(3,project.getCustomer());
+            ps.setInt(3, project.getCustomer());
             ps.setDate(4, project.getOrderDate());
             ps.setDate(5, project.getDeliveryDate());
             ps.setString(6, project.getLinkAgreement());
@@ -205,26 +244,27 @@ public class ProjectRepository {
             ps.setInt(8, project.getStatus());
             ps.setInt(9, project.getID());
             ps.executeUpdate();
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     /*
     ###########---DELETE PROJECT---###########
      */
     public void deleteProject(Project project) throws SQLException {
-        String sql="DELETE FROM project WHERE projectID=?";
+        String sql = "DELETE FROM project WHERE projectID=?";
         try {
             dbConnection.setAutoCommit(false);
             try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
                 ps.setInt(1, project.getID());
                 int rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 0) {
-                    throw new SQLException("No project found with ID: "+project.getID());
+                    throw new SQLException("No project found with ID: " + project.getID());
                 }
             }
             dbConnection.commit();
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             dbConnection.rollback();
             e.printStackTrace();
         } finally {
@@ -239,11 +279,11 @@ public class ProjectRepository {
        #####################################
     */
     public Project fetchSpecificProject(String projectTitle) {
-        String sql="SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status FROM project WHERE projectTitle=?";
+        String sql = "SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status FROM project WHERE projectTitle=?";
         Project project = null;
-        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, projectTitle);
-            try(ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     project = new Project(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4),
                             rs.getDate(5), rs.getDate(6), rs.getString(7), rs.getInt(8), rs.getInt(9));
@@ -251,30 +291,32 @@ public class ProjectRepository {
                 }
             }
 
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         if (project == null) {
-            throw new IllegalArgumentException("No project found with title: "+projectTitle);
+            throw new IllegalArgumentException("No project found with title: " + projectTitle);
         }
         return project;
     }
+
     public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
-        String sql ="SELECT projectTitle FROM project WHERE LOWER (projectTitle)=LOWER(?)";
-        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+        String sql = "SELECT projectTitle FROM project WHERE LOWER (projectTitle)=LOWER(?)";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, projectTitle);
-            try(ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     if (projectTitle.equals(rs.getString(1))) {
                         return true;
                     }
                 }
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
+
     public void setProjectID(Project project) {
         String sql = "SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
         int projectIDFromDB = -1;
@@ -297,17 +339,18 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
+
     public List<Status> fetchAllStatus() {
-        String sql ="SELECT statusID, status FROM status";
+        String sql = "SELECT statusID, status FROM status";
         List<Status> statusFromDB = new ArrayList<>();
-        try(PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            try(ResultSet rs = ps.executeQuery()) {
-                while(rs.next()) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
                     Status status = new Status(rs.getInt(1), rs.getString(2));
                     statusFromDB.add(status);
                 }
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return statusFromDB;
