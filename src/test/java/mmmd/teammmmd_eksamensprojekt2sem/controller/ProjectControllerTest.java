@@ -1,5 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
+import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
@@ -129,6 +130,26 @@ public class ProjectControllerTest {
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(requestMapping+"/success")); //Ændre mig til korrekte html redirect
+    }
+    @Test
+    void deleteProject() throws Exception {
+        mockMvc.perform(post(requestMapping+"/{name}/delete", project.getProjectTitle()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(requestMapping+"/success")); //Ændre mig til korrekte redirect view
+    }
+    @Test
+    void showCreateCustomer() throws Exception {
+        mockMvc.perform(get(requestMapping+"/show-create-customer"))
+                .andExpect(view().name("createCustomer"));
+    }
+    @Test
+    void createCustomerAction() throws Exception {
+        Customer customer = new Customer("Name", "Rep");
+        mockMvc.perform(post(requestMapping+"/create-customer")
+                        .param("companyName", customer.getCompanyName())
+                        .param("repName", customer.getRepName()))
+                .andExpect(view().name("succes")); //Ændre mig til korrekt view
     }
 
 

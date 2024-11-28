@@ -100,7 +100,7 @@ public class ProjectController {
     public String deleteProject(@PathVariable String name) throws SQLException {
         Project project = projectService.fetchSpecificProject(name);
         projectService.deleteProject(project);
-        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
+        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard. Husk at ændre test i projectControllerTest.
     }
     /*
     #####################################
@@ -120,7 +120,7 @@ public class ProjectController {
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
-        return "succes"; //TODO slet html, bare til verifikation
+        return "succes"; //TODO slet html, bare til verifikation. Husk at ændre i ProjectControllerTest.
     }
 
 }
