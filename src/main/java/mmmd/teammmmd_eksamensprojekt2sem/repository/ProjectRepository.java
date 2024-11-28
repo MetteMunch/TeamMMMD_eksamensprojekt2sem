@@ -46,7 +46,7 @@ public class ProjectRepository {
             while (rs.next()) {
                 String subProjectTitle = rs.getString("subProjectTitle");
                 String subProjectdescription = rs.getString("subProjectDescription");
-                int projectID = rs.getInt("projectID");
+                int projectNameID = rs.getInt("projectID");
                 int statusID = rs.getInt("statusID");
                 listOfSubProjects.add(new SubProject(subProjectTitle, subProjectdescription, projectID, statusID));
             }

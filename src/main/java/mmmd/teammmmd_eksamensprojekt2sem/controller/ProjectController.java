@@ -30,7 +30,7 @@ public class ProjectController {
         return "redirect:/project/" + employeeID + "/" + projectID;
     }
 
-    @PostMapping("/deleteSubProject/{employeeID}/{subProjecwqa<tID}")
+    @PostMapping("/deleteSubProject/{employeeID}/{subProjectID}")
     public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID) {
         projectService.deleteSubProject(subProjectID);
         return "redirect:/project/" + employeeID;
