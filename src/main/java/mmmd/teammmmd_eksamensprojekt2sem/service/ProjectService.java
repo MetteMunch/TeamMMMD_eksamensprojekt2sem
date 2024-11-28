@@ -77,7 +77,6 @@ public class ProjectService {
     public List<Employee> findBCEmployees() {
         return projectRepository.findBCEmployees();
     }
-}
 
     /*
     #####################################
