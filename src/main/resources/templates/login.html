@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+
+<h3>Login</h3>
+<div th:if="${errorMessage}" class="error"> <!-- Fejlbesked, hvis login failer -->
+    <p th:text="${errorMessage}" style="color: red;"></p>
+</div>
+
+<form action="/user/loginvalidation" method="post">
+    <label class="usernamePasswordText" for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <br>
+    <label class="usernamePasswordText" for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <button class="loginButton" type="submit">Login</button>
+</form>
+
+
+
+</body>
+</html>
