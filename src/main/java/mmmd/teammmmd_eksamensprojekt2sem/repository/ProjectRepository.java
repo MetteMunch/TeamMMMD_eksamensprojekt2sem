@@ -33,16 +33,17 @@ public class ProjectRepository {
         }
     }
 
-    public List<SubProject> showListOfSpecificSubProject(int subProjectID) {
+    public List<SubProject> showListOfSpecificSubProject(int projectID) {
         List<SubProject> listOfSubProjects = new ArrayList<>();
 
-        String SQL = "SELECT subProjectTitle, subProjectDescription, projectID, statusID FROM subProject WHERE subProjectID = ?";
+        String SQL = "SELECT subProjectTitle, subProjectDescription, projectID, Status.status FROM subProject\n" +
+                "INNER JOIN status ON Status.statusID = SubProject.status WHERE projectID = ?";
 
-        try(PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
-            ps.setInt(1, subProjectID);
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, projectID);
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()) {
+            while (rs.next()) {
                 String subProjectTitle = rs.getString("subProjectTitle");
                 String subProjectdescription = rs.getString("subProjectDescription");
                 int projectID = rs.getInt("projectID");
@@ -59,7 +60,7 @@ public class ProjectRepository {
         //TODO:
     }
 
- public void deleteSubproject(int subprojectID) {
+    public void deleteSubproject(int subprojectID) {
         String SQL = "DELETE FROM SubProject WHERE subProjectID = ?";
         try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
             ps.setInt(1, subprojectID);

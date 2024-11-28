@@ -2,7 +2,6 @@ package mmmd.teammmmd_eksamensprojekt2sem.model;
 
 public class SubProject {
 
-    //Foreign keys skal med men ikke IDet
     String subProjectTitle;
     String subProjectDescription;
     int projectID;
