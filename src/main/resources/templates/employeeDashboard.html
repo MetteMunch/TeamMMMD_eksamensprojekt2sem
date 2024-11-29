@@ -1,14 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Employee Dashboard</title>
-</head>
-<body>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org">
+<!--her angives at vi arbejder med thymeleaf og prefix th skal anvendes,
+når der skal kaldes attributter-->
 
-<h1>Dashboard</h1>
-<h2 th:text="${employee.getFullName()}"></h2>
-<h2 th:text="${employee.getRoleName()}"></h2>
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body
+
+<navigation>
+    <img src="..//images/alphaSolutionsLogo.png" alt="Logo">
+</navigation>
+
+<header>
+    <h1>Dashboard</h1>
+    <h2 th:text="${employee.getFullName()}"></h2>
+    <h2 th:text="${employee.getRoleName()}"></h2>
+</header>
+
+<main1>
 <!-- denne mangler at blive tilrettet -->
 <h3>Overview - Assigned Tasks</h3>
 <!--
@@ -41,42 +54,57 @@
   </tbody>
 </table>
 -->
+</main1>
 
+<main2>
 
 <h3>Overview - Associated Projects</h3>
 <table>
-  <thead>
-  <tr>
-    <th>Project Title</th>
-    <th>Project Description</th>
-    <th>Project Customer</th>
-    <th>Project Order Date</th>
-    <th>Project Delivery Date</th>
-    <th>Project Link Agreement</th>
-    <th>Project Company Rep</th>
-    <th>Project Status</th>
-  </tr>
-  </thead>
-  <tbody th:each="project : ${projects}">
-  <tr>
-    <td th:text="${project.getProjectTitle()}"></td>
-    <td th:text="${project.getProjectDescription()}"></td>
-    <td th:text="${project.getCustomerNameString()}"></td>
-    <td th:text="${project.getOrderDate()}"></td>
-    <td th:text="${project.getDeliveryDate()}"></td>
-    <td> <a th:href="${project.getLinkAgreement()}" target="_blank" th:text="${project.getLinkAgreement()}"></a></td>
-    <td th:text="${project.getCompanyRepString()}"></td>
-    <td th:text="${project.getStatusString()}"></td>
-    <!--<td>
-      <form th:action="@{/project/{name}/delete(name=${project.getProjectTitle})}" method="post">
-        <button type="submit">Delete</button>
+    <thead>
+    <tr>
+        <th>Project Title</th>
+        <th>Project Description</th>
+        <th>Project Customer</th>
+        <th>Project Order Date</th>
+        <th>Project Delivery Date</th>
+        <th>Project Link Agreement</th>
+        <th>Project Company Rep</th>
+        <th>Project Status</th>
+    </tr>
+    </thead>
+    <tbody th:each="project : ${projects}">
+    <tr>
+        <td th:text="${project.getProjectTitle()}"></td>
+        <td th:text="${project.getProjectDescription()}"></td>
+        <td th:text="${project.getCustomerNameString()}"></td>
+        <td th:text="${project.getOrderDate()}"></td>
+        <td th:text="${project.getDeliveryDate()}"></td>
+        <td><a th:href="${project.getLinkAgreement()}" target="_blank" th:text="${project.getLinkAgreement()}"></a></td>
+        <td th:text="${project.getCompanyRepString()}"></td>
+        <td th:text="${project.getStatusString()}"></td>
+        <!--<td>
+          <form th:action="@{/project/{name}/delete(name=${project.getProjectTitle})}" method="post">
+            <button type="submit">Delete</button>
 
-      </form>
-    </td>-->
-  </tr>
-  </tbody>
+          </form>
+        </td>-->
+    </tr>
+    </tbody>
 </table>
+</main2>
 
+<sidebar>
+    <h3>Her kommer diverse visninger af data</h3>
+
+</sidebar>
+
+<footer>
+    <p><Strong>Kontakt os her</Strong></p>
+    <p>Email: <a href="#">teamMMMD@failmail.dk</a></p>
+    <p>Mobil: <a href="#">+45 xxxxxxxx</a></p>
+    <p>&copy; 2024 Projektkalkulationsværktøj - TeamMMMD (Mark, Martin, Mette, Daniel)</p>
+
+</footer>
 
 </body>
 </html>

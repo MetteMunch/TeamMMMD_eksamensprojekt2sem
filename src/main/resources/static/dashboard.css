@@ -1,0 +1,159 @@
+/* Farvevariabler */
+:root {
+    --primary-bg-color: white;
+    --secondary-bg-color: #dedede;
+    --extra-bg-color: #e7eef1;
+    --link-color: black;
+    --alpha-bg-color: #59869d;
+    --primary-text-color: black;
+    --secondary-text-color: white;
+    --alpha-text-color: #59869d;
+}
+
+/* Grundlæggende layout og styling */
+
+/* Mobile first layout */
+body {
+    min-height: 100vh;
+    display: grid;
+    grid-gap: 1em;
+    grid-template-areas:
+        'navigation'
+        'header'
+        'main1'
+        'main2'
+        'sidebar'
+        'footer';
+    grid-template-rows: auto auto 1fr 1fr auto auto;
+    grid-template-columns: 1fr;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Medieforespørgsel for større skærme (min-width: 60em) */
+@media (min-width: 60em) {
+    body {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: 1fr 1fr 1fr 1fr auto;
+        width: 80%;
+        margin: 0 auto;
+        grid-template-areas:
+           'navigation navigation'
+           'header sidebar'
+           'main1 sidebar'
+           'main2 sidebar'
+           'footer footer';
+    }
+}
+
+/* Grid-områder */
+navigation {
+    grid-area: navigation;
+}
+
+header {
+    grid-area: header;
+}
+
+main1 {
+    grid-area: main1;
+}
+
+main2 {
+    grid-area: main2;
+}
+
+sidebar {
+    grid-area: sidebar;
+}
+
+footer {
+    grid-area: footer;
+}
+
+navigation, footer {
+    background-color: var(--alpha-bg-color);
+    padding: 1em;
+    border-radius: 15px;
+}
+
+header, main1, main2 {
+    background-color: #dedede;
+}
+
+sidebar {
+    background-color: darkgray;
+}
+
+/* Typografi og tekst */
+h1 {
+    text-align: center;
+    font-family: Montserrat, sans-serif;
+    font-size: 55px;
+}
+
+h2 {
+    text-align: left;
+    font-family: Montserrat, sans-serif;
+    font-size: 40px;
+}
+
+.teksttabel {
+    font-size: 18px;
+    font-family: sans-serif;
+}
+
+/* Links */
+.linka {
+    color: var(--link-color);
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+form, a {
+    display: inline;
+}
+
+/* Knapper */
+.button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+    background-color: var(--alpha-bg-color);
+    color: var(--secondary-text-color);
+    border-width: 1px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+/* Generelle tabelindstillinger */
+table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: separate; /* Tillader runde hjørner */
+    border-spacing: 0; /* Fjerner mellemrum mellem cellerne */
+    border: 1px solid black;
+    overflow: hidden; /* Sørger for, at indholdet følger runde hjørner */
+    border-radius: 15px; /* Runde hjørner */
+    background-color: var(--extra-bg-color);
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid black; /* Lige linjer mellem rækker */
+}
+
+th {
+    font-weight: bold;
+    border-top: 2px solid black;
+}
+
+tr:last-child td {
+    border-bottom: none; /* Ingen kantlinje under den sidste række */
+}
+tr:last-child th {
+    border-top: none;
+}
