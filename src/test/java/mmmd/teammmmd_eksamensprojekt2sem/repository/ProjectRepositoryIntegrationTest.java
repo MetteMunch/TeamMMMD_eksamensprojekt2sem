@@ -1,7 +1,9 @@
 package mmmd.teammmmd_eksamensprojekt2sem.repository;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import org.h2.tools.RunScript;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -215,6 +217,57 @@ public class ProjectRepositoryIntegrationTest {
 
         //Assert
         assertFalse(projectRepository.checkIfProjectNameAlreadyExists(newProject.getProjectTitle()+" 2")); //Indsætter +2 for: Project Title Test 2
+    }
+    @Test
+    void setProjectID() {
+        //Arrange
+        Project newProject = new Project("Project Title Test", "Project Description",
+                1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
+                2, 1 ); //Default constructor ID=-1;
+
+        //Act
+        projectRepository.createProject(newProject);
+        projectRepository.setProjectID(newProject); //Vi laver lookup i DB og retter til autogenererede ID.
+
+        //Assert
+        assertNotEquals(-1, newProject.getID());
+        assertEquals(3, newProject.getID()); //Vi forventer ID=3, da der i forvejen eksisterer to projekter.
+    }
+    @Test
+    void fetchAllStatus() {
+        //Arrange
+        List<Status> list;
+        int expectedSize = 4; //Der eksisterer 4 status i DB.
+
+        //Act
+        list = projectRepository.fetchAllStatus();
+
+
+        //Assert
+        assertEquals(expectedSize, list.size());
+    }
+    @Test
+    void findPMEmployees() {
+        //Arrange
+        List<Employee> listPM;
+
+        //Act
+        int expectedSize = 2; //2 PM oprettes i h2.
+        listPM = projectRepository.findPMEmployees();
+
+        //Assert
+        assertEquals(expectedSize, listPM.size());
+    }
+    @Test
+    void findBCEmployees() {
+        //Arrange
+        List<Employee> listBC;
+
+        //Act
+        int expectedSize = 2; //2 Business Consultants eksisterer i h2
+        listBC = projectRepository.findBCEmployees();
+        //Assert
+        assertEquals(expectedSize, listBC.size());
     }
 
 
