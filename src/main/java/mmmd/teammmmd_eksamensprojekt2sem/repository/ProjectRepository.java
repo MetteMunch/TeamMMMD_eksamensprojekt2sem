@@ -4,8 +4,6 @@ import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -309,22 +307,22 @@ public class ProjectRepository {
     #           CRUD Task            #
     ##################################
      */
-    public void createTask(Task task) throws SQLException {
+    public void createTask(int projectID, int subProjectID, Task task) throws SQLException {
         String sql = "INSERT INTO Task (taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (var preparedStatement = dbConnection.prepareStatement(sql)) {
-            preparedStatement.setString(1, task.getTaskTitle());
-            preparedStatement.setString(2, task.getTaskDescription());
-            preparedStatement.setInt(3, task.getAssignedEmployee());
-            preparedStatement.setDouble(4, task.getEstimatedTime());
-            preparedStatement.setDouble(5, task.getActualTime());
-            preparedStatement.setDate(6, task.getPlannedStartDate() != null ? new java.sql.Date(task.getPlannedStartDate().getTime()) : null);
-            preparedStatement.setInt(7, task.getDependingOnTask());
-            preparedStatement.setInt(8, task.getRequiredRole());
-            preparedStatement.setInt(9, task.getSubProjectID());
-            preparedStatement.setInt(10, task.getStatus().getStatusID());
+        try (var ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, task.getTaskTitle());
+            ps.setString(2, task.getTaskDescription());
+            ps.setInt(3, task.getAssignedEmployee());
+            ps.setDouble(4, task.getEstimatedTime());
+            ps.setDouble(5, task.getActualTime());
+            ps.setDate(6, task.getPlannedStartDate());
+            ps.setInt(7, task.getDependingOnTask());
+            ps.setInt(8, task.getRequiredRole());
+            ps.setInt(9, task.getSubProjectID());
+            ps.setInt(10, task.getStatus().getStatusID());
 
-            preparedStatement.executeUpdate();
+            ps.executeUpdate();
         }
     }
 
@@ -348,12 +346,10 @@ public class ProjectRepository {
                     Status taskStatus = findStatusByID(rs.getInt("statusID"));
 
                     Task task = new Task(
-                            rs.getInt("taskID"),
                             rs.getString("taskTitle"),
                             rs.getString("taskDescription"),
                             rs.getInt("assignedEmployee"),
                             rs.getDouble("estimatedTime"),
-                            rs.getDouble("actualTime"),
                             rs.getDate("plannedStartDate"),
                             rs.getInt("dependingOnTask"),
                             rs.getInt("requiredRole"),

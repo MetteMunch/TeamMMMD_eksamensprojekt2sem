@@ -1,6 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Task {
 
@@ -16,13 +16,13 @@ public class Task {
     private int subProjectID;
     private Status status;
 
-    public Task(int taskID, String taskTitle, String taskDescription, int assignedEmployee, double estimatedTime, double actualTime, Date plannedStartDate, int dependingOnTask, int requiredRole, int subProjectID, Status status) {
-        this.taskID = taskID;
+    // PM Constructor hvor actual time er sat default til 0 da denne kun skal kunne sættes af employee
+    public Task(String taskTitle, String taskDescription, int assignedEmployee, double estimatedTime, Date plannedStartDate, int dependingOnTask, int requiredRole, int subProjectID, Status status) {
         this.taskTitle = taskTitle;
         this.taskDescription = taskDescription;
         this.assignedEmployee = assignedEmployee;
         this.estimatedTime = estimatedTime;
-        this.actualTime = actualTime;
+        this.actualTime = 0.0;
         this.plannedStartDate = plannedStartDate;
         this.dependingOnTask = dependingOnTask;
         this.requiredRole = requiredRole;

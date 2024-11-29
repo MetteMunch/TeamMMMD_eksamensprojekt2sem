@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Task</title>
+</head>
+<body>
+<h1>Create Task</h1>
+<div th:if="${taskCreationError}">
+    <p th:text="${taskCreationError}" style="color:red"></p>
+</div>
+
+<!-- Adjust the form action to include projectID and subProjectID -->
+<form th:action="@{/project/{projectID}/{subProjectID}/saveTask(projectID=${projectID}, subProjectID=${subProjectID})}" method="post">
+
+    <!-- Task Title -->
+    <label class="taskTitle" for="taskTitle">Task Title: </label>
+    <input type="text" id="taskTitle" name="taskTitle" required>
+    <br>
+
+    <!-- Task Description -->
+    <label class="taskDescription" for="taskDescription">Task Description: </label>
+    <input type="text" id="taskDescription" name="taskDescription" required>
+    <br>
+
+    <!-- Assigned Employee Dropdown -->
+    <label class="assignedEmployee" for="assignedEmployee">Assigned Employee: </label>
+    <select id="assignedEmployee" name="assignedEmployee" required>
+        <option value="" disabled selected>Select Employee</option>
+        <!-- Populate with employees -->
+        <option th:each="employee : ${nonManagerEmployees}" th:value="${employee.employeeID}" th:text="${employee.fullName}"></option>
+    </select>
+    <br>
+
+    <!-- Estimated Time -->
+    <label class="estimatedTime" for="estimatedTime">Estimated Time (hours): </label>
+    <input type="number" step="0.1" id="estimatedTime" name="estimatedTime" required>
+    <br>
+
+    <!-- Actual Time (Optional for Manager) -->
+    <label class="actualTime" for="actualTime">Actual Time (hours): </label>
+    <input type="number" step="0.1" id="actualTime" name="actualTime">
+    <br>
+
+    <!-- Planned Start Date -->
+    <label class="plannedStartDate" for="plannedStartDate">Planned Start Date: </label>
+    <input type="date" id="plannedStartDate" name="plannedStartDate" required>
+    <br>
+
+    <!-- Depends on Task -->
+    <label class="dependingOnTask" for="dependingOnTask">Depends on Task: </label>
+    <select id="dependingOnTask" name="dependingOnTask">
+        <option value="" disabled selected>Select a Task</option>
+        <!-- Populate with tasks from the same project/subproject -->
+        <option th:each="task : ${tasks}" th:value="${task.taskID}" th:text="${task.taskTitle}"></option>
+    </select>
+    <br>
+
+    <!-- Required Role -->
+    <label class="requiredRole" for="requiredRole">Required Role: </label>
+    <select id="requiredRole" name="requiredRole" required>
+        <option value="" disabled selected>Select Role</option>
+        <!-- Populate with roles -->
+        <option th:each="role : ${roles}" th:value="${role.roleID}" th:text="${role.roleTitle}"></option>
+    </select>
+    <br>
+
+    <!-- Status Dropdown -->
+    <label class="status" for="status">Task Status: </label>
+    <select id="status" name="status" required>
+        <option value="" disabled selected>Select Task Status</option>
+        <!-- Populate with status objects -->
+        <option th:each="status : ${statusobjects}" th:value="${status.statusID}" th:text="${status.status}"></option>
+    </select>
+    <br>
+
+    <button type="submit">Create Task</button>
+</form>
+</body>
+</html>

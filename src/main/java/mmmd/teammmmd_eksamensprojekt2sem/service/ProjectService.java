@@ -3,8 +3,6 @@ import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,12 +77,12 @@ public class ProjectService {
     }
 
     /*
-    #####################################
+    ##################################
     #           CRUD Task            #
-    #####################################
+    ##################################
      */
-    public void createTask(Task task) throws SQLException {
-        projectRepository.createTask(task);
+    public void createTask(int projectID, int subProjectID, Task task) throws SQLException {
+        projectRepository.createTask(projectID, subProjectID, task);
     }
 
     /*

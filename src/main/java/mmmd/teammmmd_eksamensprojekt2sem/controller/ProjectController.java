@@ -1,7 +1,9 @@
 package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -126,6 +128,7 @@ public class ProjectController {
         projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
         return "succes"; //TODO slet html, bare til verifikation
     }
+
     /*
     ##################################
     #           CRUD Task            #
@@ -138,11 +141,84 @@ public class ProjectController {
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
         model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+        model.addAttribute("statusobjects", projectService.fetchAllStatus());
         return "createTask";
     }
 
+    @PostMapping("/{projectID}/{subProjectID}/saveTask")
+    public String saveTask(
+            @PathVariable int projectID,
+            @PathVariable int subProjectID,
+            @RequestParam String taskTitle,
+            @RequestParam String taskDescription,
+            @RequestParam int assignedEmployee,
+            @RequestParam double estimatedTime,
+            @RequestParam int statusID,
+            @RequestParam(required = false) Date plannedStartDate,
+            @RequestParam(required = false) int dependingOnTask,
+            @RequestParam(required = false) int requiredRole) throws SQLException {
 
+        Task newTask = new Task(taskTitle, taskDescription, assignedEmployee, estimatedTime, plannedStartDate,
+                dependingOnTask, requiredRole, subProjectID, new Status(statusID, "")); //TODO: status felt skal opdateres her
+
+        projectService.createTask(projectID, subProjectID, newTask);
+
+        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+    }
+
+
+    /*
+    ###########---READ---###########
+     */
+    /*@GetMapping("/{projectID}/{subProjectID}/tasks")
+    public String showTasks(@PathVariable int projectID, @PathVariable int subProjectID, Model model) {
+        model.addAttribute("tasks", projectService.fetchTasksForSubproject(subProjectID));
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjectID", subProjectID);
+        return "viewTasks";
+    }
+    /*
+    ###########---UPDATE---###########
+     */
+    /*@GetMapping("/{projectID}/{subProjectID}/editTask/{taskID}")
+    public String editTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model) {
+        Task task = projectService.fetchTaskById(taskID);
+        model.addAttribute("task", task);
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjectID", subProjectID);
+        model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+        model.addAttribute("roles", projectService.getRoles());
+        model.addAttribute("statusobjects", projectService.fetchAllStatus());
+        return "updateTask";
+    }
+
+    @PostMapping("/{projectID}/{subProjectID}/updateTask")
+    public String updateTask(
+            @PathVariable int projectID,
+            @PathVariable int subProjectID,
+            @RequestParam int taskID,
+            @RequestParam String taskTitle,
+            @RequestParam String taskDescription,
+            @RequestParam int assignedEmployee,
+            @RequestParam double estimatedTime,
+            @RequestParam int statusID,
+            @RequestParam(required = false) Date plannedStartDate,
+            @RequestParam(required = false) int dependingOnTask,
+            @RequestParam(required = false) int requiredRole) {
+
+        Task updatedTask = new Task(taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, statusID);
+        projectService.updateTaskInProject(projectID, subProjectID, updatedTask);
+
+        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+    }
+
+    /*
+    ###########---DELETE---###########
+     */
+    /*@PostMapping("/{projectID}/{subProjectID}/deleteTask/{taskID}")
+    public String deleteTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID) {
+        projectService.deleteTaskFromProject(projectID, subProjectID, taskID);
+        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+    }*/
 
 }
-
-
