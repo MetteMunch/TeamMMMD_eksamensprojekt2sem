@@ -18,7 +18,7 @@ body {
     display: grid;
     grid-gap: 1em;
     grid-template-areas:
-        'navigation'
+        'nav'
         'header'
         'main1'
         'main2'
@@ -35,11 +35,11 @@ body {
 @media (min-width: 60em) {
     body {
         grid-template-columns: 1fr auto;
-        grid-template-rows: 1fr 1fr 1fr 1fr auto;
+        grid-template-rows: auto 1fr 1fr 1fr auto;
         width: 80%;
         margin: 0 auto;
         grid-template-areas:
-           'navigation navigation'
+           'nav nav'
            'header sidebar'
            'main1 sidebar'
            'main2 sidebar'
@@ -48,8 +48,8 @@ body {
 }
 
 /* Grid-områder */
-navigation {
-    grid-area: navigation;
+nav {
+    grid-area: nav;
 }
 
 header {
@@ -72,14 +72,19 @@ footer {
     grid-area: footer;
 }
 
-navigation, footer {
+nav, footer {
     background-color: var(--alpha-bg-color);
     padding: 1em;
     border-radius: 15px;
 }
 
-header, main1, main2 {
+header {
     background-color: #dedede;
+}
+
+main1, main2 {
+    background-color: #dedede;
+    overflow: auto; /* Tilføjer scroll */
 }
 
 sidebar {
