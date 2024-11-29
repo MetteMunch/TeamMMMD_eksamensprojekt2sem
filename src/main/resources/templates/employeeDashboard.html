@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>All projects specific user</title>
+  <title>Employee Dashboard</title>
 </head>
 <body>
 
 <h1>Dashboard</h1>
 <h2 th:text="${employee.getFullName()}"></h2>
 <h2 th:text="${employee.getRoleName()}"></h2>
-<!-- denne mangler at blive tilrettet
-<h3>Tasks</h3>
+<!-- denne mangler at blive tilrettet -->
+<h3>Overview - Assigned Tasks</h3>
+<!--
 <table>
   <thead>
   <tr>
@@ -42,7 +43,7 @@
 -->
 
 
-<h3>Associated Projects</h3>
+<h3>Overview - Associated Projects</h3>
 <table>
   <thead>
   <tr>

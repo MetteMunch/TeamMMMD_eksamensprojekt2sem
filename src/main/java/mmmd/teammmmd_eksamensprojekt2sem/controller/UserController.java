@@ -31,6 +31,7 @@ public class UserController {
 
     @GetMapping("/loginpage")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
+        System.out.println("her er vi ende i endpoint get /loginpage");
         if (error != null) {
             model.addAttribute("errorMessage", "Either username or password do not match. Please try again or contact Admin");
         }
@@ -40,6 +41,7 @@ public class UserController {
 
     @PostMapping("/loginvalidation")
     public String loginValidation(HttpServletRequest request, @RequestParam String username, @RequestParam String password) throws SQLException {
+        System.out.println("her bliver endpoint loginvalidation kaldt");
         String returnStatement;
 
         if (userService.validateLogin(username, password)) {
@@ -53,8 +55,7 @@ public class UserController {
                 returnStatement = "redirect:/user/projectmanager/" + employeeID; //Jeg kender ikke korrekt sti/Get Endpoint endnu
 
             } else {
-                System.out.println("test udskrift - brugeren er ikke manager");
-                returnStatement = "redirect:/user/employee/" + employeeID; //Jeg kender ikke korrekt sti/Get Endpoint endnu
+                returnStatement = "redirect:/user/employee/" + employeeID;
             }
         } else {
             System.out.println("test udskrift - brugeren kunne ikke valideres");
@@ -69,7 +70,7 @@ public class UserController {
 
     @GetMapping("/employee/{employeeID}")
     public String showEmployeeDashboard(@PathVariable int employeeID, Model model) {
-        String redirect = userService.redirectUserLoginAttributes(session,employeeID);
+        String redirect = userService.redirectUserLoginAttributes(session, employeeID);
         if (redirect != null) {
             return redirect;
         }
@@ -79,8 +80,8 @@ public class UserController {
         Se redirectUserLoginAttributes() dokumentation i koden.
          */
 
-        model.addAttribute("projects",projectService.showAllProjectsSpecificEmployee(employeeID));
-        model.addAttribute("employee",userService.getEmployee(employeeID);
+        model.addAttribute("projects", projectService.showAllProjectsSpecificEmployee(employeeID));
+        model.addAttribute("employee", userService.getEmployee(employeeID));
 
         return "employeeDashboard";
     }

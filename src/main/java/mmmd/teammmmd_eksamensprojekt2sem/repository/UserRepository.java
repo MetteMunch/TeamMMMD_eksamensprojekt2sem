@@ -59,6 +59,7 @@ public class UserRepository {
      ###########---READ / VIEW---###########
       */
     public Employee getEmployee(int employeeID) {
+        Employee employee = null;
         String SQL = "SELECT fullName, employee.role, employeerole.roleTitle FROM employee \n" +
                 "INNER JOIN employeerole ON employee.role = employeerole.roleID WHERE employeeID = ?";
 
@@ -69,12 +70,15 @@ public class UserRepository {
                 String fullName = rs.getString(1);
                 int role = rs.getInt(2);
                 String roleTitle = rs.getString(3);
-                Employee employee = new Employee(employeeID,fullName,role);
+                employee = new Employee(employeeID,fullName,role);
                 employee.setRoleName(roleTitle);
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return employee;
+
     }
 
     /*
