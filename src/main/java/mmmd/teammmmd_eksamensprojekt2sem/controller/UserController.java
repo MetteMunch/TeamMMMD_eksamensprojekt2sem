@@ -31,7 +31,6 @@ public class UserController {
 
     @GetMapping("/loginpage")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
-        System.out.println("her er vi ende i endpoint get /loginpage");
         if (error != null) {
             model.addAttribute("errorMessage", "Either username or password do not match. Please try again or contact Admin");
         }
@@ -41,7 +40,6 @@ public class UserController {
 
     @PostMapping("/loginvalidation")
     public String loginValidation(HttpServletRequest request, @RequestParam String username, @RequestParam String password) throws SQLException {
-        System.out.println("her bliver endpoint loginvalidation kaldt");
         String returnStatement;
 
         if (userService.validateLogin(username, password)) {
@@ -51,14 +49,12 @@ public class UserController {
             //brugeren ikke tilgår Endpoints, som tilhører andre brugere ved at skrive dette direkte i url
 
             if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
-                System.out.println("test udskrift - brugeren er manager");
                 returnStatement = "redirect:/user/projectmanager/" + employeeID; //Jeg kender ikke korrekt sti/Get Endpoint endnu
 
             } else {
                 returnStatement = "redirect:/user/employee/" + employeeID;
             }
         } else {
-            System.out.println("test udskrift - brugeren kunne ikke valideres");
             returnStatement = "redirect:/user/loginpage?error=true";
         }
         return returnStatement;
@@ -69,7 +65,7 @@ public class UserController {
      */
 
     @GetMapping("/employee/{employeeID}")
-    public String showEmployeeDashboard(@PathVariable int employeeID, Model model) {
+    public String showEmployeeDashboard(@PathVariable int employeeID, Model model) throws SQLException {
         String redirect = userService.redirectUserLoginAttributes(session, employeeID);
         if (redirect != null) {
             return redirect;
