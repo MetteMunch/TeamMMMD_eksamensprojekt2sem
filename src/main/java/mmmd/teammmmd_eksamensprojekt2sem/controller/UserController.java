@@ -26,7 +26,7 @@ public class UserController {
     }
 
     /*
-    ###########---LOGIN---###########
+    ###########---LOGIN OG LOGOUT---###########
      */
 
     @GetMapping("/loginpage")
@@ -58,6 +58,17 @@ public class UserController {
             returnStatement = "redirect:/user/loginpage?error=true";
         }
         return returnStatement;
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        //Vi skal invalidate / lukke sessionen for at slette employeeID og andre data
+        session = request.getSession(false); //henter den eksisterende session uden at oprette ny
+
+        if (session != null) {
+            session.invalidate(); //lukker sessionen
+        }
+        return "redirect:/user/loginpage";
     }
 
     /*

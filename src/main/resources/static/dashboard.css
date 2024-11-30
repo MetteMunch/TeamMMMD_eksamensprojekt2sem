@@ -117,8 +117,8 @@ h2 {
 }
 
 .logo img {
-    width: 160px; /* Juster bredden */
-    height: 160px; /* Juster højden */
+    width: 200px; /* Juster bredden */
+    height: 200px; /* Juster højden */
     object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
     background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
     padding: 5px; /* Giver lidt luft omkring billederne */
@@ -134,8 +134,6 @@ h2 {
 form, a {
     display: inline;
 }
-
-
 
 /* Knapper */
 .button {
