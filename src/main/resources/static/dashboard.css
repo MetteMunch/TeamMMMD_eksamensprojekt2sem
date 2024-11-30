@@ -108,6 +108,21 @@ h2 {
     font-size: 18px;
     font-family: sans-serif;
 }
+.icon img {
+    width: 80px; /* Juster bredden */
+    height: 80px; /* Juster højden */
+    object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
+    background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
+    padding: 5px; /* Giver lidt luft omkring billederne */
+}
+
+.logo img {
+    width: 160px; /* Juster bredden */
+    height: 160px; /* Juster højden */
+    object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
+    background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
+    padding: 5px; /* Giver lidt luft omkring billederne */
+}
 
 /* Links */
 .linka {
@@ -119,6 +134,8 @@ h2 {
 form, a {
     display: inline;
 }
+
+
 
 /* Knapper */
 .button {

@@ -9,10 +9,10 @@ når der skal kaldes attributter-->
     <title>Employee Dashboard</title>
     <link rel="stylesheet" href="/dashboard.css">
 </head>
-<body
+<body>
 
 <nav>
-    <h2>Her kan indsættes logo - titel - og diverse ikoner - dette går igen på alle sider ligesom footer</h2>
+<div th:insert="fragments.html :: nav"></div>
 </nav>
 
 <header>
@@ -99,11 +99,7 @@ når der skal kaldes attributter-->
 </sidebar>
 
 <footer>
-    <p><Strong>Kontakt os her</Strong></p>
-    <p>Email: <a href="#">teamMMMD@failmail.dk</a></p>
-    <p>Mobil: <a href="#">+45 xxxxxxxx</a></p>
-    <p>&copy; 2024 Projektkalkulationsværktøj - TeamMMMD (Mark, Martin, Mette, Daniel)</p>
-
+<div th:insert="fragments.html :: footer"></div>
 </footer>
 
 </body>

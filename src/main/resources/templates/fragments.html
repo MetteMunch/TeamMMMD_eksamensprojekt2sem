@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragmenter der benyttes i flere views og som kan kaldes og benyttes med th:insert..</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+<nav th:fragment="nav">
+    <div>
+        <a th:href="@{https://www.alpha-solutions.com/da}" class="logo">
+            <img src="/images/logo_farve.png" alt="logo">
+        </a>
+        <a th:href="@{/user/logout}" class="icon">
+            <img src="/icons/logud_farve.png" alt="logud">
+        </a>
+    </div>
+</nav>
+
+<footer th:fragment="footer">
+    <p><Strong>Kontakt os her</Strong></p>
+    <p>Email: <a href="#">teamMMMD@failmail.dk</a></p>
+    <p>Mobil: <a href="#">+45 xxxxxxxx</a></p>
+    <p>&copy; 2024 Projektkalkulationsværktøj - TeamMMMD (Mark, Martin, Mette, Daniel)</p>
+</footer>
+
+</body>
+</html>
