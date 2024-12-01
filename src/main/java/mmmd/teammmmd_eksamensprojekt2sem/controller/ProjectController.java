@@ -137,10 +137,12 @@ public class ProjectController {
     ###########---CREATE---###########
      */
     @GetMapping("/{projectID}/{subProjectID}/createTask")
-    public String createTask(@PathVariable int projectID, @PathVariable int subProjectID, Model model) {
+    public String createTask(@PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
         model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+        model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
+        model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
         model.addAttribute("statusobjects", projectService.fetchAllStatus());
         return "createTask";
     }
@@ -150,16 +152,17 @@ public class ProjectController {
             @PathVariable int projectID,
             @PathVariable int subProjectID,
             @RequestParam String taskTitle,
-            @RequestParam String taskDescription,
-            @RequestParam int assignedEmployee,
-            @RequestParam double estimatedTime,
-            @RequestParam int statusID,
+            @RequestParam(required = false) String taskDescription,
+            @RequestParam(required = false) Integer assignedEmployee,
+            @RequestParam(required = false) Double estimatedTime,
+            @RequestParam int status,
             @RequestParam(required = false) Date plannedStartDate,
-            @RequestParam(required = false) int dependingOnTask,
-            @RequestParam(required = false) int requiredRole) throws SQLException {
+            @RequestParam(required = false) Integer dependingOnTask,
+            @RequestParam(required = false) Integer requiredRole) throws SQLException {
 
-        Task newTask = new Task(taskTitle, taskDescription, assignedEmployee, estimatedTime, plannedStartDate,
-                dependingOnTask, requiredRole, subProjectID, new Status(statusID, "")); //TODO: status felt skal opdateres her
+        Task newTask = new Task(taskTitle, taskDescription,
+                assignedEmployee, estimatedTime, plannedStartDate,
+                dependingOnTask, requiredRole, subProjectID, status);
 
         projectService.createTask(projectID, subProjectID, newTask);
 

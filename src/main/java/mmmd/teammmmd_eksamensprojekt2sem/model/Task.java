@@ -7,21 +7,23 @@ public class Task {
     private int taskID;
     private String taskTitle;
     private String taskDescription;
-    private int assignedEmployee;
-    private double estimatedTime;
+    private Integer assignedEmployee;
+    private Double estimatedTime;
     private double actualTime;
     private Date plannedStartDate;
-    private int dependingOnTask;
-    private int requiredRole;
+    private Integer dependingOnTask;
+    private Integer requiredRole;
     private int subProjectID;
-    private Status status;
+    private int status;
 
     // PM Constructor hvor actual time er sat default til 0 da denne kun skal kunne sættes af employee
-    public Task(String taskTitle, String taskDescription, int assignedEmployee, double estimatedTime, Date plannedStartDate, int dependingOnTask, int requiredRole, int subProjectID, Status status) {
+    public Task(String taskTitle, String taskDescription, Integer assignedEmployee,
+                Double estimatedTime, Date plannedStartDate, Integer dependingOnTask,
+                Integer requiredRole, int subProjectID, int status) {
         this.taskTitle = taskTitle;
         this.taskDescription = taskDescription;
         this.assignedEmployee = assignedEmployee;
-        this.estimatedTime = estimatedTime;
+        this.estimatedTime = estimatedTime != null ? estimatedTime : 0.0; // Default sat til 0.0 hvis den er null
         this.actualTime = 0.0;
         this.plannedStartDate = plannedStartDate;
         this.dependingOnTask = dependingOnTask;
@@ -50,19 +52,19 @@ public class Task {
         this.taskDescription = taskDescription;
     }
 
-    public int getAssignedEmployee() {
+    public Integer getAssignedEmployee() {
         return assignedEmployee;
     }
 
-    public void setAssignedEmployee(int assignedEmployee) {
+    public void setAssignedEmployee(Integer assignedEmployee) {
         this.assignedEmployee = assignedEmployee;
     }
 
-    public double getEstimatedTime() {
+    public Double getEstimatedTime() {
         return estimatedTime;
     }
 
-    public void setEstimatedTime(double estimatedTime) {
+    public void setEstimatedTime(Double estimatedTime) {
         this.estimatedTime = estimatedTime;
     }
 
@@ -82,19 +84,19 @@ public class Task {
         this.plannedStartDate = plannedStartDate;
     }
 
-    public int getDependingOnTask() {
+    public Integer getDependingOnTask() {
         return dependingOnTask;
     }
 
-    public void setDependingOnTask(int dependingOnTask) {
+    public void setDependingOnTask(Integer dependingOnTask) {
         this.dependingOnTask = dependingOnTask;
     }
 
-    public int getRequiredRole() {
+    public Integer getRequiredRole() {
         return requiredRole;
     }
 
-    public void setRequiredRole(int requiredRole) {
+    public void setRequiredRole(Integer requiredRole) {
         this.requiredRole = requiredRole;
     }
 
@@ -106,11 +108,11 @@ public class Task {
         this.subProjectID = subProjectID;
     }
 
-    public Status getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 }

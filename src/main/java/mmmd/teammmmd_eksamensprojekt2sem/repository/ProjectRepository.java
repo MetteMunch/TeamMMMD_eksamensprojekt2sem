@@ -1,10 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.repository;
 
-import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
+import mmmd.teammmmd_eksamensprojekt2sem.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -308,30 +304,33 @@ public class ProjectRepository {
     ##################################
      */
     public void createTask(int projectID, int subProjectID, Task task) throws SQLException {
-        String sql = "INSERT INTO Task (taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Task (taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (var ps = dbConnection.prepareStatement(sql)) {
+            //setObject håndterer automatisk null værdier
             ps.setString(1, task.getTaskTitle());
             ps.setString(2, task.getTaskDescription());
-            ps.setInt(3, task.getAssignedEmployee());
-            ps.setDouble(4, task.getEstimatedTime());
+            ps.setObject(3, task.getAssignedEmployee(), java.sql.Types.INTEGER);
+            ps.setObject(4, task.getEstimatedTime(), java.sql.Types.DOUBLE);
             ps.setDouble(5, task.getActualTime());
             ps.setDate(6, task.getPlannedStartDate());
-            ps.setInt(7, task.getDependingOnTask());
-            ps.setInt(8, task.getRequiredRole());
+            ps.setObject(7, task.getDependingOnTask(), java.sql.Types.INTEGER);
+            ps.setObject(8, task.getRequiredRole(), java.sql.Types.INTEGER);
             ps.setInt(9, task.getSubProjectID());
-            ps.setInt(10, task.getStatus().getStatusID());
+            ps.setInt(10, task.getStatus());
 
             ps.executeUpdate();
         }
     }
+
 
     /*
     ##################################
     #           READ Task            #
     ##################################
      */
-    public List<Task> showAllTasksInSpecificSubproject(int subProjectID) throws SQLException {
+    public List<Task> getAllTasksInSpecificSubProject(int subProjectID) throws SQLException {
         List<Task> tasks = new ArrayList<>();
         String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
                 "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status " +
@@ -343,18 +342,22 @@ public class ProjectRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
 
-                    Status taskStatus = findStatusByID(rs.getInt("statusID"));
+                    // getObject metoden bruges så vi kan håndtere null værdier
+                    Integer assignedEmployee = rs.getObject("assignedEmployee", Integer.class);
+                    Double estimatedTime = rs.getObject("estimatedTime", Double.class);
+                    Integer dependingOnTask = rs.getObject("dependingOnTask", Integer.class);
+                    Integer requiredRole = rs.getObject("requiredRole", Integer.class);
 
                     Task task = new Task(
                             rs.getString("taskTitle"),
                             rs.getString("taskDescription"),
-                            rs.getInt("assignedEmployee"),
-                            rs.getDouble("estimatedTime"),
+                            assignedEmployee,
+                            estimatedTime,
                             rs.getDate("plannedStartDate"),
-                            rs.getInt("dependingOnTask"),
-                            rs.getInt("requiredRole"),
+                            dependingOnTask,
+                            requiredRole,
                             rs.getInt("subProjectID"),
-                            taskStatus
+                            rs.getInt("status")
                     );
                     tasks.add(task);
                 }
@@ -368,7 +371,7 @@ public class ProjectRepository {
         #          Helper Methods         #
         #####################################
      */
-    public Status findStatusByID(int statusID) throws SQLException {
+    public Status getStatusByID(int statusID) throws SQLException {
         String sql = "SELECT statusID, status FROM Status WHERE statusID = ?";
         Status status = null;
 
@@ -383,6 +386,27 @@ public class ProjectRepository {
         }
         return status;
     }
+
+    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
+        String sql = "SELECT roleID, roleTitle, isManager FROM EmployeeRole WHERE isManager = false";
+
+        List<EmployeeRole> nonManagerRoles = new ArrayList<>();
+
+        try (var ps = dbConnection.prepareStatement(sql);
+             var rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int roleID = rs.getInt("roleID");
+                String roleTitle = rs.getString("roleTitle");
+                boolean isManager = rs.getBoolean("isManager");
+
+                nonManagerRoles.add(new EmployeeRole(roleID, roleTitle, isManager));
+            }
+        }
+
+        return nonManagerRoles;
+    }
+
 
 
 
