@@ -32,8 +32,8 @@ public class ProjectService {
         return projectRepository.checkIfSubProjectNameAlreadyExists(subProjectTitle);
     }
 
-    public List<SubProject> showListOfSpecificSubProject(int subProjectID) {
-        return projectRepository.showListOfSpecificSubProject(subProjectID);
+    public List<SubProject> showListOfSpecificSubProject(int projectID) {
+        return projectRepository.showListOfSpecificSubProject(projectID);
     }
 
     public void updateSubProject() {

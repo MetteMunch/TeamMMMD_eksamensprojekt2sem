@@ -120,34 +120,43 @@ public class ProjectController {
     public String createSubProject(@PathVariable int projectID, Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("projectID", projectID);
         redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
-        return "createSubProject";
+        return "createSubProjectForm";
     }
 
-    @PostMapping("/{projectID}/saveSubProject")
-    public String saveSubProject(@PathVariable int projectID,
-                                 @RequestParam String subProjectTitle,
-                                 @RequestParam String subProjectDescription,
-                                 @RequestParam int statusID) {
+//    @PostMapping("/{projectID}/saveSubProject")
+//    public String saveSubProject(@PathVariable int projectID,
+//                                 @RequestParam String subProjectTitle,
+//                                 @RequestParam String subProjectDescription,
+//                                 @RequestParam int statusID) {
+//
+//        SubProject newSubProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
+//
+//        projectService.createSubproject(newSubProject);
+//
+//        return "redirect:/project/" + projectID + "/subProject";
+//    }
 
-        SubProject newSubProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
+//    @PostMapping("/deleteSubProject/{employeeID}/{subProjectID}")
+//    public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID) {
+//        projectService.deleteSubProject(subProjectID);
+//        return "redirect:/project/" + employeeID;
+//    }
 
-        projectService.createSubproject(newSubProject);
-
-        return "redirect:/project/" + projectID + "/subProject";
-    }
-
-    @PostMapping("/deleteSubProject/{employeeID}/{subProjectID}")
-    public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID) {
-        projectService.deleteSubProject(subProjectID);
-        return "redirect:/project/" + employeeID;
-    }
-
-    @GetMapping("/show_all_subprojects")
-    public String showAllSubProjects(Model model) {
+    @GetMapping("//show_all_subprojects")
+    public String showAllSubProjects(@PathVariable int projectID, Model model) {
         model.addAttribute("subProjects", projectService.showAllSubProjects());
         return "showAllSubProjectsTest";
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
+
+    @GetMapping("/{projectID}/show_specific_subprojects")
+    public String showSpecificSubProjects(@PathVariable int projectID, Model model) {
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjects", projectService.showListOfSpecificSubProject(projectID));
+        return "showSpecificSubProjects";
+        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
+    }
+
 }
 
 

@@ -7,7 +7,7 @@
 <h1>Create SubProject</h1>
 
 <!-- Formular til oprettelse af SubProject -->
-<form th:action="@{'/' + ${projectID} + '/saveSubProject'}" method="post">
+<form th:action="@{/project/{projectID}/CreateSubProject}" method="post">
     <!-- Skjult felt til Project ID -->
     <input type="hidden" th:value="${projectID}" name="projectID">
 
