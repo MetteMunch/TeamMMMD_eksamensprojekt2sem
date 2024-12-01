@@ -199,29 +199,29 @@ public class ProjectController {
     public String updateTask(
             @PathVariable int projectID,
             @PathVariable int subProjectID,
-            @RequestParam int taskID,
             @RequestParam String taskTitle,
-            @RequestParam String taskDescription,
-            @RequestParam int assignedEmployee,
-            @RequestParam double estimatedTime,
-            @RequestParam int statusID,
+            @RequestParam(required = false) String taskDescription,
+            @RequestParam(required = false) Integer assignedEmployee,
+            @RequestParam(required = false) Double estimatedTime,
+            @RequestParam int status,
             @RequestParam(required = false) Date plannedStartDate,
-            @RequestParam(required = false) int dependingOnTask,
-            @RequestParam(required = false) int requiredRole) {
+            @RequestParam(required = false) Integer dependingOnTask,
+            @RequestParam(required = false) Integer requiredRole) throws SQLException {
 
-        Task updatedTask = new Task(taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, statusID);
+        Task updatedTask = new Task(taskTitle, taskDescription, assignedEmployee, estimatedTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status);
         projectService.updateTaskInProject(projectID, subProjectID, updatedTask);
 
         return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
-    }
+    } */
 
     /*
     ###########---DELETE---###########
-     */
-    /*@PostMapping("/{projectID}/{subProjectID}/deleteTask/{taskID}")
-    public String deleteTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID) {
-        projectService.deleteTaskFromProject(projectID, subProjectID, taskID);
+    */
+    @PostMapping("/{projectID}/{subProjectID}/deleteTask/{taskID}")
+    public String deleteTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID) throws SQLException {
+        projectService.deleteTask(taskID);
         return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
-    }*/
+    }
+
 
 }

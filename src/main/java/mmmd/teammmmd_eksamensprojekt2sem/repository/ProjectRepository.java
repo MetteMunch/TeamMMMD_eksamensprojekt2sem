@@ -303,6 +303,13 @@ public class ProjectRepository {
     #           CRUD Task            #
     ##################################
      */
+
+
+    /*
+    ##################################
+    #           Create Task            #
+    ##################################
+     */
     public void createTask(int projectID, int subProjectID, Task task) throws SQLException {
         String sql = "INSERT INTO Task (taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -367,10 +374,51 @@ public class ProjectRepository {
     }
 
     /*
-        #####################################
-        #          Helper Methods         #
-        #####################################
+    ##################################
+    #           Update Task          #
+    ##################################
      */
+    public void updateTask(Task task) throws SQLException {
+        String sql = "UPDATE Task SET taskTitle = ?, taskDescription = ?, assignedEmployee = ?, estimatedTime = ?, " +
+                "actualTime = ?, plannedStartDate = ?, dependingOnTask = ?, requiredRole = ?, status = ? " +
+                "WHERE taskID = ?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, task.getTaskTitle());
+            ps.setString(2, task.getTaskDescription());
+            ps.setObject(3, task.getAssignedEmployee(), java.sql.Types.INTEGER);
+            ps.setObject(4, task.getEstimatedTime(), java.sql.Types.DOUBLE);
+            ps.setDouble(5, task.getActualTime());
+            ps.setDate(6, task.getPlannedStartDate());
+            ps.setObject(7, task.getDependingOnTask(), java.sql.Types.INTEGER);
+            ps.setObject(8, task.getRequiredRole(), java.sql.Types.INTEGER);
+            ps.setInt(9, task.getStatus());
+            ps.setInt(10, task.getTaskID());
+
+            ps.executeUpdate();
+        }
+    }
+
+    /*
+    ##################################
+    #           Delete Task          #
+    ##################################
+    */
+    public void deleteTask(int taskID) throws SQLException {
+        String sql = "DELETE FROM Task WHERE taskID = ?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, taskID);
+
+            ps.executeUpdate();
+        }
+    }
+
+
+
+    /*
+    ###################################
+    #          Helper Methods         #
+    ###################################
+    */
     public Status getStatusByID(int statusID) throws SQLException {
         String sql = "SELECT statusID, status FROM Status WHERE statusID = ?";
         Status status = null;
@@ -407,14 +455,6 @@ public class ProjectRepository {
         return nonManagerRoles;
     }
 
-
-
-
-    /*
-        #####################################
-        #          Employee Methods         #
-        #####################################
-     */
     public List<Employee> findNonManagerEmployees() {
         List<Employee> nonManagerEmployees = new ArrayList<>();
         String sql = "SELECT e.employeeID, e.fullName " +

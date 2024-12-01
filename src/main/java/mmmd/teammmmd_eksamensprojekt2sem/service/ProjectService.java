@@ -85,6 +85,14 @@ public class ProjectService {
         return projectRepository.getAllTasksInSpecificSubProject(subProjectID);
     }
 
+    public void updateTask(Task task) throws SQLException {
+        projectRepository.updateTask(task);
+    }
+
+    public void deleteTask(int taskID) throws SQLException {
+        projectRepository.deleteTask(taskID);
+    }
+
     /*
     ###########---Helper Methods---###########
      */
@@ -92,9 +100,6 @@ public class ProjectService {
         return projectRepository.getNonManagerRoles();
     }
 
-    /*
-    ###########---EMPLOYEE METHODS---###########
-     */
     public List<Employee> findNonManagerEmployees() {
         return projectRepository.findNonManagerEmployees();
     }
