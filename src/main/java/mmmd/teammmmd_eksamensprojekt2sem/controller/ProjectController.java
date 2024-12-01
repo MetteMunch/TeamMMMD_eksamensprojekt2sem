@@ -114,18 +114,27 @@ public class ProjectController {
         return "succes"; //TODO slet html, bare til verifikation
     }
 
-    @GetMapping("/createsubproject/{projectID}")
 
+    //******* SUBPROJECT *********
+    @GetMapping("/{projectID}/createSubProject")
+    public String createSubProject(@PathVariable int projectID, Model model, RedirectAttributes redirectAttributes) {
+        model.addAttribute("projectID", projectID);
+        redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
+        return "createSubProject";
+    }
 
-//    @PostMapping("/{employeeID}/{projectID}/saveSubProject")
-//    public String saveSubProject(@PathVariable int employeeID,
-//                                 @PathVariable int projectID,
-//                                 @RequestParam String subProjectTitle,
-//                                 @RequestParam String subProjectDescription,
-//                                 @RequestParam int statusID) {
-//        projectService.createSubproject();
-//        return "redirect:/project/" + employeeID + "/" + projectID;
-//    }
+    @PostMapping("/{projectID}/saveSubProject")
+    public String saveSubProject(@PathVariable int projectID,
+                                 @RequestParam String subProjectTitle,
+                                 @RequestParam String subProjectDescription,
+                                 @RequestParam int statusID) {
+
+        SubProject newSubProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
+
+        projectService.createSubproject(newSubProject);
+
+        return "redirect:/project/" + projectID + "/subProject";
+    }
 
     @PostMapping("/deleteSubProject/{employeeID}/{subProjectID}")
     public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID) {
