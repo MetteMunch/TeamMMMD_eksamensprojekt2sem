@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.UUID;
 
 @RequestMapping("/project")
 @Controller
@@ -41,6 +42,10 @@ public class ProjectController {
             return "redirect:/project/show_create_project";
         }
         else {
+            if (customer == 99) { //TODO: Problem med skalerbarhed ;) - En mere dynamisk måde at tjekke for dette sammenholdt med html eftertragtes. Måske skal 'Internal Project' kunde bare sættes ind som den allerførste kunde i databasen.
+                Customer internalProject = projectService.fetchInternalProjectCustomer();
+                customer = internalProject.getCustomerID();
+            }
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
             projectService.createProject(project); // Projekt oprettes i DB
             projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
