@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +39,7 @@ class UserServiceTest {
     }
 
     @Test
-    void redirectUserLoginAttributesCorrectLogin() {
+    void redirectUserLoginAttributesCorrectLogin() throws SQLException {
         //Hvis brugeren er korrekt logget ind, så vil vi ikke komme ind i metodens if-blokke, men derimod bare
         //returnere null
 
@@ -55,7 +57,7 @@ class UserServiceTest {
     }
 
     @Test
-    void redirectUserLoginAttributesWrongUserLoggedIn() {
+    void redirectUserLoginAttributesWrongUserLoggedIn() throws SQLException {
         //Arrange
         int employeeID = 2;
         int sessionUserID = 3;
@@ -70,7 +72,7 @@ class UserServiceTest {
     }
 
     @Test
-    void redirectUserLoginAttributesWrongUserNotLoggedIn() {
+    void redirectUserLoginAttributesWrongUserNotLoggedIn() throws SQLException {
         //Arrange
         int employeeID = 2;
         when(session.getAttribute("userID")).thenReturn(null);
