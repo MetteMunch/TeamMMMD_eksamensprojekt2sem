@@ -3,6 +3,7 @@ package mmmd.teammmmd_eksamensprojekt2sem.controller;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 @RequestMapping("/project")
@@ -22,6 +24,30 @@ public class ProjectController {
 
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
+    }
+
+    /*
+    #####################################
+    #           Customers               #
+    #####################################
+    */
+
+    @GetMapping("/get-customers") //TODO: Demo kode
+    public String getCustomers(Model model) {
+        model.addAttribute("listofcustomers", projectService.getListOfCurrentCustomers());
+        return "customers"; //Husk at slette html //TODO: Slette html
+    }
+
+    @GetMapping("/show-create-customer")
+    public String showCreateCustomer() {
+        return "createCustomer";
+    }
+
+    @PostMapping("/create-customer")
+    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
+        Customer customer = new Customer(companyName, repName);
+        projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
+        return "succes"; //TODO slet html, bare til verifikation. Husk at ændre i ProjectControllerTest.
     }
 
     /*
@@ -51,13 +77,13 @@ public class ProjectController {
             projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
             //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
             //TODO: Tilføj gå tilbage eller return to PM Dashboard i html
-            return "redirect:/project/success"; //TODO:korriger redirect til Project Manager dashboard, når denne er færdig
+            return "redirect:/project/{projectID}"; //TODO:korriger redirect til Project Manager dashboard, når denne er færdig
         }
     }
-    @GetMapping("/success") //TODO: Udelukkende til demokode for at se om metode eksekveres korrekt med redirect. Slet når ikke længere nødvendig sammen med html fil.
-    public String showSuccess() {
-        return "succes";
-    }
+//    @GetMapping("/success") //TODO: Udelukkende til demokode for at se om metode eksekveres korrekt med redirect. Slet når ikke længere nødvendig sammen med html fil.
+//    public String showSuccess() {
+//        return "succes";
+//    }
 
     @GetMapping("/show_create_project")
     public String showCreateProject(Model model) {
@@ -72,6 +98,19 @@ public class ProjectController {
     /*
     ###########---READ---###########
      */
+
+    @GetMapping("/{projectID}")
+    public String showProject(@PathVariable int projectID, Model model) {
+        Project project = projectService.fetchSpecificProject(projectID);
+        List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
+        model.addAttribute("project",project);
+        model.addAttribute("listOfSubProjects",listOfSpecificSubProjects);
+
+        return "showProject";
+
+    }
+
+
     @GetMapping("/show_all_projects")
     public String showAllProjects(Model model) {
         model.addAttribute("projects", projectService.showAllProjects());
@@ -112,31 +151,13 @@ public class ProjectController {
         return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard. Husk at ændre test i projectControllerTest.
     }
 
+
+
     /*
     #####################################
-    #           Customers               #
+    #           SubProject              #
     #####################################
-     */
-    @GetMapping("/get-customers") //TODO: Demo kode
-    public String getCustomers(Model model) {
-        model.addAttribute("listofcustomers", projectService.getListOfCurrentCustomers());
-        return "customers"; //Husk at slette html //TODO: Slette html
-    }
-
-    @GetMapping("/show-create-customer")
-    public String showCreateCustomer() {
-        return "createCustomer";
-    }
-
-    @PostMapping("/create-customer")
-    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
-        Customer customer = new Customer(companyName, repName);
-        projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
-        return "succes"; //TODO slet html, bare til verifikation. Husk at ændre i ProjectControllerTest.
-    }
-
-
-    //******* SUBPROJECT *********
+    */
     @GetMapping("/{projectID}/createsubproject")
     public String createSubProject(@PathVariable int projectID, Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("projectID", projectID);
@@ -163,20 +184,129 @@ public class ProjectController {
 //        return "redirect:/project/" + employeeID;
 //    }
 
-    @GetMapping("/{projectID}/show_all_subprojects")
-    public String showAllSubProjects(@PathVariable int projectID, Model model) {
-        model.addAttribute("subProjects", projectService.showAllSubProjects());
-        return "showAllSubProjectsTest";
-        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
-    }
+//    @GetMapping("/{projectID}/show_all_subprojects")
+//    public String showAllSubProjects(@PathVariable int projectID, Model model) {
+//        model.addAttribute("subProjects", projectService.showAllSubProjects());
+//        return "showAllSubProjectsTest";
+//        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
+//    }
 
     @GetMapping("/{projectID}/show_specific_subprojects")
     public String showSpecificSubProjects(@PathVariable int projectID, Model model) {
         model.addAttribute("projectID", projectID);
-        model.addAttribute("subProjects", projectService.showListOfSpecificSubProject(projectID));
+        model.addAttribute("subProjects", projectService.showListOfSpecificSubProjects(projectID));
         return "showSpecificSubProjects";
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
+
+    /*
+    ##################################
+    #           CRUD Task            #
+    ##################################
+
+    ###########---CREATE---###########
+     */
+    @GetMapping("/{projectID}/{subProjectID}/createtask")
+    public String createTask(@PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjectID", subProjectID);
+        model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+        model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
+        model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
+        model.addAttribute("statusobjects", projectService.fetchAllStatus());
+        return "createTask";
+    }
+
+    @PostMapping("/{projectID}/{subProjectID}/savetask")
+    public String saveTask(
+            @PathVariable int projectID,
+            @PathVariable int subProjectID,
+            @RequestParam String taskTitle,
+            @RequestParam(required = false) String taskDescription,
+            @RequestParam(required = false) Integer assignedEmployee,
+            @RequestParam(required = false) Double estimatedTime,
+            @RequestParam int status,
+            @RequestParam Date plannedStartDate,
+            @RequestParam(required = false) Integer dependingOnTask,
+            @RequestParam(required = false) Integer requiredRole) throws SQLException {
+
+        //souts for testing only
+        System.out.println("projectID: " + projectID);
+        System.out.println("subProjectID: " + subProjectID);
+        System.out.println("taskTitle: " + taskTitle);
+        System.out.println("taskDesc: " + taskDescription);
+        System.out.println("assignedEmp: " + assignedEmployee);
+        System.out.println("estimatedTime: " + estimatedTime);
+        System.out.println("status: " + status);
+        System.out.println("plannedStartDate: " + plannedStartDate);
+        System.out.println("dependingOnTask: " + dependingOnTask);
+        System.out.println("requiredRole: " + requiredRole);
+
+        Task newTask = new Task(taskTitle, taskDescription,
+                assignedEmployee, estimatedTime, plannedStartDate,
+                dependingOnTask, requiredRole, subProjectID, status);
+
+        projectService.createTask(projectID, subProjectID, newTask);
+
+        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+    }
+
+
+    /*
+    ###########---READ---###########
+     */
+    /*@GetMapping("/{projectID}/{subProjectID}/tasks")
+    public String showTasks(@PathVariable int projectID, @PathVariable int subProjectID, Model model) {
+        model.addAttribute("tasks", projectService.fetchTasksForSubproject(subProjectID));
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjectID", subProjectID);
+        return "viewTasks";
+    }
+    /*
+    ###########---UPDATE---###########
+     */
+    /*@GetMapping("/{projectID}/{subProjectID}/editTask/{taskID}")
+    public String editTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model) {
+        Task task = projectService.fetchTaskById(taskID);
+        model.addAttribute("task", task);
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjectID", subProjectID);
+        model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+        model.addAttribute("roles", projectService.getRoles());
+        model.addAttribute("statusobjects", projectService.fetchAllStatus());
+        return "updateTask";
+    }
+
+    @PostMapping("/{projectID}/{subProjectID}/updateTask")
+    public String updateTask(
+            @PathVariable int projectID,
+            @PathVariable int subProjectID,
+            @RequestParam String taskTitle,
+            @RequestParam(required = false) String taskDescription,
+            @RequestParam(required = false) Integer assignedEmployee,
+            @RequestParam(required = false) Double estimatedTime,
+            @RequestParam int status,
+            @RequestParam(required = false) Date plannedStartDate,
+            @RequestParam(required = false) Integer dependingOnTask,
+            @RequestParam(required = false) Integer requiredRole) throws SQLException {
+
+        Task updatedTask = new Task(taskTitle, taskDescription, assignedEmployee, estimatedTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status);
+        projectService.updateTaskInProject(projectID, subProjectID, updatedTask);
+
+        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+    } */
+
+    /*
+    ###########---DELETE---###########
+    */
+    @PostMapping("/{projectID}/{subProjectID}/deleteTask/{taskID}")
+    public String deleteTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID) throws SQLException {
+        projectService.deleteTask(taskID);
+        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+    }
+
+
+
 
 }
 

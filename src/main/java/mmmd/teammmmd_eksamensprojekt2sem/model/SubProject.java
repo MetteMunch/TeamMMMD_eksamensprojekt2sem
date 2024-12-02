@@ -15,12 +15,12 @@ public class SubProject {
         this.statusID = statusID;
     }
 
-    public SubProject (String subprojectTitle, String subprojectDescription, int projectID, String status) {
-        this.subProjectTitle = subprojectTitle;
-        this.subProjectDescription = subprojectDescription;
-        this.projectID = projectID;
-        this.status = status;
-    }
+//    public SubProject (String subprojectTitle, String subprojectDescription, int projectID, String status) {
+//        this.subProjectTitle = subprojectTitle;
+//        this.subProjectDescription = subprojectDescription;
+//        this.projectID = projectID;
+//        this.status = status;
+//    }
 
     public String getSubProjectTitle() {
         return subProjectTitle;
@@ -55,5 +55,9 @@ public class SubProject {
     }
     public void setStatusID(int statusID) {
         this.statusID = statusID;
+    }
+
+    public void setStatusString(String status) {
+        this.status = status;
     }
 }
