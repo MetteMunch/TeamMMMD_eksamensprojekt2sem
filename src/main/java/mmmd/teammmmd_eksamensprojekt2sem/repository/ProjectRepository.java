@@ -342,6 +342,7 @@ public class ProjectRepository {
         String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
                 "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status " +
                 "FROM Task WHERE subProjectID = ?";
+        //TODO: skal tilrettes så taskID er korrekt når man vælger en specifik task i dependingOnTask
 
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setInt(1, subProjectID);
