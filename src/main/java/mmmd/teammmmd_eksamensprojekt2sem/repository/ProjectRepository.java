@@ -37,7 +37,7 @@ public class ProjectRepository {
             ps.setString(1, subProject.getSubProjectTitle());
             ps.setString(2, subProject.getSubProjectDescription());
             ps.setInt(3, subProject.getProjectID());
-            ps.setInt(4, subProject.getProjectID());
+            ps.setInt(4, subProject.getStatusID());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

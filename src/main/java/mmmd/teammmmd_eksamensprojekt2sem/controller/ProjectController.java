@@ -116,25 +116,26 @@ public class ProjectController {
 
 
     //******* SUBPROJECT *********
-    @GetMapping("/{projectID}/createSubProject")
+    @GetMapping("/{projectID}/createsubproject")
     public String createSubProject(@PathVariable int projectID, Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("projectID", projectID);
         redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
         return "createSubProjectForm";
     }
 
-//    @PostMapping("/{projectID}/saveSubProject")
-//    public String saveSubProject(@PathVariable int projectID,
-//                                 @RequestParam String subProjectTitle,
-//                                 @RequestParam String subProjectDescription,
-//                                 @RequestParam int statusID) {
-//
-//        SubProject newSubProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
-//
-//        projectService.createSubproject(newSubProject);
-//
-//        return "redirect:/project/" + projectID + "/subProject";
-//    }
+    @PostMapping("/{projectID}/savesubproject")
+    public String saveSubProject(@PathVariable int projectID,
+                                 @RequestParam String subProjectTitle,
+                                 @RequestParam String subProjectDescription,
+                                 @RequestParam int statusID) {
+
+        SubProject newSubProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
+
+        projectService.createSubproject(newSubProject);
+
+        return "redirect:/project/" + projectID + "/subproject";
+    }
+    //TODO: Lav et view der hvor vi lander efter at subproject er gemt fx. subprojectview
 
 //    @PostMapping("/deleteSubProject/{employeeID}/{subProjectID}")
 //    public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID) {
@@ -142,7 +143,7 @@ public class ProjectController {
 //        return "redirect:/project/" + employeeID;
 //    }
 
-    @GetMapping("//show_all_subprojects")
+    @GetMapping("/{projectID}/show_all_subprojects")
     public String showAllSubProjects(@PathVariable int projectID, Model model) {
         model.addAttribute("subProjects", projectService.showAllSubProjects());
         return "showAllSubProjectsTest";
