@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.UUID;
 
 @RequestMapping("/project")
 @Controller
@@ -41,6 +42,10 @@ public class ProjectController {
             return "redirect:/project/show_create_project";
         }
         else {
+            if (customer == 99) { //TODO: Problem med skalerbarhed ;) - En mere dynamisk måde at tjekke for dette sammenholdt med html eftertragtes. Måske skal 'Internal Project' kunde bare sættes ind som den allerførste kunde i databasen.
+                Customer internalProject = projectService.fetchInternalProjectCustomer();
+                customer = internalProject.getCustomerID();
+            }
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
             projectService.createProject(project); // Projekt oprettes i DB
             projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
@@ -68,7 +73,7 @@ public class ProjectController {
     @GetMapping("/show_all_projects")
     public String showAllProjects(Model model) {
         model.addAttribute("projects", projectService.showAllProjects());
-        return "showAllProjectsTest";
+        return "showAllProjectsTest"; //TODO: Husk at rette showAllProjectsTest() ved sletning af demo html.
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
     /*
@@ -91,7 +96,7 @@ public class ProjectController {
                                 @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
         Project project = new Project(projectID,projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
         projectService.updateProject(project);
-        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
+        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard. Husk at korriger i ProjectControllerTest også.
     }
     /*
     ###########---DELETE---###########
@@ -100,7 +105,7 @@ public class ProjectController {
     public String deleteProject(@PathVariable String name) throws SQLException {
         Project project = projectService.fetchSpecificProject(name);
         projectService.deleteProject(project);
-        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard
+        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard. Husk at ændre test i projectControllerTest.
     }
     /*
     #####################################
@@ -120,7 +125,7 @@ public class ProjectController {
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
-        return "succes"; //TODO slet html, bare til verifikation
+        return "succes"; //TODO slet html, bare til verifikation. Husk at ændre i ProjectControllerTest.
     }
 
 }

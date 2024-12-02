@@ -43,6 +43,9 @@ public class Project {
         this.companyRep = companyRep;
         this.status = status;
     }
+    public Project() {
+
+    }
 
     public int getID() {
         if (ID == -1) {
