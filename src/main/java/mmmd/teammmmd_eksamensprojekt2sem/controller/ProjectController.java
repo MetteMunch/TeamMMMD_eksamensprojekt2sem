@@ -2,8 +2,8 @@ package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
+import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +58,7 @@ public class ProjectController {
     public String showSuccess() {
         return "succes";
     }
+
     @GetMapping("/show_create_project")
     public String showCreateProject(Model model) {
         model.addAttribute("PMEmployees", projectService.findPMEmployees());
@@ -67,6 +68,7 @@ public class ProjectController {
 
         return "createProjectForm";
     }
+
     /*
     ###########---READ---###########
      */
@@ -76,6 +78,7 @@ public class ProjectController {
         return "showAllProjectsTest"; //TODO: Husk at rette showAllProjectsTest() ved sletning af demo html.
         //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
+
     /*
     ###########---UPDATE---###########
      */
@@ -92,12 +95,13 @@ public class ProjectController {
 
     @PostMapping("/updateProject")
     public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
-                                @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
-                                @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
-        Project project = new Project(projectID,projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
+                                      @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
+                                      @RequestParam(required = false) String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
+        Project project = new Project(projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
         projectService.updateProject(project);
         return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard. Husk at korriger i ProjectControllerTest også.
     }
+
     /*
     ###########---DELETE---###########
      */
@@ -107,6 +111,7 @@ public class ProjectController {
         projectService.deleteProject(project);
         return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard. Husk at ændre test i projectControllerTest.
     }
+
     /*
     #####################################
     #           Customers               #
@@ -117,15 +122,60 @@ public class ProjectController {
         model.addAttribute("listofcustomers", projectService.getListOfCurrentCustomers());
         return "customers"; //Husk at slette html //TODO: Slette html
     }
+
     @GetMapping("/show-create-customer")
     public String showCreateCustomer() {
         return "createCustomer";
     }
+
     @PostMapping("/create-customer")
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
         return "succes"; //TODO slet html, bare til verifikation. Husk at ændre i ProjectControllerTest.
+    }
+
+
+    //******* SUBPROJECT *********
+    @GetMapping("/{projectID}/createsubproject")
+    public String createSubProject(@PathVariable int projectID, Model model, RedirectAttributes redirectAttributes) {
+        model.addAttribute("projectID", projectID);
+        redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
+        return "createSubProjectForm";
+    }
+
+    @PostMapping("/{projectID}/savesubproject")
+    public String saveSubProject(@PathVariable int projectID,
+                                 @RequestParam String subProjectTitle,
+                                 @RequestParam String subProjectDescription,
+                                 @RequestParam int statusID) {
+        SubProject newSubProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
+
+        projectService.createSubproject(newSubProject);
+
+        return "redirect:/project/" + projectID + "/subproject";
+    }
+    //TODO: Lav et view der hvor vi lander efter at subproject er gemt fx. subprojectview
+
+//    @PostMapping("/deleteSubProject/{employeeID}/{subProjectID}")
+//    public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID) {
+//        projectService.deleteSubProject(subProjectID);
+//        return "redirect:/project/" + employeeID;
+//    }
+
+    @GetMapping("/{projectID}/show_all_subprojects")
+    public String showAllSubProjects(@PathVariable int projectID, Model model) {
+        model.addAttribute("subProjects", projectService.showAllSubProjects());
+        return "showAllSubProjectsTest";
+        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
+    }
+
+    @GetMapping("/{projectID}/show_specific_subprojects")
+    public String showSpecificSubProjects(@PathVariable int projectID, Model model) {
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjects", projectService.showListOfSpecificSubProject(projectID));
+        return "showSpecificSubProjects";
+        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
     }
 
 }

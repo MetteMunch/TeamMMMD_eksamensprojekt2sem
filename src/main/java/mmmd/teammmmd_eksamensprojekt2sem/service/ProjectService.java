@@ -1,4 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
+
+import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
@@ -6,6 +8,8 @@ import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -18,6 +22,32 @@ public class ProjectService {
     public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
+
+    //*******CRUD --- SUBPROJECT******//
+    public void createSubproject(SubProject subProject) {
+        projectRepository.createSubProject(subProject);
+    }
+
+    public boolean checkIfSubProjectNameAlreadyExists(int projectID, String subProjectTitle) {
+        return projectRepository.checkIfSubProjectNameAlreadyExists(subProjectTitle);
+    }
+
+    public List<SubProject> showListOfSpecificSubProject(int projectID) {
+        return projectRepository.showListOfSpecificSubProject(projectID);
+    }
+
+    public void updateSubProject() {
+        //TODO:
+    }
+
+    public void deleteSubProject(int subProjectID) {
+        projectRepository.deleteSubproject(subProjectID);
+    }
+
+    public List<SubProject> showAllSubProjects() {
+        return projectRepository.showAllSubProjects();
+    }
+
     /*
     #####################################
     #           Customer Methods        #
@@ -80,4 +110,5 @@ public class ProjectService {
     public List<Employee> findBCEmployees() {
         return projectRepository.findBCEmployees();
     }
+
 }
