@@ -10,14 +10,17 @@ public class Project {
     private String projectTitle;
     private String projectDescription;
     private int customer;
+    private String customerNameString;
     private Date orderDate;
     private Date deliveryDate;
     private String linkAgreement;
     private int companyRep;
+    private String companyRepString;
     private int status;
+    private String statusString;
 
     public Project(String projectTitle, String projectDescription, int customer, Date orderDate, Date deliveryDate, String linkAgreement, int companyRep, int status) {
-        ID = -1; //Vi retter ID til korrekte id ved lookup i DB. Kun relevant ved createProject()
+        ID = -1; //Vi retter ID til korrekte id ved lookup i DB. Kun relevant ved createProject() //Hvorfor er denne nødvendig?
         this.projectTitle = projectTitle;
         this.projectDescription = projectDescription;
         this.customer = customer;
@@ -39,6 +42,9 @@ public class Project {
         this.linkAgreement = linkAgreement;
         this.companyRep = companyRep;
         this.status = status;
+    }
+    public Project() {
+
     }
 
     public int getID() {
@@ -77,6 +83,14 @@ public class Project {
         this.customer = customer;
     }
 
+    public String getCustomerNameString() {
+        return customerNameString;
+    }
+
+    public void setCustomerNameString(String customerName) {
+        this.customerNameString = customerNameString;
+    }
+
     public Date getOrderDate() {
         return orderDate;
     }
@@ -105,6 +119,14 @@ public class Project {
         return companyRep;
     }
 
+    public String getCompanyRepString() {
+        return companyRepString;
+    }
+
+    public void setCompanyRepString(String companyRepString) {
+        this.companyRepString = companyRepString;
+    }
+
     public void setCompanyRep(int companyRep) {
         this.companyRep = companyRep;
     }
@@ -114,6 +136,14 @@ public class Project {
         TODO: Lav enum
          */
         return status;
+    }
+
+    public String getStatusString() {
+        return statusString;
+    }
+
+    public void setStatusString(String statusString) {
+        this.statusString = statusString;
     }
 
     public void setStatus(int status) {

@@ -1,5 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.repository;
 
+import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,9 @@ public class UserRepository {
         this.dbConnection = connectionManager.getConnection();
     }
 
+     /*
+     ###########---LOGIN---###########
+      */
 
     public boolean validateLogin(String username, String password) throws SQLException {
         boolean result = false;
@@ -50,6 +54,36 @@ public class UserRepository {
         }
         return result;
     }
+
+    /*
+     ###########---READ / VIEW---###########
+      */
+    public Employee getEmployee(int employeeID) {
+        Employee employee = null;
+        String SQL = "SELECT fullName, employee.role, employeerole.roleTitle FROM employee \n" +
+                "INNER JOIN employeerole ON employee.role = employeerole.roleID WHERE employeeID = ?";
+
+        try(PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, employeeID);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                String fullName = rs.getString(1);
+                int role = rs.getInt(2);
+                String roleTitle = rs.getString(3);
+                employee = new Employee(employeeID,fullName,role);
+                employee.setRoleName(roleTitle);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return employee;
+
+    }
+
+    /*
+     ###########---DIVERSE HJÆLPEMETODER---###########
+      */
 
     //Muligvis kan nedenstående metode erstattes af alm getter metode fra model senere?
     public boolean getIsEmployeeManagerInfoFromDB(int employeeID) throws SQLException {
