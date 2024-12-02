@@ -32,7 +32,7 @@ public class ProjectRepository {
 
     //*******CRUD --- SUBPROJECT******//
     public void createSubProject(SubProject subProject) {
-        String sqlInsertSubproject = "INSERT INTO Subproject (subProjectTitle, subProjectDescription, projectID, statusID) VALUES (?, ?, ?, ?)";
+        String sqlInsertSubproject = "INSERT INTO Subproject (subProjectTitle, subProjectDescription, projectID, status) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = dbConnection.prepareStatement(sqlInsertSubproject, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, subProject.getSubProjectTitle());
             ps.setString(2, subProject.getSubProjectDescription());

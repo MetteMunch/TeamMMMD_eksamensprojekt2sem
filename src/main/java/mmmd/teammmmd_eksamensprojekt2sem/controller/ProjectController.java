@@ -128,7 +128,6 @@ public class ProjectController {
                                  @RequestParam String subProjectTitle,
                                  @RequestParam String subProjectDescription,
                                  @RequestParam int statusID) {
-
         SubProject newSubProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
 
         projectService.createSubproject(newSubProject);
