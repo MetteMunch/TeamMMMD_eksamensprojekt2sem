@@ -1,6 +1,7 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
 
 import jakarta.servlet.http.HttpSession;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 import mmmd.teammmmd_eksamensprojekt2sem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,14 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-
     }
 
     public boolean validateLogin(String username, String password) throws SQLException {
         return userRepository.validateLogin(username, password);
+    }
+
+    public Employee getEmployee(int employeeID) {
+        return userRepository.getEmployee(employeeID);
     }
 
     public int getEmployeeIDFromDB(String username) throws SQLException {
@@ -32,20 +36,23 @@ public class UserService {
 
     //////HJÆLPEMETODE TIL CONTROLLEREN////////
 
-    public String redirectUserLoginAttributes(HttpSession session, int employeeID) {
-        Integer sessionUserID = (Integer) session.getAttribute("userID");
+    public String redirectUserLoginAttributes(HttpSession session, int employeeID) throws SQLException {
+        Integer sessionEmpID = (Integer) session.getAttribute("employeeID");
 
-        if (sessionUserID == null) {
+        if (sessionEmpID == null) {
             //Hvis brugeren ikke er logget ind ligger der ikke et ID gemt på session,
             // hvorfor brugeren derfor promptes til at logge ind
             return "redirect:/user/loginpage";
-        }
-        else if(!sessionUserID.equals(employeeID)) {
+        } else if (!sessionEmpID.equals(employeeID)) {
             /*
             Brugeren prøver at tilgå en anden brugers data.
             De bliver redirected til deres egen side, hvis de er logget ind.
              */
-            return "redirect:/user/"+sessionUserID;
+            if (getIsEmployeeManagerInfoFromDB(sessionEmpID)) {
+                return "redirect:/user/projectmanager/" + sessionEmpID;
+
+            } else
+                return "redirect:/user/employee/" + sessionEmpID;
         }
         return null;
     }

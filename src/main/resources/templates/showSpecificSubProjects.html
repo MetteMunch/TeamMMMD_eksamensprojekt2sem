@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Show specific subprojects</title>
+</head>
+<body>
+<!--TEMPLATE TIL EKSEMPELVISNING DEMO - SLET NÅR DEN IKKE ER NØDVENDIG MERE -->
+<table>
+  <thead>
+  <tr>
+    <th>Subproject Title</th>
+    <th>Subproject Description</th>
+    <th>Project ID</th>
+    <th>Subproject status</th>
+
+  </tr>
+  </thead>
+  <tbody th:each="subProject : ${subProjects}">
+  <tr>
+    <td th:text="${subProject.getSubProjectTitle()}"></td>
+    <td th:text="${subProject.getSubProjectDescription()}"></td>
+    <td th:text="${subProject.getProjectID()}"></td>
+    <td th:text="${subProject.getStatus()}"></td>
+    <td>
+      <form th:action="@{/project/{name}/delete(name=${subProject.getSubProjectTitle})}" method="post">
+        <button type="submit">Delete</button>
+
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+
+</body>
+</html>
