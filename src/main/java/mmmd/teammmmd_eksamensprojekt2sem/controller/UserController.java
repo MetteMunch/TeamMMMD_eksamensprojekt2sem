@@ -7,6 +7,7 @@ import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
 
@@ -39,8 +40,8 @@ public class UserController {
     }
 
     @PostMapping("/loginvalidation")
-    public String loginValidation(HttpServletRequest request, @RequestParam String username, @RequestParam String password) throws SQLException {
-        String returnStatement;
+    public String loginValidation(HttpServletRequest request, @RequestParam String username, @RequestParam String password,
+                                  RedirectAttributes redirectAttributes) throws SQLException {
 
         if (userService.validateLogin(username, password)) {
             session = request.getSession();
@@ -48,19 +49,14 @@ public class UserController {
             session.setAttribute("employeeID", employeeID); // Brugerens unikke employeeID gemmes i sessionen, så vi kan sikre, at
             //brugeren ikke tilgår Endpoints, som tilhører andre brugere ved at skrive dette direkte i url
 
-            if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
-                returnStatement = "redirect:/user/projectmanager/" + employeeID; //Jeg kender ikke korrekt sti/Get Endpoint endnu
-
-            } else {
-                returnStatement = "redirect:/user/employee/" + employeeID;
-            }
+            redirectAttributes.addAttribute("employeeID", employeeID);
+            return "redirect:/user/{employeeID}";
         } else {
-            returnStatement = "redirect:/user/loginpage?error=true";
+            return "redirect:/user/loginpage?error=true";
         }
-        return returnStatement;
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/{employeeID}/logout")
     public String logout(HttpServletRequest request) {
         //Vi skal invalidate / lukke sessionen for at slette employeeID og andre data
         session = request.getSession(false); //henter den eksisterende session uden at oprette ny
@@ -75,8 +71,8 @@ public class UserController {
     ###########---EMPLOYEE---###########
      */
 
-    @GetMapping("/employee/{employeeID}")
-    public String showEmployeeDashboard(@PathVariable int employeeID, Model model) throws SQLException {
+    @GetMapping("/{employeeID}")
+    public String showDashboard(@PathVariable int employeeID, Model model) throws SQLException {
         String redirect = userService.redirectUserLoginAttributes(session, employeeID);
         if (redirect != null) {
             return redirect;
@@ -89,8 +85,15 @@ public class UserController {
 
         model.addAttribute("projects", projectService.showAllProjectsSpecificEmployee(employeeID));
         model.addAttribute("employee", userService.getEmployee(employeeID));
+        model.addAttribute("tasks", projectService.showAllTasksSpecificEmployee(employeeID));
 
-        return "employeeDashboard";
+        if(userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
+            return "projectmanagerDashboard";  //TODO: dette view findes ikke endnu
+        } else {
+            return "employeeDashboard";
+        }
+
+
     }
 
 

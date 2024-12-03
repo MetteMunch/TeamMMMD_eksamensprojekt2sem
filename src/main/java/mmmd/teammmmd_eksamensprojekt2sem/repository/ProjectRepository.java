@@ -425,6 +425,63 @@ public class ProjectRepository {
             return tasks;
         }
     }
+
+    public List<Task> showAllTasksSpecificEmployee(int employeeID) {
+
+        List<Task> listOfTasksSpecificEmployee = new ArrayList<>();
+
+        String SQL = "SELECT task.taskID, task.taskTitle, task.taskDescription, task.assignedEmployee, employee.fullName,\n" +
+                "task.estimatedTime, task.actualTime, task.plannedStartDate,task.dependingOnTask, task2.taskTitle AS dependingOnTaskTitle, \n" +
+                "task.requiredRole, employeerole.roleTitle, task.subProjectID, task.status, status.status, subproject.projectID FROM task\n" +
+                "LEFT JOIN task task2 ON task.dependingOntask = task2.taskID\n" +
+                "INNER JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
+                "INNER JOIN employeerole ON employeerole.roleID = task.requiredRole\n" +
+                "INNER JOIN status ON status.statusID = task.status\n" +
+                "INNER JOIN subproject ON subproject.subprojectID = task.subProjectID\n" +
+                "WHERE task.assignedEmployee = ?";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, employeeID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+
+                    int taskID = rs.getInt(1);
+                    String taskTitle = rs.getString(2);
+                    String taskDescription = rs.getString(3);
+                    int assignedEmp = rs.getInt(4);
+                    String assignedEmpFullName = rs.getString(5);
+                    double estTime = rs.getDouble(6);
+                    double actTime = rs.getDouble(7);
+                    Date plannedStartDate = rs.getDate(8);
+                    int dependingOnTaskID = rs.getInt(9);
+                    String dependingOnTaskTitle = rs.getString(10);
+                    int requiredRole = rs.getInt(11);
+                    String roleTitle = rs.getString(12);
+                    int subProjectID = rs.getInt(13);
+                    int statusID = rs.getInt(14);
+                    String status = rs.getString(15);
+                    int projectID = rs.getInt(16);
+
+                    Task task = new Task(taskID, taskTitle, taskDescription, assignedEmp, estTime, plannedStartDate, dependingOnTaskID, requiredRole, subProjectID, statusID);
+                    task.setActualTime(actTime);
+                    task.setAssignedEmployeeString(assignedEmpFullName);
+                    task.setDependingOnTaskString(dependingOnTaskTitle);
+                    task.setRequiredRoleString(roleTitle);
+                    task.setStatusString(status);
+                    task.setProjectID(projectID);
+
+                    listOfTasksSpecificEmployee.add(task);
+
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listOfTasksSpecificEmployee;
+    }
+
+
     //###### Update  Task #############
 
     public void updateTask(Task task) throws SQLException {
@@ -516,8 +573,8 @@ public class ProjectRepository {
                     project.setCustomerNameString(customerName);
                     project.setCompanyRepString(nameCompanyRep);
 
-                    System.out.println("Her er kunde navn:" +customerName);
-                    System.out.println("Her er Projekt status:" +status);
+                    System.out.println("Her er kunde navn:" + customerName);
+                    System.out.println("Her er Projekt status:" + status);
 
 
                     return project;

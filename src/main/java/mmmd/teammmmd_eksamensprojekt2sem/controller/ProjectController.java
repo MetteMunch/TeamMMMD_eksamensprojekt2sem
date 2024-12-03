@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/project")
+@RequestMapping("/user/{employeeID}")
 @Controller
 public class ProjectController {
 
@@ -64,14 +64,14 @@ public class ProjectController {
     /*
     ###########---CREATE---###########
      */
-    @PostMapping("/create_project") //CREATE
+    @PostMapping("/create-project") //CREATE
     public String createProjectAction(@RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
                                       @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status, RedirectAttributes redirectAttributes) {
         if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) { //returnerer true, hvis navnet allerede eksisterer i DB.
             redirectAttributes.addFlashAttribute("titleAlreadyExistsError", "The selected project title already exists. " +
                     "Please select another title for this project.");
-            return "redirect:/project/show_create_project";
+            return "redirect:/user/{employeeID}/project/create-project";
         }
         else {
             if (customer == 99) { //TODO: Problem med skalerbarhed ;) - En mere dynamisk måde at tjekke for dette sammenholdt med html eftertragtes. Måske skal 'Internal Project' kunde bare sættes ind som den allerførste kunde i databasen.
@@ -85,7 +85,7 @@ public class ProjectController {
             redirectAttributes.addAttribute("projectID",project.getID());
             //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
             //TODO: Tilføj gå tilbage eller return to PM Dashboard i html
-            return "redirect:/project/{projectID}"; //TODO:korriger redirect til Project Manager dashboard, når denne er færdig
+            return "redirect:/user/{employeeID}"; //DENNE GÅR TILBAGE TIL LOGINPAGE ER DET FORDI DEN IKKE HAR EMPLOYEEID MED?
         }
     }
 //    @GetMapping("/success") //TODO: Udelukkende til demokode for at se om metode eksekveres korrekt med redirect. Slet når ikke længere nødvendig sammen med html fil.
@@ -93,12 +93,13 @@ public class ProjectController {
 //        return "succes";
 //    }
 
-    @GetMapping("/show_create_project")
-    public String showCreateProject(Model model) {
+    @GetMapping("/show-create-project")
+    public String showCreateProject(@PathVariable("employeeID") int employeeID, Model model) {
         model.addAttribute("PMEmployees", projectService.findPMEmployees());
         model.addAttribute("BCEmployees", projectService.findBCEmployees());
         model.addAttribute("statusobjects", projectService.fetchAllStatus());
         model.addAttribute("customers", projectService.getListOfCurrentCustomers());
+        model.addAttribute("employeeID", employeeID);
 
         return "createProjectForm";
     }
@@ -295,10 +296,10 @@ public class ProjectController {
     /*
     ###########---DELETE---###########
     */
-    @PostMapping("/{projectID}/{subProjectID}/deleteTask/{taskID}")
+    @PostMapping("/{projectID}/{subProjectID}/delete-task/{taskID}")
     public String deleteTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID) throws SQLException {
         projectService.deleteTask(taskID);
-        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+        return "redirect:/user/{employeeID}/" + projectID + "/" + subProjectID + "/tasks";
     }
 
 

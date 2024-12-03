@@ -136,7 +136,7 @@ public class ProjectService {
 
     /*
     ##################################
-    #           CRUD Task            #
+    #              Task              #
     ##################################
      */
     public void createTask(int projectID, int subProjectID, Task task) throws SQLException {
@@ -147,6 +147,10 @@ public class ProjectService {
         return projectRepository.getAllTasksInSpecificSubProject(subProjectID);
     }
 
+    public List<Task> showAllTasksSpecificEmployee(int employeeID) {
+        return projectRepository.showAllTasksSpecificEmployee(employeeID);
+    }
+
     public void updateTask(Task task) throws SQLException {
         projectRepository.updateTask(task);
     }
@@ -154,6 +158,7 @@ public class ProjectService {
     public void deleteTask(int taskID) throws SQLException {
         projectRepository.deleteTask(taskID);
     }
+
 
     /*
     ###########---Helper Methods---###########
