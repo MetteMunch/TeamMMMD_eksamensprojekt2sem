@@ -27,6 +27,7 @@ public class ProjectService {
     public List<Customer> getListOfCurrentCustomers() {
         return projectRepository.getListOfCurrentCustomers();
     }
+
     public void createCustomer(Customer customer) {
         projectRepository.createCustomer(customer);
     }
@@ -39,12 +40,15 @@ public class ProjectService {
     public void createProject(Project project) {
         projectRepository.createProject(project);
     }
+
     public List<Project> showAllProjects() {
         return projectRepository.showAllProjects();
     }
+
     public void updateProject(Project project) {
         projectRepository.updateProject(project);
     }
+
     public void deleteProject(Project project) throws SQLException {
         projectRepository.deleteProject(project);
     }
@@ -64,9 +68,11 @@ public class ProjectService {
     public List<Status> fetchAllStatus() {
         return projectRepository.fetchAllStatus();
     }
+
     public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
         return projectRepository.checkIfProjectNameAlreadyExists(projectTitle);
     }
+
     public void setProjectID(Project project) {
         projectRepository.setProjectID(project);
     }
@@ -75,11 +81,11 @@ public class ProjectService {
         return projectRepository.showAllProjectsSpecificEmployee(employeeID);
     }
 
- /*
-   ####################################
-             SubProject
-   #####################################
-  */
+    /*
+      ####################################
+                SubProject
+      #####################################
+     */
     public void createSubproject(SubProject subProject) {
         projectRepository.createSubProject(subProject);
     }
@@ -104,28 +110,6 @@ public class ProjectService {
 //        return projectRepository.showAllSubProjects();
 //    }
 
-    /*
-    #####################################
-    #              Task                 #
-    #####################################
-    */
-
-    public void createTask(int projectID, int subProjectID, Task task) throws SQLException {
-        projectRepository.createTask(projectID, subProjectID, task);
-    }
-
-    public List<Task> getAllTasksInSpecificSubProject(int subProjectID) throws SQLException {
-        return projectRepository.getAllTasksInSpecificSubProject(subProjectID);
-    }
-
-    public void updateTask(Task task) throws SQLException {
-        projectRepository.updateTask(task);
-    }
-
-    public void deleteTask(int taskID) throws SQLException {
-        projectRepository.deleteTask(taskID);
-    }
-
 
     /*
     #####################################
@@ -136,9 +120,11 @@ public class ProjectService {
     public List<Employee> findPMEmployees() {
         return projectRepository.findPMEmployees();
     }
+
     public List<Employee> findBCEmployees() {
         return projectRepository.findBCEmployees();
     }
+
     public List<EmployeeRole> getNonManagerRoles() throws SQLException {
         return projectRepository.getNonManagerRoles();
     }
@@ -172,11 +158,5 @@ public class ProjectService {
     /*
     ###########---Helper Methods---###########
      */
-    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
-        return projectRepository.getNonManagerRoles();
-    }
 
-    public List<Employee> findNonManagerEmployees() {
-        return projectRepository.findNonManagerEmployees();
-    }
 }
