@@ -215,18 +215,6 @@ public class ProjectController {
             @RequestParam(required = false) Integer dependingOnTask,
             @RequestParam(required = false) Integer requiredRole) throws SQLException {
 
-        //souts for testing only
-        System.out.println("projectID: " + projectID);
-        System.out.println("subProjectID: " + subProjectID);
-        System.out.println("taskTitle: " + taskTitle);
-        System.out.println("taskDesc: " + taskDescription);
-        System.out.println("assignedEmp: " + assignedEmployee);
-        System.out.println("estimatedTime: " + estimatedTime);
-        System.out.println("status: " + status);
-        System.out.println("plannedStartDate: " + plannedStartDate);
-        System.out.println("dependingOnTask: " + dependingOnTask);
-        System.out.println("requiredRole: " + requiredRole);
-
         Task newTask = new Task(taskTitle, taskDescription,
                 assignedEmployee, estimatedTime, plannedStartDate,
                 dependingOnTask, requiredRole, subProjectID, status);

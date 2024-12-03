@@ -2,11 +2,11 @@ package mmmd.teammmmd_eksamensprojekt2sem.model;
 
 public class SubProject {
 
-    String subProjectTitle;
-    String subProjectDescription;
-    int projectID;
-    int statusID;
-    String status;
+    private String subProjectTitle;
+    private String subProjectDescription;
+    private int projectID;
+    private int statusID;
+    private String status;
 
     public SubProject (String subprojectTitle, String subprojectDescription, int projectID, int statusID) {
         this.subProjectTitle = subprojectTitle;

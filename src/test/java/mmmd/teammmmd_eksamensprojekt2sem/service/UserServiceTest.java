@@ -1,6 +1,7 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
 
 import jakarta.servlet.http.HttpSession;
+import mmmd.teammmmd_eksamensprojekt2sem.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -22,6 +25,8 @@ class UserServiceTest {
     @Mock
     private HttpSession session; //Vi mocker session for at isolere testkoden uden at bruge et servermiljø. Tests er hurtigere på denne måde.
 
+    @Mock
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -37,7 +42,7 @@ class UserServiceTest {
     }
 
     @Test
-    void redirectUserLoginAttributesCorrectLogin() {
+    void redirectUserLoginAttributesCorrectLogin() throws SQLException {
         //Hvis brugeren er korrekt logget ind, så vil vi ikke komme ind i metodens if-blokke, men derimod bare
         //returnere null
 
@@ -55,7 +60,7 @@ class UserServiceTest {
     }
 
     @Test
-    void redirectUserLoginAttributesWrongUserLoggedIn() {
+    void redirectUserLoginAttributesWrongUserLoggedIn() throws SQLException {
         //Arrange
         int employeeID = 2;
         int sessionUserID = 3;
@@ -70,7 +75,7 @@ class UserServiceTest {
     }
 
     @Test
-    void redirectUserLoginAttributesWrongUserNotLoggedIn() {
+    void redirectUserLoginAttributesWrongUserNotLoggedIn() throws SQLException {
         //Arrange
         int employeeID = 2;
         when(session.getAttribute("userID")).thenReturn(null);
