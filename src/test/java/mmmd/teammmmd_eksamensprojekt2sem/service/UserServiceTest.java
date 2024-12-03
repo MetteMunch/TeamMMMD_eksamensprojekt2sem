@@ -1,6 +1,7 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
 
 import jakarta.servlet.http.HttpSession;
+import mmmd.teammmmd_eksamensprojekt2sem.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ class UserServiceTest {
     @Mock
     private HttpSession session; //Vi mocker session for at isolere testkoden uden at bruge et servermiljø. Tests er hurtigere på denne måde.
 
+    @Mock
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -46,7 +49,7 @@ class UserServiceTest {
         //Arrange
         int employeeID = 3;
         int sessionUserID = 3;
-        when(session.getAttribute("userID")).thenReturn(sessionUserID);
+        when(session.getAttribute("employeeID")).thenReturn(sessionUserID);
 
         //Act
         String expectedResult = null;
@@ -61,10 +64,10 @@ class UserServiceTest {
         //Arrange
         int employeeID = 2;
         int sessionUserID = 3;
-        when(session.getAttribute("userID")).thenReturn(sessionUserID);
-
+        when(session.getAttribute("employeeID")).thenReturn(sessionUserID);
+        when(userRepository.getIsEmployeeManagerInfoFromDB(sessionUserID)).thenReturn(false);
         //Act
-        String expectedResult = "redirect:/user/"+sessionUserID;
+        String expectedResult = "redirect:/user/employee/"+sessionUserID;
         String actualResult = userService.redirectUserLoginAttributes(session,employeeID);
 
         //Assert
@@ -75,7 +78,7 @@ class UserServiceTest {
     void redirectUserLoginAttributesWrongUserNotLoggedIn() throws SQLException {
         //Arrange
         int employeeID = 2;
-        when(session.getAttribute("userID")).thenReturn(null);
+        when(session.getAttribute("employeeID")).thenReturn(null);
 
         //Act
         String expectedResult = "redirect:/user/loginpage";

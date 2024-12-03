@@ -1,5 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.repository;
 
+import mmmd.teammmmd_eksamensprojekt2sem.model.*;
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
@@ -119,10 +120,10 @@ public class ProjectRepository {
     }
 
     /*
-#####################################
-#           CRUD Customer           #
-#####################################
- */
+    #####################################
+    #           CRUD Customer           #
+    #####################################
+     */
     public List<Customer> getListOfCurrentCustomers() {
         String sql = "SELECT customerID, companyName, repName FROM customer";
         List<Customer> customersToReturn = new ArrayList<>();
@@ -473,6 +474,189 @@ public class ProjectRepository {
             e.printStackTrace();
         }
         return employeesFromDBBC;
+    }
+
+
+
+
+    /*
+    ##################################
+    #           CRUD Task            #
+    ##################################
+     */
+
+
+    /*
+    ##################################
+    #           Create Task            #
+    ##################################
+     */
+    public void createTask(int projectID, int subProjectID, Task task) throws SQLException {
+        String sql = "INSERT INTO Task (taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (var ps = dbConnection.prepareStatement(sql)) {
+            //setObject håndterer automatisk null værdier
+            ps.setString(1, task.getTaskTitle());
+            ps.setString(2, task.getTaskDescription());
+            ps.setObject(3, task.getAssignedEmployee(), java.sql.Types.INTEGER);
+            ps.setObject(4, task.getEstimatedTime(), java.sql.Types.DOUBLE);
+            ps.setDouble(5, task.getActualTime());
+            ps.setDate(6, task.getPlannedStartDate());
+            ps.setObject(7, task.getDependingOnTask(), java.sql.Types.INTEGER);
+            ps.setObject(8, task.getRequiredRole(), java.sql.Types.INTEGER);
+            ps.setInt(9, task.getSubProjectID());
+            ps.setInt(10, task.getStatus());
+
+            ps.executeUpdate();
+        }
+    }
+
+
+    /*
+    ##################################
+    #           READ Task            #
+    ##################################
+     */
+    public List<Task> getAllTasksInSpecificSubProject(int subProjectID) throws SQLException {
+        List<Task> tasks = new ArrayList<>();
+        String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
+                "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status " +
+                "FROM Task WHERE subProjectID = ?";
+        //TODO: skal tilrettes så taskID er korrekt når man vælger en specifik task i dependingOnTask
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, subProjectID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+
+                    // getObject metoden bruges så vi kan håndtere null værdier
+                    Integer assignedEmployee = rs.getObject("assignedEmployee", Integer.class);
+                    Double estimatedTime = rs.getObject("estimatedTime", Double.class);
+                    Integer dependingOnTask = rs.getObject("dependingOnTask", Integer.class);
+                    Integer requiredRole = rs.getObject("requiredRole", Integer.class);
+
+                    Task task = new Task(
+                            rs.getInt("taskID"),
+                            rs.getString("taskTitle"),
+                            rs.getString("taskDescription"),
+                            assignedEmployee,
+                            estimatedTime,
+                            rs.getDate("plannedStartDate"),
+                            dependingOnTask,
+                            requiredRole,
+                            rs.getInt("subProjectID"),
+                            rs.getInt("status")
+                    );
+                    tasks.add(task);
+                }
+            }
+
+            return tasks;
+        }
+    }
+
+    /*
+    ##################################
+    #           Update Task          #
+    ##################################
+     */
+    public void updateTask(Task task) throws SQLException {
+        String sql = "UPDATE Task SET taskTitle = ?, taskDescription = ?, assignedEmployee = ?, estimatedTime = ?, " +
+                "actualTime = ?, plannedStartDate = ?, dependingOnTask = ?, requiredRole = ?, status = ? " +
+                "WHERE taskID = ?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, task.getTaskTitle());
+            ps.setString(2, task.getTaskDescription());
+            ps.setObject(3, task.getAssignedEmployee(), java.sql.Types.INTEGER);
+            ps.setObject(4, task.getEstimatedTime(), java.sql.Types.DOUBLE);
+            ps.setDouble(5, task.getActualTime());
+            ps.setDate(6, task.getPlannedStartDate());
+            ps.setObject(7, task.getDependingOnTask(), java.sql.Types.INTEGER);
+            ps.setObject(8, task.getRequiredRole(), java.sql.Types.INTEGER);
+            ps.setInt(9, task.getStatus());
+            ps.setInt(10, task.getTaskID());
+
+            ps.executeUpdate();
+        }
+    }
+
+    /*
+    ##################################
+    #           Delete Task          #
+    ##################################
+    */
+    public void deleteTask(int taskID) throws SQLException {
+        String sql = "DELETE FROM Task WHERE taskID = ?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, taskID);
+
+            ps.executeUpdate();
+        }
+    }
+
+
+
+    /*
+    ###################################
+    #          Helper Methods         #
+    ###################################
+    */
+    public Status getStatusByID(int statusID) throws SQLException {
+        String sql = "SELECT statusID, status FROM Status WHERE statusID = ?";
+        Status status = null;
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, statusID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    status = new Status(rs.getInt("statusID"), rs.getString("status"));
+                }
+            }
+        }
+        return status;
+    }
+
+    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
+        String sql = "SELECT roleID, roleTitle, isManager FROM EmployeeRole WHERE isManager = false";
+
+        List<EmployeeRole> nonManagerRoles = new ArrayList<>();
+
+        try (var ps = dbConnection.prepareStatement(sql);
+             var rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int roleID = rs.getInt("roleID");
+                String roleTitle = rs.getString("roleTitle");
+                boolean isManager = rs.getBoolean("isManager");
+
+                nonManagerRoles.add(new EmployeeRole(roleID, roleTitle, isManager));
+            }
+        }
+
+        return nonManagerRoles;
+    }
+
+    public List<Employee> findNonManagerEmployees() {
+        List<Employee> nonManagerEmployees = new ArrayList<>();
+        String sql = "SELECT e.employeeID, e.fullName " +
+                "FROM Employee e " +
+                "JOIN EmployeeRole r ON e.role = r.roleID " +
+                "WHERE r.isManager = false";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), null, null, 0);
+                    nonManagerEmployees.add(emp);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nonManagerEmployees;
     }
 
 }
