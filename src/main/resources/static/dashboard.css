@@ -2,6 +2,7 @@
 :root {
     --primary-bg-color: white;
     --secondary-bg-color: #dedede;
+    --sidebar-color: darkgray;
     --extra-bg-color: #e7eef1;
     --link-color: black;
     --alpha-bg-color: #59869d;
@@ -48,6 +49,9 @@ body {
 }
 
 /* Grid-områder */
+nav, header, main1, main2, sidebar, footer {
+    padding: 1em;
+}
 nav {
     grid-area: nav;
 }
@@ -74,21 +78,19 @@ footer {
 
 nav, footer {
     background-color: var(--alpha-bg-color);
-    padding: 1em;
-    border-radius: 15px;
 }
 
 header {
-    background-color: #dedede;
+    background-color: var(--secondary-bg-color);
 }
 
 main1, main2 {
-    background-color: #dedede;
+    background-color: var(--secondary-bg-color);
     overflow: auto; /* Tilføjer scroll */
 }
 
 sidebar {
-    background-color: darkgray;
+    background-color: var(--sidebar-color);
 }
 
 /* Typografi og tekst */
@@ -176,4 +178,14 @@ tr:last-child td {
 }
 tr:last-child th {
     border-top: none;
+}
+
+/* Container Styling */
+.nav-container {
+    display: flex;
+    gap: 20px;
+}
+.nav-box {
+    text-align: center;
+    padding: 20px;
 }

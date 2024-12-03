@@ -8,13 +8,17 @@
 </head>
 <body>
 <nav th:fragment="nav">
-    <div>
+    <div class="nav-container">
+    <div class="nav-box">
         <a th:href="@{https://www.alpha-solutions.com/da}" class="logo">
             <img src="/images/logo_farve.png" alt="logo">
         </a>
+    </div>
+    <div class="nav-box">
         <a th:href="@{/user/logout}" class="icon">
             <img src="/icons/logud_farve.png" alt="logud">
         </a>
+    </div>
     </div>
 </nav>
 
