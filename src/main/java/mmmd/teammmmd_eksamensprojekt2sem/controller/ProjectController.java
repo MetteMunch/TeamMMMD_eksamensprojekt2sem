@@ -1,9 +1,11 @@
 package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,10 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/project")
 @Controller
@@ -232,18 +238,6 @@ public class ProjectController {
             @RequestParam(required = false) Integer dependingOnTask,
             @RequestParam(required = false) Integer requiredRole) throws SQLException {
 
-        //souts for testing only
-        System.out.println("projectID: " + projectID);
-        System.out.println("subProjectID: " + subProjectID);
-        System.out.println("taskTitle: " + taskTitle);
-        System.out.println("taskDesc: " + taskDescription);
-        System.out.println("assignedEmp: " + assignedEmployee);
-        System.out.println("estimatedTime: " + estimatedTime);
-        System.out.println("status: " + status);
-        System.out.println("plannedStartDate: " + plannedStartDate);
-        System.out.println("dependingOnTask: " + dependingOnTask);
-        System.out.println("requiredRole: " + requiredRole);
-
         Task newTask = new Task(taskTitle, taskDescription,
                 assignedEmployee, estimatedTime, plannedStartDate,
                 dependingOnTask, requiredRole, subProjectID, status);
@@ -308,8 +302,4 @@ public class ProjectController {
     }
 
 
-
-
 }
-
-

@@ -1,6 +1,7 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.*;
+import mmmd.teammmmd_eksamensprojekt2sem.model.*;
 import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -147,4 +148,35 @@ public class ProjectService {
     }
 
 
+    /*
+    ##################################
+    #           CRUD Task            #
+    ##################################
+     */
+    public void createTask(int projectID, int subProjectID, Task task) throws SQLException {
+        projectRepository.createTask(projectID, subProjectID, task);
+    }
+
+    public List<Task> getAllTasksInSpecificSubProject(int subProjectID) throws SQLException {
+        return projectRepository.getAllTasksInSpecificSubProject(subProjectID);
+    }
+
+    public void updateTask(Task task) throws SQLException {
+        projectRepository.updateTask(task);
+    }
+
+    public void deleteTask(int taskID) throws SQLException {
+        projectRepository.deleteTask(taskID);
+    }
+
+    /*
+    ###########---Helper Methods---###########
+     */
+    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
+        return projectRepository.getNonManagerRoles();
+    }
+
+    public List<Employee> findNonManagerEmployees() {
+        return projectRepository.findNonManagerEmployees();
+    }
 }
