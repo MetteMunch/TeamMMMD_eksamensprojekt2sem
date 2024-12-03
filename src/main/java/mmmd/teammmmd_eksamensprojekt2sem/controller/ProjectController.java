@@ -75,6 +75,8 @@ public class ProjectController {
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
             projectService.createProject(project); // Projekt oprettes i DB
             projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
+
+            redirectAttributes.addAttribute("projectID",project.getID());
             //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
             //TODO: Tilføj gå tilbage eller return to PM Dashboard i html
             return "redirect:/project/{projectID}"; //TODO:korriger redirect til Project Manager dashboard, når denne er færdig

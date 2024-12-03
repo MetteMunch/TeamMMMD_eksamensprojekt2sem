@@ -19,23 +19,20 @@ når der skal kaldes attributter-->
   <h1>Project</h1>
   <h2 th:text="${project.getProjectTitle()}"></h2>
 
-</header>
-
-<main1>
-  <p text="Customer"></p>
+  <h3>Customer></h3>
   <p th:text="${project.getCustomerNameString()}"></p>
 
-  <p text="Description"></p>
+  <h3>Description</h3>
   <p th:text="${project.getProjectDescription()}"></p>
 
-  <p text="Project startup date"></p>
-  <p th:text="${project.getOrderDate()}"></p>
+  <h3>Project startup date<h3>
+    <p th:text="${project.getOrderDate()}"></p>
 
-  <p text="Project agreed deliverydate"></p>
-  <p th:text="${project.getDeliveryDate()}"></p>
-</main1>
+    <h3>Project agreed deliverydate<h3>
+      <p th:text="${project.getDeliveryDate()}"></p>
+</header>
 
-<main2>
+<main>
 
   <h3>Overview - Assigned subprojects</h3>
 
@@ -48,17 +45,17 @@ når der skal kaldes attributter-->
       <th>Functions</th>
     </tr>
     </thead>
-    <tbody th:each="subProject : ${subProjects}">
+    <tbody th:each="subProject : ${listOfSubProjects}">
     <tr>
       <td th:text="${subProject.getSubProjectTitle()}"></td>
-      <td th:text="Her vises count of antal tasks"></td>
-      <td th:text="Her vises beregnet deadline"></td>
+      <td>Metode mangler til count af tasks på subproject</td>
+      <td>Metode mangler til at tage deadline fra task</td>
       <td>
-        <a th:href="@{'/project/'+${projectID} +'/'+${subProjectID}+'/tasks'}">
-          <button class="vedikke" type="button">Show tasks</button>
+        <a th:href="@{'/project/'+${projectID} +'/'+${subProject.getProjectID()}+'/tasks'}">
+          <button class="vedikke" type="button">Show subproject</button>
         </a>
 
-        <form th:action="@{'/project/'+${projectID} +'/'+${subProjectID}+'/delete'}"
+        <form th:action="@{'/project/'+${projectID} +'/'+${subProject.getProjectID()}+'/delete'}"
               method="post" onsubmit="return confirmDeletion()">
           <button class="vedikke" type="submit">Delete</button>
         </form>
@@ -71,8 +68,10 @@ når der skal kaldes attributter-->
     </tr>
     </tbody>
   </table>
-  -->
-</main2>
+  <form th:action="@{'/project/'+${projectID} +'/createsubproject'}" method=get>
+    <button class="createResetPasswordButton" type="submit">Create new subproject</button>
+  </form>
+</main>
 
 <sidebar>
   <h3>Her kommer diverse visninger af data</h3>
