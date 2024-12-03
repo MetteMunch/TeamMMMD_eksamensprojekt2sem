@@ -156,7 +156,7 @@ public class ProjectController {
             @RequestParam(required = false) Integer assignedEmployee,
             @RequestParam(required = false) Double estimatedTime,
             @RequestParam int status,
-            @RequestParam(required = false) Date plannedStartDate,
+            @RequestParam Date plannedStartDate,
             @RequestParam(required = false) Integer dependingOnTask,
             @RequestParam(required = false) Integer requiredRole) throws SQLException {
 

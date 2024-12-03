@@ -357,6 +357,7 @@ public class ProjectRepository {
                     Integer requiredRole = rs.getObject("requiredRole", Integer.class);
 
                     Task task = new Task(
+                            rs.getInt("taskID"),
                             rs.getString("taskTitle"),
                             rs.getString("taskDescription"),
                             assignedEmployee,
@@ -370,6 +371,7 @@ public class ProjectRepository {
                     tasks.add(task);
                 }
             }
+
             return tasks;
         }
     }
