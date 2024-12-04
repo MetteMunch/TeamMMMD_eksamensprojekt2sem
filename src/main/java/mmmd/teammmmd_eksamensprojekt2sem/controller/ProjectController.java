@@ -260,7 +260,6 @@ public class ProjectController {
 
         projectService.createTask(projectID, subProjectID, newTask);
 
-//        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
         return "redirect:/user/"+employeeID+"/"+projectID+"/"+subProjectID;
     }
 
