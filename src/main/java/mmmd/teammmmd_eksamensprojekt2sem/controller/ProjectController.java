@@ -229,7 +229,8 @@ public class ProjectController {
     ###########---CREATE---###########
      */
     @GetMapping("/{projectID}/{subProjectID}/create-task")
-    public String createTask(@PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
+    public String createTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
+        model.addAttribute("employeeID", employeeID);
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
         model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
@@ -241,6 +242,7 @@ public class ProjectController {
 
     @PostMapping("/{projectID}/{subProjectID}/savetask")
     public String saveTask(
+            @PathVariable int employeeID,
             @PathVariable int projectID,
             @PathVariable int subProjectID,
             @RequestParam String taskTitle,
@@ -258,7 +260,8 @@ public class ProjectController {
 
         projectService.createTask(projectID, subProjectID, newTask);
 
-        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+//        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+        return "redirect:/user/"+employeeID+"/"+projectID+"/"+subProjectID;
     }
 
 
