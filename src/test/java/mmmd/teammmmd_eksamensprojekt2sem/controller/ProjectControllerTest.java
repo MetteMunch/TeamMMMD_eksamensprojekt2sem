@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -31,11 +32,13 @@ public class ProjectControllerTest {
     @Autowired // med denne annotation fortæller vi Spring, at den automatisk skal indsætte (injecte) en instans
     //af denne afhængighed. Dvs vi skal ikke oprette instansen manuelt med new. Spring håndterer instansieringen.
     private MockMvc mockMvc;
+    @Autowired
+    private UserService userService;
     @MockBean //med denne annotation instruere vi Spring Boot i at oprette en Mock-version af UserService, som
     //vi kan manipulere med under testen
-    private ProjectService projectService;
+    private ProjectService mockProjectService;
     @MockBean
-    private UserService userService;
+    private UserService mockUserService;
     //    String requestMapping = "/project";
     String requestMapping = "/user/{employeeID}";
     private Project project;
@@ -45,7 +48,7 @@ public class ProjectControllerTest {
     public void setup() {
         employeeID = 4;
         project = new Project();
-//        project.setID(999);
+        project.setID(999);
         project.setProjectTitle("Test Title");
         project.setProjectDescription("Test Description");
         project.setCustomer(9999);
@@ -56,27 +59,54 @@ public class ProjectControllerTest {
         project.setLinkAgreement("My link");
         project.setCompanyRep(4444);
         project.setStatus(1);
-        when(projectService.fetchSpecificProject("Test Title")).thenReturn(project);
+        when(mockProjectService.checkIfProjectNameAlreadyExists(anyString())).thenReturn(false);
+        when(mockProjectService.findProjectIDFromDB(any(Project.class))).thenReturn(project.getID());
     }
 
     @Test
     void createProjectActionSuccess() throws Exception {
-        String solvedRM = requestMapping.replace("{employeeID}", String.valueOf(employeeID));
-        mockMvc.perform(post(solvedRM + "/create-project")
-                        .param("projectTitle", project.getProjectTitle())
-                        .param("projectDescription", project.getProjectDescription())
-                        .param("customer", String.valueOf(project.getCustomer()))
-                        .param("orderDate", String.valueOf(project.getOrderDate()))
-                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
-                        .param("linkAgreement", project.getLinkAgreement())
-                        .param("companyRep", String.valueOf(project.getCompanyRep()))
-                        .param("status", String.valueOf(project.getStatus()))
-                        .param("employeeID", String.valueOf(employeeID)))
-                .andDo(print())
-                .andExpect(flash().attribute("projectID", project.getID()))
-                .andExpect(flash().attribute("employeeID", employeeID))
+        int employeeID = 4;
+        mockMvc.perform(post("/user/{employeeID}/create-project", employeeID)
+                .param("projectTitle", project.getProjectTitle())
+                .param("projectDescription", project.getProjectDescription())
+                .param("customer", String.valueOf(project.getCustomer()))
+                .param("orderDate", String.valueOf(project.getOrderDate()))
+                .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
+                .param("linkAgreement", project.getLinkAgreement())
+                .param("companyRep", String.valueOf(project.getCompanyRep()))
+                .param("status", String.valueOf(project.getStatus()))
+                .param("employeeID", String.valueOf(employeeID)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(solvedRM + "/"+project.getID())); //Husk at rette mit navn til korrekte html
+                .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, project.getID()));
+//        mockMvc.perform(post("/user/{employeeID}/create-project", employeeID)
+//                        .param("projectTitle", "Test Title")
+//                        .param("projectDescription", "Test Description")
+//                        .param("customer", "9999")
+//                        .param("orderDate", "2024-12-12")
+//                        .param("deliveryDate", "2025-01-01")
+//                        .param("linkAgreement", "My link")
+//                        .param("companyRep", "4444")
+//                        .param("status", "1")
+//                        .param("employeeID", String.valueOf(employeeID))) // Add the missing employeeID as a request param
+//                .andExpect(status().is3xxRedirection()) // Expecting a redirect after successful project creation
+//                .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, 999)); // Verifying the redirection URL
+//        String solvedRM = requestMapping.replace("{employeeID}", String.valueOf(employeeID));
+////
+////        mockMvc.perform(post(solvedRM + "/create-project")
+////                        .param("projectTitle", project.getProjectTitle())
+////                        .param("projectDescription", project.getProjectDescription())
+////                        .param("customer", String.valueOf(project.getCustomer()))
+////                        .param("orderDate", String.valueOf(project.getOrderDate()))
+////                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
+////                        .param("linkAgreement", project.getLinkAgreement())
+////                        .param("companyRep", String.valueOf(project.getCompanyRep()))
+////                        .param("status", String.valueOf(project.getStatus()))
+////                        .param("employeeID", String.valueOf(employeeID)))
+////                .andDo(print())
+////                .andExpect(flash().attribute("projectID", project.getID()))
+////                .andExpect(flash().attribute("employeeID", employeeID))
+////                .andExpect(status().is3xxRedirection())
+////                .andExpect(redirectedUrl(solvedRM + "/"+project.getID())); //Husk at rette mit navn til korrekte html
     }
 //    @Test
 //    void createProjectActionFailNameAlreadyExists() throws Exception {
