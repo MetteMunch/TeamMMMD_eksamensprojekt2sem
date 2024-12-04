@@ -1,7 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.service;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.*;
-import mmmd.teammmmd_eksamensprojekt2sem.model.*;
 import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,7 +90,7 @@ public class ProjectService {
     }
 
     public boolean checkIfSubProjectNameAlreadyExists(int projectID, String subProjectTitle) {
-        return projectRepository.checkIfSubProjectNameAlreadyExists(subProjectTitle);
+        return projectRepository.checkIfSubProjectNameAlreadyExists(subProjectTitle, projectID);
     }
 
     public List<SubProject> showListOfSpecificSubProjects(int projectID) {
@@ -106,9 +105,9 @@ public class ProjectService {
         projectRepository.deleteSubproject(subProjectID);
     }
 
-//    public List<SubProject> showAllSubProjects() {
-//        return projectRepository.showAllSubProjects();
-//    }
+    public SubProject showSubProject(int subProjectID) {
+        return projectRepository.showSubProject(subProjectID);
+    }
 
 
     /*
@@ -143,7 +142,7 @@ public class ProjectService {
         projectRepository.createTask(projectID, subProjectID, task);
     }
 
-    public List<Task> getAllTasksInSpecificSubProject(int subProjectID) throws SQLException {
+    public List<Task> getAllTasksInSpecificSubProject(int subProjectID) {
         return projectRepository.getAllTasksInSpecificSubProject(subProjectID);
     }
 

@@ -88,7 +88,7 @@ public class UserController {
         model.addAttribute("tasks", projectService.showAllTasksSpecificEmployee(employeeID));
 
         if(userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
-            return "projectmanagerDashboard";  //TODO: dette view findes ikke endnu
+            return "employeeDashboard";  //TODO: skal laves til PMdashboard
         } else {
             return "employeeDashboard";
         }

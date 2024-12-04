@@ -51,11 +51,11 @@ når der skal kaldes attributter-->
       <td>Metode mangler til count af tasks på subproject</td>
       <td>Metode mangler til at tage deadline fra task</td>
       <td>
-        <a th:href="@{'/project/'+${projectID} +'/'+${subProject.getProjectID()}+'/tasks'}">
+        <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}}">
           <button class="vedikke" type="button">Show subproject</button>
         </a>
 
-        <form th:action="@{'/project/'+${projectID} +'/'+${subProject.getProjectID()}+'/delete'}"
+        <form th:action="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}+'/delete-subproject'}"
               method="post" onsubmit="return confirmDeletion()">
           <button class="vedikke" type="submit">Delete</button>
         </form>
@@ -68,7 +68,7 @@ når der skal kaldes attributter-->
     </tr>
     </tbody>
   </table>
-  <form th:action="@{'/project/'+${projectID} +'/createsubproject'}" method=get>
+  <form th:action="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}" method=get>
     <button class="createResetPasswordButton" type="submit">Create new subproject</button>
   </form>
 </main>

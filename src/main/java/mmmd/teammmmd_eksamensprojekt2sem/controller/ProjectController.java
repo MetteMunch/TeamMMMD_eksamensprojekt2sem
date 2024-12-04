@@ -4,8 +4,6 @@ import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,7 +64,7 @@ public class ProjectController {
     @PostMapping("/create-project") //CREATE
     public String createProjectAction(@RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
-                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status, RedirectAttributes redirectAttributes) {
+                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status,@RequestParam int employeeID, RedirectAttributes redirectAttributes) {
         if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) { //returnerer true, hvis navnet allerede eksisterer i DB.
             redirectAttributes.addFlashAttribute("titleAlreadyExistsError", "The selected project title already exists. " +
                     "Please select another title for this project.");
@@ -83,9 +80,10 @@ public class ProjectController {
             projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
 
             redirectAttributes.addAttribute("projectID",project.getID());
+            redirectAttributes.addAttribute("employeeID", employeeID);
             //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
             //TODO: Tilføj gå tilbage eller return to PM Dashboard i html
-            return "redirect:/user/{employeeID}"; //DENNE GÅR TILBAGE TIL LOGINPAGE ER DET FORDI DEN IKKE HAR EMPLOYEEID MED?
+            return "redirect:/user/{employeeID}/{projectID}"; //DENNE GÅR TILBAGE TIL LOGINPAGE ER DET FORDI DEN IKKE HAR EMPLOYEEID MED?
         }
     }
 //    @GetMapping("/success") //TODO: Udelukkende til demokode for at se om metode eksekveres korrekt med redirect. Slet når ikke længere nødvendig sammen med html fil.
@@ -109,11 +107,12 @@ public class ProjectController {
      */
 
     @GetMapping("/{projectID}")
-    public String showProject(@PathVariable int projectID, Model model) {
+    public String showProject(@PathVariable int projectID, Model model,@PathVariable int employeeID) {
         Project project = projectService.fetchSpecificProject(projectID);
         List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
         model.addAttribute("project",project);
         model.addAttribute("listOfSubProjects",listOfSpecificSubProjects);
+        model.addAttribute("employeeID",employeeID);
 
         return "showProject";
 
@@ -167,38 +166,52 @@ public class ProjectController {
     #           SubProject              #
     #####################################
     */
-    @GetMapping("/{projectID}/createsubproject")
-    public String createSubProject(@PathVariable int projectID, Model model, RedirectAttributes redirectAttributes) {
+    @GetMapping("/{projectID}/create-subproject")
+    public String createSubProject(@PathVariable int projectID, @PathVariable int employeeID, Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("projectID", projectID);
+        model.addAttribute("employeeID",employeeID);
         redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
         return "createSubProjectForm";
     }
 
-    @PostMapping("/{projectID}/savesubproject")
+    @PostMapping("/{projectID}/save-subproject")
     public String saveSubProject(@PathVariable int projectID,
+                                 @PathVariable int employeeID,
                                  @RequestParam String subProjectTitle,
                                  @RequestParam String subProjectDescription,
-                                 @RequestParam int statusID) {
+                                 @RequestParam int statusID,
+                                 RedirectAttributes redirectAttributes) {
         SubProject newSubProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
 
-        projectService.createSubproject(newSubProject);
 
-        return "redirect:/project/" + projectID + "/subproject";
+        projectService.createSubproject(newSubProject);
+        redirectAttributes.addAttribute("employeeID", employeeID);
+        redirectAttributes.addAttribute("projectID", projectID);
+
+        return "redirect:/user/{employeeID}/{projectID}";
     }
     //TODO: Lav et view der hvor vi lander efter at subproject er gemt fx. subprojectview
 
-//    @PostMapping("/deleteSubProject/{employeeID}/{subProjectID}")
-//    public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID) {
-//        projectService.deleteSubProject(subProjectID);
-//        return "redirect:/project/" + employeeID;
-//    }
+    @PostMapping("/{projectID}/{subProjectID}/delete-subproject")
+    public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID, @PathVariable int projectID, RedirectAttributes redirectAttributes) {
+        System.out.println("subID: "+subProjectID);
+        projectService.deleteSubProject(subProjectID);
+        redirectAttributes.addAttribute("employeeID", employeeID);
+        redirectAttributes.addAttribute("projectID", projectID);
+        return "redirect:/user/{employeeID}/{projectID}";
+    }
 
-//    @GetMapping("/{projectID}/show_all_subprojects")
-//    public String showAllSubProjects(@PathVariable int projectID, Model model) {
-//        model.addAttribute("subProjects", projectService.showAllSubProjects());
-//        return "showAllSubProjectsTest";
-//        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
-//    }
+    @GetMapping("/{projectID}/{subProjectID}")
+    public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) {
+        System.out.println("kommer vi ind i endpoint show SubProject?");
+        System.out.println("projectID: "+projectID);
+        System.out.println("subprojectID: "+subProjectID);
+        System.out.println("EmployeeID: "+employeeID);
+        model.addAttribute("subProject", projectService.showSubProject(subProjectID));
+        model.addAttribute("tasks",projectService.getAllTasksInSpecificSubProject(subProjectID));
+        return "showSubProject";
+
+    }
 
     @GetMapping("/{projectID}/show_specific_subprojects")
     public String showSpecificSubProjects(@PathVariable int projectID, Model model) {
@@ -215,7 +228,7 @@ public class ProjectController {
 
     ###########---CREATE---###########
      */
-    @GetMapping("/{projectID}/{subProjectID}/createtask")
+    @GetMapping("/{projectID}/{subProjectID}/create-task")
     public String createTask(@PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
@@ -296,10 +309,13 @@ public class ProjectController {
     /*
     ###########---DELETE---###########
     */
-    @PostMapping("/{projectID}/{subProjectID}/delete-task/{taskID}")
-    public String deleteTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID) throws SQLException {
+    @PostMapping("/{projectID}/{subProjectID}/{taskID}/delete-task")
+    public String deleteTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, RedirectAttributes redirectAttributes) throws SQLException {
         projectService.deleteTask(taskID);
-        return "redirect:/user/{employeeID}/" + projectID + "/" + subProjectID + "/tasks";
+        redirectAttributes.addAttribute("employeeID", employeeID);
+        redirectAttributes.addAttribute("projectID", projectID);
+        redirectAttributes.addAttribute("subProjectID",subProjectID);
+        return "redirect:/user/{employeeID}/{projectID}/{subProjectID}";
     }
 
 
