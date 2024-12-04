@@ -2,11 +2,12 @@ package mmmd.teammmmd_eksamensprojekt2sem.model;
 
 public class SubProject {
 
+    private int subProjectID;
     private String subProjectTitle;
     private String subProjectDescription;
     private int projectID;
     private int statusID;
-    private String status;
+    private String statusString;
 
     public SubProject (String subprojectTitle, String subprojectDescription, int projectID, int statusID) {
         this.subProjectTitle = subprojectTitle;
@@ -15,11 +16,13 @@ public class SubProject {
         this.statusID = statusID;
     }
 
-    public SubProject (String subprojectTitle, String subprojectDescription, int projectID, String status) {
-        this.subProjectTitle = subprojectTitle;
-        this.subProjectDescription = subprojectDescription;
-        this.projectID = projectID;
-        this.status = status;
+
+    public int getSubProjectID() {
+        return subProjectID;
+    }
+
+    public void setSubProjectID(int subProjectID) {
+        this.subProjectID = subProjectID;
     }
 
     public String getSubProjectTitle() {
@@ -38,8 +41,8 @@ public class SubProject {
         return statusID;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusString() {
+        return statusString;
     }
 
     public void setSubProjectTitle(String subProjectTitle) {
@@ -55,5 +58,9 @@ public class SubProject {
     }
     public void setStatusID(int statusID) {
         this.statusID = statusID;
+    }
+
+    public void setStatusString(String status) {
+        this.statusString = status;
     }
 }

@@ -3,15 +3,9 @@ package mmmd.teammmmd_eksamensprojekt2sem.repository;
 import mmmd.teammmmd_eksamensprojekt2sem.model.*;
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 
-import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +13,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Repository
@@ -33,91 +25,6 @@ public class ProjectRepository {
         this.dbConnection = connectionManager.getConnection();
     }
 
-    //*******CRUD --- SUBPROJECT******//
-    public void createSubProject(SubProject subProject) {
-        String sqlInsertSubproject = "INSERT INTO Subproject (subProjectTitle, subProjectDescription, projectID, status) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = dbConnection.prepareStatement(sqlInsertSubproject, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, subProject.getSubProjectTitle());
-            ps.setString(2, subProject.getSubProjectDescription());
-            ps.setInt(3, subProject.getProjectID());
-            ps.setInt(4, subProject.getStatusID());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean checkIfSubProjectNameAlreadyExists(String subProjectTitle) {
-        String sql = "SELECT subProjectTitle FROM subProject WHERE LOWER(subProjectTitle) = LOWER(?)";
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            ps.setString(1, subProjectTitle);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    if (subProjectTitle.equals(rs.getString(1))) {
-                        return true;
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public List<SubProject> showAllSubProjects() { //READ
-        String sql = "SELECT subProjectTitle, subProjectDescription, projectID, status.status FROM subProject\n" +
-                "INNER JOIN Status ON subProject.status = status.statusID";
-        List<SubProject> listOfSubProjects = new ArrayList<>();
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    SubProject subProject = new SubProject(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4));
-
-                    listOfSubProjects.add(subProject);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return listOfSubProjects;
-    }
-
-    public List<SubProject> showListOfSpecificSubProject(int projectID) {
-        List<SubProject> listOfSubProjects = new ArrayList<>();
-
-        String SQL = "SELECT subProjectTitle, subProjectDescription, projectID, Status.status FROM subProject\n" +
-                "INNER JOIN status ON Status.statusID = SubProject.status WHERE projectID = ?";
-
-        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
-            ps.setInt(1, projectID);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                String subProjectTitle = rs.getString("subProjectTitle");
-                String subProjectdescription = rs.getString("subProjectDescription");
-                int projectNameID = rs.getInt("projectID");
-                int statusID = rs.getInt("statusID");
-                listOfSubProjects.add(new SubProject(subProjectTitle, subProjectdescription, projectID, statusID));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return listOfSubProjects;
-    }
-
-    public void updateSubProject() {
-        //TODO:
-    }
-
-    public void deleteSubproject(int subprojectID) {
-        String SQL = "DELETE FROM SubProject WHERE subProjectID = ?";
-        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
-            ps.setInt(1, subprojectID);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     /*
     #####################################
@@ -145,40 +52,41 @@ public class ProjectRepository {
     }
 
     public Customer fetchInternalProjectCustomer() {
-        String fetchSql ="SELECT customerID, companyName, repName FROM customer WHERE companyName=?";
+        String fetchSql = "SELECT customerID, companyName, repName FROM customer WHERE companyName=?";
         String insertSQL = "INSERT INTO customer(companyName, repName) VALUES(?,?)";
         String internalProject = "Internal Project";
         String internalRep = "Internal";
 
-        try(PreparedStatement fetchPs = dbConnection.prepareStatement(fetchSql)) { //Vi henter Internal Project som Customer, hvis det eksisterer i databasen
+        try (PreparedStatement fetchPs = dbConnection.prepareStatement(fetchSql)) { //Vi henter Internal Project som Customer, hvis det eksisterer i databasen
             fetchPs.setString(1, internalProject);
 
-            try(ResultSet rs = fetchPs.executeQuery()) {
+            try (ResultSet rs = fetchPs.executeQuery()) {
                 if (rs.next()) { //Internal Project(IP) eksisterer i databasen og vi laver det til Customer objekt og sender videre.
                     Customer internalCus = new Customer(rs.getInt(1), rs.getString(2), rs.getString(3));
                     return internalCus;
                 }
             }
 
-            try(PreparedStatement insertPs = dbConnection.prepareStatement(insertSQL, PreparedStatement.RETURN_GENERATED_KEYS)) { //IP findes ikke og vi inserter det i databasen.
+            try (PreparedStatement insertPs = dbConnection.prepareStatement(insertSQL, PreparedStatement.RETURN_GENERATED_KEYS)) { //IP findes ikke og vi inserter det i databasen.
                 insertPs.setString(1, internalProject);
                 insertPs.setString(2, internalRep);
                 int affectedRows = insertPs.executeUpdate();
 
-                if (affectedRows > 0 ) {
-                    try(ResultSet rs = insertPs.getGeneratedKeys()) {
+                if (affectedRows > 0) {
+                    try (ResultSet rs = insertPs.getGeneratedKeys()) {
                         if (rs.next()) {
                             int customerID = rs.getInt(1);
-                            return new Customer(customerID,internalProject, internalRep );
+                            return new Customer(customerID, internalProject, internalRep);
                         }
                     }
                 }
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
+
     public void createCustomer(Customer customer) {
         String sql = "INSERT INTO customer(companyName, repName) VALUES(?,?)";
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
@@ -293,7 +201,7 @@ public class ProjectRepository {
                 String companyRepName = rs.getString(10);
                 int projectStatusID = rs.getInt(11);
                 String projectStatus = rs.getString(12);
-                Project project = new Project(projectID,projectTitle,projectDescription,customerID,orderDate,agreedDeliveryDate,linkAgreement,companyRep,projectStatusID);
+                Project project = new Project(projectID, projectTitle, projectDescription, customerID, orderDate, agreedDeliveryDate, linkAgreement, companyRep, projectStatusID);
                 project.setCompanyRepString(companyRepName);
                 project.setCustomerNameString(customerName);
                 project.setStatusString(projectStatus);
@@ -351,6 +259,270 @@ public class ProjectRepository {
         }
     }
 
+    /*
+    #####################################
+    #           CRUD SUBPROJECT        #
+    #####################################
+     */
+
+    //*******CREATE --- SUBPROJECT******//
+    public void createSubProject(SubProject subProject) {
+        String sqlInsertSubproject = "INSERT INTO Subproject (subProjectTitle, subProjectDescription, projectID, status) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sqlInsertSubproject, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, subProject.getSubProjectTitle());
+            ps.setString(2, subProject.getSubProjectDescription());
+            ps.setInt(3, subProject.getProjectID());
+            ps.setInt(4, subProject.getStatusID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkIfSubProjectNameAlreadyExists(String subProjectTitle, int projectID) {
+        String sql = "SELECT subProjectTitle FROM subProject WHERE LOWER(subProjectTitle) = LOWER(?) AND projectID=?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, subProjectTitle);
+            ps.setInt(2, projectID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    if (subProjectTitle.equals(rs.getString(1))) {
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public SubProject showSubProject(int subProjectID) {
+        String sql = "SELECT subProjectTitle, subProjectDescription, projectID, subproject.status, status.status FROM subProject\n" +
+                "INNER JOIN Status ON subProject.status = status.statusID WHERE subProjectID =?";
+
+        SubProject subProject = null;
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, subProjectID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+
+                    subProject = new SubProject(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4));
+                    subProject.setSubProjectID(subProjectID);
+                    subProject.setStatusString(rs.getString(5));
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subProject;
+    }
+
+    public List<SubProject> showListOfSpecificSubProjects(int projectID) {
+        List<SubProject> listOfSubProjects = new ArrayList<>();
+
+        String SQL = "SELECT subProjectID, subProjectTitle, subProjectDescription, subProject.status, Status.status FROM subProject\n" +
+                "INNER JOIN status ON Status.statusID = SubProject.status WHERE projectID = ?";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, projectID);
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    int subProjectID = rs.getInt(1);
+                    String subProjectTitle = rs.getString(2);
+                    String subProjectDescription = rs.getString(3);
+                    int statusID = rs.getInt(4);
+                    String statusString = rs.getString(5);
+                    SubProject subProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
+                    subProject.setStatusString(statusString);
+                    subProject.setSubProjectID(subProjectID);
+                    listOfSubProjects.add(subProject);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listOfSubProjects;
+    }
+
+    public void updateSubProject() {
+        //TODO:
+    }
+
+    public void deleteSubproject(int subprojectID) {
+        String SQL = "DELETE FROM SubProject WHERE subProjectID = ?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, subprojectID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+    ##################################
+    #             Task               #
+    ##################################
+     */
+
+
+    //###### Create Task #############
+
+    public void createTask(int projectID, int subProjectID, Task task) throws SQLException {
+        String sql = "INSERT INTO Task (taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (var ps = dbConnection.prepareStatement(sql)) {
+            //setObject håndterer automatisk null værdier
+            ps.setString(1, task.getTaskTitle());
+            ps.setString(2, task.getTaskDescription());
+            ps.setObject(3, task.getAssignedEmployee(), java.sql.Types.INTEGER);
+            ps.setObject(4, task.getEstimatedTime(), java.sql.Types.DOUBLE);
+            ps.setDouble(5, task.getActualTime());
+            ps.setDate(6, task.getPlannedStartDate());
+            ps.setObject(7, task.getDependingOnTask(), java.sql.Types.INTEGER);
+            ps.setObject(8, task.getRequiredRole(), java.sql.Types.INTEGER);
+            ps.setInt(9, task.getSubProjectID());
+            ps.setInt(10, task.getStatus());
+
+            ps.executeUpdate();
+        }
+    }
+
+
+    //###### Read Task #############
+
+    public List<Task> getAllTasksInSpecificSubProject(int subProjectID) {
+        List<Task> tasks = new ArrayList<>();
+        String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
+                "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status " +
+                "FROM Task WHERE subProjectID = ?";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, subProjectID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+
+                    // getObject metoden bruges så vi kan håndtere null værdier
+                    Integer assignedEmployee = rs.getObject("assignedEmployee", Integer.class);
+                    Double estimatedTime = rs.getObject("estimatedTime", Double.class);
+                    Integer dependingOnTask = rs.getObject("dependingOnTask", Integer.class);
+                    Integer requiredRole = rs.getObject("requiredRole", Integer.class);
+
+                    Task task = new Task(
+                            rs.getInt("taskID"),
+                            rs.getString("taskTitle"),
+                            rs.getString("taskDescription"),
+                            assignedEmployee,
+                            estimatedTime,
+                            rs.getDate("plannedStartDate"),
+                            dependingOnTask,
+                            requiredRole,
+                            rs.getInt("subProjectID"),
+                            rs.getInt("status")
+                    );
+                    tasks.add(task);
+                }
+            }
+
+            return tasks;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Task> showAllTasksSpecificEmployee(int employeeID) {
+
+        List<Task> listOfTasksSpecificEmployee = new ArrayList<>();
+
+        String SQL = "SELECT task.taskID, task.taskTitle, task.taskDescription, task.assignedEmployee, employee.fullName,\n" +
+                "task.estimatedTime, task.actualTime, task.plannedStartDate,task.dependingOnTask, task2.taskTitle AS dependingOnTaskTitle, \n" +
+                "task.requiredRole, employeerole.roleTitle, task.subProjectID, task.status, status.status, subproject.projectID FROM task\n" +
+                "LEFT JOIN task task2 ON task.dependingOntask = task2.taskID\n" +
+                "INNER JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
+                "INNER JOIN employeerole ON employeerole.roleID = task.requiredRole\n" +
+                "INNER JOIN status ON status.statusID = task.status\n" +
+                "INNER JOIN subproject ON subproject.subprojectID = task.subProjectID\n" +
+                "WHERE task.assignedEmployee = ?";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, employeeID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+
+                    int taskID = rs.getInt(1);
+                    String taskTitle = rs.getString(2);
+                    String taskDescription = rs.getString(3);
+                    int assignedEmp = rs.getInt(4);
+                    String assignedEmpFullName = rs.getString(5);
+                    double estTime = rs.getDouble(6);
+                    double actTime = rs.getDouble(7);
+                    Date plannedStartDate = rs.getDate(8);
+                    int dependingOnTaskID = rs.getInt(9);
+                    String dependingOnTaskTitle = rs.getString(10);
+                    int requiredRole = rs.getInt(11);
+                    String roleTitle = rs.getString(12);
+                    int subProjectID = rs.getInt(13);
+                    int statusID = rs.getInt(14);
+                    String status = rs.getString(15);
+                    int projectID = rs.getInt(16);
+
+                    Task task = new Task(taskID, taskTitle, taskDescription, assignedEmp, estTime, plannedStartDate, dependingOnTaskID, requiredRole, subProjectID, statusID);
+                    task.setActualTime(actTime);
+                    task.setAssignedEmployeeString(assignedEmpFullName);
+                    task.setDependingOnTaskString(dependingOnTaskTitle);
+                    task.setRequiredRoleString(roleTitle);
+                    task.setStatusString(status);
+                    task.setProjectID(projectID);
+
+                    listOfTasksSpecificEmployee.add(task);
+
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listOfTasksSpecificEmployee;
+    }
+
+
+    //###### Update  Task #############
+
+    public void updateTask(Task task) throws SQLException {
+        String sql = "UPDATE Task SET taskTitle = ?, taskDescription = ?, assignedEmployee = ?, estimatedTime = ?, " +
+                "actualTime = ?, plannedStartDate = ?, dependingOnTask = ?, requiredRole = ?, status = ? " +
+                "WHERE taskID = ?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, task.getTaskTitle());
+            ps.setString(2, task.getTaskDescription());
+            ps.setObject(3, task.getAssignedEmployee(), java.sql.Types.INTEGER);
+            ps.setObject(4, task.getEstimatedTime(), java.sql.Types.DOUBLE);
+            ps.setDouble(5, task.getActualTime());
+            ps.setDate(6, task.getPlannedStartDate());
+            ps.setObject(7, task.getDependingOnTask(), java.sql.Types.INTEGER);
+            ps.setObject(8, task.getRequiredRole(), java.sql.Types.INTEGER);
+            ps.setInt(9, task.getStatus());
+            ps.setInt(10, task.getTaskID());
+
+            ps.executeUpdate();
+        }
+    }
+    //###### Delete Task #############
+
+    public void deleteTask(int taskID) throws SQLException {
+        String sql = "DELETE FROM Task WHERE taskID = ?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, taskID);
+
+            ps.executeUpdate();
+        }
+    }
 
     /*
        #####################################
@@ -434,57 +606,6 @@ public class ProjectRepository {
         }
         return statusFromDB;
     }
-    /*
-        #####################################
-        #          Employee Methods         #
-        #####################################
-     */
-
-    public List<Employee> findPMEmployees() {
-        //Project Managers(role code 1)
-        List<Employee> employeesFromDBPM = new ArrayList<>();
-        String sql = "SELECT employeeID, fullName, username, password, role FROM employee WHERE role=1";
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3),
-                            rs.getString(4), rs.getInt(5));
-                    employeesFromDBPM.add(emp);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return employeesFromDBPM;
-    }
-
-    public List<Employee> findBCEmployees() {
-        //Business Consultants(role code 2)
-        List<Employee> employeesFromDBBC = new ArrayList<>();
-        String sql = "SELECT employeeID, fullName, username, password, role FROM employee WHERE role=2";
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3),
-                            rs.getString(4), rs.getInt(5));
-                    employeesFromDBBC.add(emp);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return employeesFromDBBC;
-    }
-
-
-
-
-    /*
-    ##################################
-    #           CRUD Task            #
-    ##################################
-     */
-
 
     /*
     ##################################
@@ -513,12 +634,9 @@ public class ProjectRepository {
     }
 
 
-    /*
-    ##################################
-    #           READ Task            #
-    ##################################
-     */
-    public List<Task> getAllTasksInSpecificSubProject(int subProjectID) throws SQLException {
+    //###### Read Task #############
+
+    public List<Task> getAllTasksInSpecificSubProject(int subProjectID) {
         List<Task> tasks = new ArrayList<>();
         String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
                 "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status " +
@@ -552,14 +670,13 @@ public class ProjectRepository {
                 }
             }
             return tasks;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    /*
-    ##################################
-    #           Update Task          #
-    ##################################
-     */
+    //###### Update  Task #############
+
     public void updateTask(Task task) throws SQLException {
         String sql = "UPDATE Task SET taskTitle = ?, taskDescription = ?, assignedEmployee = ?, estimatedTime = ?, " +
                 "plannedStartDate = ?, dependingOnTask = ?, requiredRole = ?, status = ? " +
@@ -578,12 +695,8 @@ public class ProjectRepository {
             ps.executeUpdate();
         }
     }
+    //###### Delete Task #############
 
-    /*
-    ##################################
-    #           Delete Task          #
-    ##################################
-    */
     public void deleteTask(int taskID) throws SQLException {
         String sql = "DELETE FROM Task WHERE taskID = ?";
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
@@ -593,13 +706,122 @@ public class ProjectRepository {
         }
     }
 
-
-
     /*
     ###################################
     #          Helper Methods         #
     ###################################
     */
+    public Project fetchSpecificProject(String projectTitle) {
+        String sql = "SELECT projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status FROM project WHERE projectTitle=?";
+        Project project = null;
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, projectTitle);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    project = new Project(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4),
+                            rs.getDate(5), rs.getDate(6), rs.getString(7), rs.getInt(8), rs.getInt(9));
+                    return project;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (project == null) {
+            throw new IllegalArgumentException("No project found with title: " + projectTitle);
+        }
+        return project;
+    }
+
+    public Project fetchSpecificProject(int projectID) {
+        Project project = null;
+
+        String SQL = "SELECT projectTitle, projectDescription, project.customer, customer.companyName, orderDate, deliveryDate, " +
+                "linkAgreement, companyRep, employee.fullName, project.status AS statusID, status.status AS statusString FROM project " +
+                "INNER JOIN customer ON customer.customerID = project.customer " +
+                "INNER JOIN status ON status.statusID = project.status " +
+                "INNER JOIN employee ON employee.employeeID = project.companyrep WHERE project.projectID=?";
+
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, projectID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String projectTitle = rs.getString(1);
+                    String projectDescription = rs.getString(2);
+                    int customerID = rs.getInt(3);
+                    String customerName = rs.getString(4);
+                    Date orderDate = rs.getDate(5);
+                    Date agreedDeliveryDate = rs.getDate(6);
+                    String linkAgreement = rs.getString(7);
+                    int companyRep = rs.getInt(8);
+                    String nameCompanyRep = rs.getString(9);
+                    String status = rs.getString("statusString");
+                    int statusID = rs.getInt("statusID");
+
+                    project = new Project(projectID, projectTitle, projectDescription, customerID, orderDate, agreedDeliveryDate,
+                            linkAgreement, companyRep, statusID);
+                    project.setStatusString(status);
+                    project.setCustomerNameString(customerName);
+                    project.setCompanyRepString(nameCompanyRep);
+
+                    System.out.println("Her er kunde navn:" + customerName);
+                    System.out.println("Her er Projekt status:" + status);
+
+
+                    return project;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (project == null) {
+            throw new IllegalArgumentException("No project found with ID: " + projectID);
+        }
+        return project;
+    }
+
+    public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
+        String sql = "SELECT projectTitle FROM project WHERE LOWER (projectTitle)=LOWER(?)";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, projectTitle);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    if (projectTitle.equals(rs.getString(1))) {
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void setProjectID(Project project) {
+        String sql = "SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
+        int projectIDFromDB = -1;
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, project.getProjectTitle());
+            ps.setDate(2, project.getOrderDate());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    projectIDFromDB = rs.getInt(1);
+                    project.setID(projectIDFromDB);
+                    System.out.println("Successfully created project: " + project.getProjectTitle() + " with ID: " + project.getID());
+                } else {
+                    throw new IllegalArgumentException("No project found with title: " + project.getProjectTitle() + " and order date: " + project.getOrderDate() + ". PROJECT REPOSITORY LINE 45.");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Task getTaskByID(int taskID) throws SQLException {
         String sql = "SELECT taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status FROM Task WHERE taskID = ?";
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
@@ -646,6 +868,22 @@ public class ProjectRepository {
         return status;
     }
 
+    public List<Status> fetchAllStatus() {
+        String sql = "SELECT statusID, status FROM status";
+        List<Status> statusFromDB = new ArrayList<>();
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Status status = new Status(rs.getInt(1), rs.getString(2));
+                    statusFromDB.add(status);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return statusFromDB;
+    }
+
     public List<EmployeeRole> getNonManagerRoles() throws SQLException {
         String sql = "SELECT roleID, roleTitle, isManager FROM EmployeeRole WHERE isManager = false";
 
@@ -668,8 +906,7 @@ public class ProjectRepository {
 
     public List<Employee> findNonManagerEmployees() {
         List<Employee> nonManagerEmployees = new ArrayList<>();
-        String sql = "SELECT e.employeeID, e.fullName " +
-                "FROM Employee e " +
+        String sql = "SELECT e.employeeID, e.fullName FROM Employee e " +
                 "JOIN EmployeeRole r ON e.role = r.roleID " +
                 "WHERE r.isManager = false";
 
@@ -684,6 +921,47 @@ public class ProjectRepository {
             e.printStackTrace();
         }
         return nonManagerEmployees;
+    }
+    /*
+        #####################################
+        #          Employee Methods         #
+        #####################################
+     */
+
+    public List<Employee> findPMEmployees() {
+        //Project Managers(role code 1)
+        List<Employee> employeesFromDBPM = new ArrayList<>();
+        String sql = "SELECT employeeID, fullName, username, password, role FROM employee WHERE role=1";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3),
+                            rs.getString(4), rs.getInt(5));
+                    employeesFromDBPM.add(emp);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employeesFromDBPM;
+    }
+
+    public List<Employee> findBCEmployees() {
+        //Business Consultants(role code 2)
+        List<Employee> employeesFromDBBC = new ArrayList<>();
+        String sql = "SELECT employeeID, fullName, username, password, role FROM employee WHERE role=2";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3),
+                            rs.getString(4), rs.getInt(5));
+                    employeesFromDBBC.add(emp);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employeesFromDBBC;
     }
 
 }

@@ -10,7 +10,9 @@
     <p th:text="${titleAlreadyExistsError}" style="color:red"></p>
 </div>
 
-<form action="/project/create_project" method="post">
+<form th:action="@{/user/{employeeID}/create-project(employeeID=${employeeID})}" method="post">
+
+    <input type="hidden" name="employeeID" th:value="${employeeID}">
     <!--String title, string description, int customer, Date orderDate, Date Delivery, string linkagreement, int companyrep, int status -->
     <label class="projectTitle" for="projectTitle">Project Title: </label>
     <input type="text" id="projectTitle" name="projectTitle" required>
