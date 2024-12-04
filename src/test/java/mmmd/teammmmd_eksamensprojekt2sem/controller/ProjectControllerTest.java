@@ -1,73 +1,83 @@
-//package mmmd.teammmmd_eksamensprojekt2sem.controller;
-//
-//import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
-//import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
-//import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
-//import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.springframework.http.MediaType;
-//import java.sql.Date;
-//
-//import static org.mockito.ArgumentMatchers.anyString;
-//import static org.mockito.Mockito.when;
-//
-//
-//import java.sql.Date;
-//
-//import static org.mockito.Mockito.when;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-//
-//@WebMvcTest(ProjectController.class)
-//public class ProjectControllerTest {
-//    @Autowired // med denne annotation fortæller vi Spring, at den automatisk skal indsætte (injecte) en instans
-//    //af denne afhængighed. Dvs vi skal ikke oprette instansen manuelt med new. Spring håndterer instansieringen.
-//    private MockMvc mockMvc;
-//    @MockBean //med denne annotation instruere vi Spring Boot i at oprette en Mock-version af UserService, som
-//    //vi kan manipulere med under testen
-//    private ProjectService projectService;
-////    String requestMapping = "/project";
-//    String requestMapping = "/user/{employeeID}";
-//    private Project project;
-//
-//    @BeforeEach
-//    public void setup() {
-//        project = new Project();
+package mmmd.teammmmd_eksamensprojekt2sem.controller;
+
+import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
+import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
+import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.sql.Date;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+
+import java.sql.Date;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(ProjectController.class)
+public class ProjectControllerTest {
+    @Autowired // med denne annotation fortæller vi Spring, at den automatisk skal indsætte (injecte) en instans
+    //af denne afhængighed. Dvs vi skal ikke oprette instansen manuelt med new. Spring håndterer instansieringen.
+    private MockMvc mockMvc;
+    @MockBean //med denne annotation instruere vi Spring Boot i at oprette en Mock-version af UserService, som
+    //vi kan manipulere med under testen
+    private ProjectService projectService;
+    @MockBean
+    private UserService userService;
+    //    String requestMapping = "/project";
+    String requestMapping = "/user/{employeeID}";
+    private Project project;
+    private int employeeID;
+
+    @BeforeEach
+    public void setup() {
+        employeeID = 4;
+        project = new Project();
 //        project.setID(999);
-//        project.setProjectTitle("Test Title");
-//        project.setProjectDescription("Test Description");
-//        project.setCustomer(9999);
-//        Date orderDate = Date.valueOf("2024-12-12");
-//        Date deliveryDate = Date.valueOf("2025-01-01");
-//        project.setOrderDate(orderDate);
-//        project.setDeliveryDate(deliveryDate);
-//        project.setLinkAgreement("My link");
-//        project.setCompanyRep(4444);
-//        project.setStatus(1);
-//        when(projectService.fetchSpecificProject("Test Title")).thenReturn(project);
-//    }
-//
-//    @Test
-//    void createProjectActionSuccess() throws Exception {
-//        mockMvc.perform(post(requestMapping+"/create_project")
-//                .param("projectTitle", project.getProjectTitle())
-//                .param("projectDescription", project.getProjectDescription())
-//                .param("customer", String.valueOf(project.getCustomer()))
-//                .param("orderDate", String.valueOf(project.getOrderDate()))
-//                .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
-//                .param("linkAgreement", project.getLinkAgreement())
-//                .param("companyRep", String.valueOf(project.getCompanyRep()))
-//                .param("status", String.valueOf(project.getStatus())))
-//                .andDo(print())
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl(requestMapping+"/success")); //Husk at rette mit navn til korrekte html
-//    }
+        project.setProjectTitle("Test Title");
+        project.setProjectDescription("Test Description");
+        project.setCustomer(9999);
+        Date orderDate = Date.valueOf("2024-12-12");
+        Date deliveryDate = Date.valueOf("2025-01-01");
+        project.setOrderDate(orderDate);
+        project.setDeliveryDate(deliveryDate);
+        project.setLinkAgreement("My link");
+        project.setCompanyRep(4444);
+        project.setStatus(1);
+        when(projectService.fetchSpecificProject("Test Title")).thenReturn(project);
+    }
+
+    @Test
+    void createProjectActionSuccess() throws Exception {
+        String solvedRM = requestMapping.replace("{employeeID}", String.valueOf(employeeID));
+        mockMvc.perform(post(solvedRM + "/create-project")
+                        .param("projectTitle", project.getProjectTitle())
+                        .param("projectDescription", project.getProjectDescription())
+                        .param("customer", String.valueOf(project.getCustomer()))
+                        .param("orderDate", String.valueOf(project.getOrderDate()))
+                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
+                        .param("linkAgreement", project.getLinkAgreement())
+                        .param("companyRep", String.valueOf(project.getCompanyRep()))
+                        .param("status", String.valueOf(project.getStatus()))
+                        .param("employeeID", String.valueOf(employeeID)))
+                .andDo(print())
+                .andExpect(flash().attribute("projectID", project.getID()))
+                .andExpect(flash().attribute("employeeID", employeeID))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(solvedRM + "/"+project.getID())); //Husk at rette mit navn til korrekte html
+    }
 //    @Test
 //    void createProjectActionFailNameAlreadyExists() throws Exception {
 //        when(projectService.checkIfProjectNameAlreadyExists(anyString())).thenReturn(true);
@@ -157,4 +167,4 @@
 //
 //
 //
-//}
+}

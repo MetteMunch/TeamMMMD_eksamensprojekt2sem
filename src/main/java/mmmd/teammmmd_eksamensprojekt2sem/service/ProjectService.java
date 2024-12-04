@@ -72,8 +72,8 @@ public class ProjectService {
         return projectRepository.checkIfProjectNameAlreadyExists(projectTitle);
     }
 
-    public void setProjectID(Project project) {
-        projectRepository.setProjectID(project);
+    public int findProjectIDFromDB(Project project) {
+       return projectRepository.findProjectIDFromDB(project);
     }
 
     public List<Project> showAllProjectsSpecificEmployee(int employeeID) {
