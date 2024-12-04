@@ -702,44 +702,16 @@ public class ProjectRepository {
         return statusFromDB;
     }
 
-    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
-        String sql = "SELECT roleID, roleTitle, isManager FROM EmployeeRole WHERE isManager = false";
-
-        List<EmployeeRole> nonManagerRoles = new ArrayList<>();
-
-        try (var ps = dbConnection.prepareStatement(sql);
-             var rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                int roleID = rs.getInt("roleID");
-                String roleTitle = rs.getString("roleTitle");
-                boolean isManager = rs.getBoolean("isManager");
-
-                nonManagerRoles.add(new EmployeeRole(roleID, roleTitle, isManager));
-            }
-        }
-
-        return nonManagerRoles;
-    }
-
-    public List<Employee> findNonManagerEmployees() {
-        List<Employee> nonManagerEmployees = new ArrayList<>();
-        String sql = "SELECT e.employeeID, e.fullName FROM Employee e " +
-                "JOIN EmployeeRole r ON e.role = r.roleID " +
-                "WHERE r.isManager = false";
+    public void submitHours(int taskID, double hours) throws SQLException {
+        String sql = "UPDATE Task SET actualTime = actualTime + ? WHERE taskID = ?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), null, null, 0);
-                    nonManagerEmployees.add(emp);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            ps.setDouble(1, hours);
+            ps.setInt(2, taskID);
+            ps.executeUpdate();
         }
-        return nonManagerEmployees;
     }
+
     /*
         #####################################
         #          Employee Methods         #
@@ -780,6 +752,45 @@ public class ProjectRepository {
             e.printStackTrace();
         }
         return employeesFromDBBC;
+    }
+
+    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
+        String sql = "SELECT roleID, roleTitle, isManager FROM EmployeeRole WHERE isManager = false";
+
+        List<EmployeeRole> nonManagerRoles = new ArrayList<>();
+
+        try (var ps = dbConnection.prepareStatement(sql);
+             var rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int roleID = rs.getInt("roleID");
+                String roleTitle = rs.getString("roleTitle");
+                boolean isManager = rs.getBoolean("isManager");
+
+                nonManagerRoles.add(new EmployeeRole(roleID, roleTitle, isManager));
+            }
+        }
+
+        return nonManagerRoles;
+    }
+
+    public List<Employee> findNonManagerEmployees() {
+        List<Employee> nonManagerEmployees = new ArrayList<>();
+        String sql = "SELECT e.employeeID, e.fullName FROM Employee e " +
+                "JOIN EmployeeRole r ON e.role = r.roleID " +
+                "WHERE r.isManager = false";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), null, null, 0);
+                    nonManagerEmployees.add(emp);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nonManagerEmployees;
     }
 
 }
