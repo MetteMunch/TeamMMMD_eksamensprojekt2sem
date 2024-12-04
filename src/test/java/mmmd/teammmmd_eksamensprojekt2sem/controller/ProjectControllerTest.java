@@ -32,7 +32,8 @@
 //    @MockBean //med denne annotation instruere vi Spring Boot i at oprette en Mock-version af UserService, som
 //    //vi kan manipulere med under testen
 //    private ProjectService projectService;
-//    String requestMapping = "/project";
+////    String requestMapping = "/project";
+//    String requestMapping = "/user/{employeeID}";
 //    private Project project;
 //
 //    @BeforeEach
