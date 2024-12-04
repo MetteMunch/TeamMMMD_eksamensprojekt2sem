@@ -48,11 +48,7 @@ public class UserService {
             Brugeren prøver at tilgå en anden brugers data.
             De bliver redirected til deres egen side, hvis de er logget ind.
              */
-            if (getIsEmployeeManagerInfoFromDB(sessionEmpID)) {
-                return "redirect:/user/projectmanager/" + sessionEmpID;
-
-            } else
-                return "redirect:/user/employee/" + sessionEmpID;
+            return "redirect:/user/" + sessionEmpID;
         }
         return null;
     }
