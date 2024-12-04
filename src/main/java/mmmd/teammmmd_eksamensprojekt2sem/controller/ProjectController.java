@@ -276,7 +276,6 @@ public class ProjectController {
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
         model.addAttribute("taskID", taskID);
-
         return "viewTasks";
     }
     /*
