@@ -627,7 +627,7 @@ public class ProjectRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     projectIDFromDB = rs.getInt(1);
-                    System.out.println("Successfully created project: " + project.getProjectTitle() + " with ID: " + project.getID());
+                    System.out.println("Successfully created project: " + project.getProjectTitle());
                 }
             }
 

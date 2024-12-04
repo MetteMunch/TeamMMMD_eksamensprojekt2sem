@@ -86,8 +86,6 @@ public class ProjectController {
 //            projectService.findProjectIDFromDB(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
             int pID = projectService.findProjectIDFromDB(project);
             project.setID(pID);
-            System.out.println(pID);
-            System.out.println(project.getID());
 
             redirectAttributes.addAttribute("projectID",pID);
             redirectAttributes.addAttribute("employeeID", employeeID);

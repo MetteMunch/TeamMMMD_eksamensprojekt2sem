@@ -78,35 +78,6 @@ public class ProjectControllerTest {
                 .param("employeeID", String.valueOf(employeeID)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, project.getID()));
-//        mockMvc.perform(post("/user/{employeeID}/create-project", employeeID)
-//                        .param("projectTitle", "Test Title")
-//                        .param("projectDescription", "Test Description")
-//                        .param("customer", "9999")
-//                        .param("orderDate", "2024-12-12")
-//                        .param("deliveryDate", "2025-01-01")
-//                        .param("linkAgreement", "My link")
-//                        .param("companyRep", "4444")
-//                        .param("status", "1")
-//                        .param("employeeID", String.valueOf(employeeID))) // Add the missing employeeID as a request param
-//                .andExpect(status().is3xxRedirection()) // Expecting a redirect after successful project creation
-//                .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, 999)); // Verifying the redirection URL
-//        String solvedRM = requestMapping.replace("{employeeID}", String.valueOf(employeeID));
-////
-////        mockMvc.perform(post(solvedRM + "/create-project")
-////                        .param("projectTitle", project.getProjectTitle())
-////                        .param("projectDescription", project.getProjectDescription())
-////                        .param("customer", String.valueOf(project.getCustomer()))
-////                        .param("orderDate", String.valueOf(project.getOrderDate()))
-////                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
-////                        .param("linkAgreement", project.getLinkAgreement())
-////                        .param("companyRep", String.valueOf(project.getCompanyRep()))
-////                        .param("status", String.valueOf(project.getStatus()))
-////                        .param("employeeID", String.valueOf(employeeID)))
-////                .andDo(print())
-////                .andExpect(flash().attribute("projectID", project.getID()))
-////                .andExpect(flash().attribute("employeeID", employeeID))
-////                .andExpect(status().is3xxRedirection())
-////                .andExpect(redirectedUrl(solvedRM + "/"+project.getID())); //Husk at rette mit navn til korrekte html
     }
 //    @Test
 //    void createProjectActionFailNameAlreadyExists() throws Exception {
