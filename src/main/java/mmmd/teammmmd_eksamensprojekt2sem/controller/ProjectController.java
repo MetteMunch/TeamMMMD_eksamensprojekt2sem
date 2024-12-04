@@ -191,7 +191,7 @@ public class ProjectController {
 
     ###########---CREATE---###########
      */
-    @GetMapping("/{projectID}/{subProjectID}/createtask")
+    @GetMapping("/{projectID}/{subProjectID}/create-task")
     public String createTask(@PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
@@ -202,7 +202,7 @@ public class ProjectController {
         return "createTask";
     }
 
-    @PostMapping("/{projectID}/{subProjectID}/savetask")
+    @PostMapping("/{projectID}/{subProjectID}/save-task")
     public String saveTask(
             @PathVariable int projectID,
             @PathVariable int subProjectID,
@@ -221,7 +221,7 @@ public class ProjectController {
 
         projectService.createTask(projectID, subProjectID, newTask);
 
-        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+        return "redirect:/project/" + projectID + "/" + subProjectID + "/subprojectview";
     }
 
 
@@ -238,22 +238,28 @@ public class ProjectController {
     /*
     ###########---UPDATE---###########
      */
-    /*@GetMapping("/{projectID}/{subProjectID}/editTask/{taskID}")
-    public String editTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model) {
-        Task task = projectService.fetchTaskById(taskID);
-        model.addAttribute("task", task);
+    @GetMapping("/{projectID}/{subProjectID}/edit-task/{taskID}")
+    public String editTask(@PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model) throws SQLException {
+        Task task = projectService.getTaskByID(taskID);
+        if (task == null) {
+            throw new IllegalArgumentException("Task with ID " + taskID + " not found");
+        }
+        model.addAttribute("taskID", taskID);
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
+        model.addAttribute("task", task);
         model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
-        model.addAttribute("roles", projectService.getRoles());
+        model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
+        model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
         model.addAttribute("statusobjects", projectService.fetchAllStatus());
         return "updateTask";
     }
 
-    @PostMapping("/{projectID}/{subProjectID}/updateTask")
+    @PostMapping("/{projectID}/{subProjectID}/update-task/{taskID}")
     public String updateTask(
             @PathVariable int projectID,
             @PathVariable int subProjectID,
+            @PathVariable int taskID,
             @RequestParam String taskTitle,
             @RequestParam(required = false) String taskDescription,
             @RequestParam(required = false) Integer assignedEmployee,
@@ -264,10 +270,11 @@ public class ProjectController {
             @RequestParam(required = false) Integer requiredRole) throws SQLException {
 
         Task updatedTask = new Task(taskTitle, taskDescription, assignedEmployee, estimatedTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status);
-        projectService.updateTaskInProject(projectID, subProjectID, updatedTask);
+        updatedTask.setTaskID(taskID);
+        projectService.updateTask(updatedTask);
 
         return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
-    } */
+    }
 
     /*
     ###########---DELETE---###########

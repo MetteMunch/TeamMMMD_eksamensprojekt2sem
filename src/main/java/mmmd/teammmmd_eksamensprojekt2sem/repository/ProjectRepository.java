@@ -523,7 +523,6 @@ public class ProjectRepository {
         String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
                 "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status " +
                 "FROM Task WHERE subProjectID = ?";
-        //TODO: skal tilrettes så taskID er korrekt når man vælger en specifik task i dependingOnTask
 
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setInt(1, subProjectID);
@@ -552,7 +551,6 @@ public class ProjectRepository {
                     tasks.add(task);
                 }
             }
-
             return tasks;
         }
     }
@@ -564,19 +562,18 @@ public class ProjectRepository {
      */
     public void updateTask(Task task) throws SQLException {
         String sql = "UPDATE Task SET taskTitle = ?, taskDescription = ?, assignedEmployee = ?, estimatedTime = ?, " +
-                "actualTime = ?, plannedStartDate = ?, dependingOnTask = ?, requiredRole = ?, status = ? " +
+                "plannedStartDate = ?, dependingOnTask = ?, requiredRole = ?, status = ? " +
                 "WHERE taskID = ?";
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, task.getTaskTitle());
             ps.setString(2, task.getTaskDescription());
             ps.setObject(3, task.getAssignedEmployee(), java.sql.Types.INTEGER);
             ps.setObject(4, task.getEstimatedTime(), java.sql.Types.DOUBLE);
-            ps.setDouble(5, task.getActualTime());
-            ps.setDate(6, task.getPlannedStartDate());
-            ps.setObject(7, task.getDependingOnTask(), java.sql.Types.INTEGER);
-            ps.setObject(8, task.getRequiredRole(), java.sql.Types.INTEGER);
-            ps.setInt(9, task.getStatus());
-            ps.setInt(10, task.getTaskID());
+            ps.setDate(5, task.getPlannedStartDate());
+            ps.setObject(6, task.getDependingOnTask(), java.sql.Types.INTEGER);
+            ps.setObject(7, task.getRequiredRole(), java.sql.Types.INTEGER);
+            ps.setInt(8, task.getStatus());
+            ps.setInt(9, task.getTaskID());
 
             ps.executeUpdate();
         }
@@ -603,6 +600,36 @@ public class ProjectRepository {
     #          Helper Methods         #
     ###################################
     */
+    public Task getTaskByID(int taskID) throws SQLException {
+        String sql = "SELECT taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status FROM Task WHERE taskID = ?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, taskID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+
+                    // getObject metoden bruges så vi kan håndtere null værdier
+                    Integer assignedEmployee = rs.getObject("assignedEmployee", Integer.class);
+                    Double estimatedTime = rs.getObject("estimatedTime", Double.class);
+                    Integer dependingOnTask = rs.getObject("dependingOnTask", Integer.class);
+                    Integer requiredRole = rs.getObject("requiredRole", Integer.class);
+
+                    return new Task(
+                            rs.getString("taskTitle"),
+                            rs.getString("taskDescription"),
+                            assignedEmployee,
+                            estimatedTime,
+                            rs.getDate("plannedStartDate"),
+                            dependingOnTask,
+                            requiredRole,
+                            rs.getInt("subProjectID"),
+                            rs.getInt("status")
+                    );
+                }
+            }
+        }
+        return null; // Hvis ikke taskID findes returnerer vi null
+    }
+
     public Status getStatusByID(int statusID) throws SQLException {
         String sql = "SELECT statusID, status FROM Status WHERE statusID = ?";
         Status status = null;

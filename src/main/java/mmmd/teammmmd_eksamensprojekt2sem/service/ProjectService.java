@@ -130,6 +130,9 @@ public class ProjectService {
     /*
     ###########---Helper Methods---###########
      */
+    public Task getTaskByID(int taskID) throws SQLException {
+        return projectRepository.getTaskByID(taskID);
+    }
     public List<EmployeeRole> getNonManagerRoles() throws SQLException {
         return projectRepository.getNonManagerRoles();
     }
