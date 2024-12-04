@@ -5,6 +5,8 @@ import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
+import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ProjectController {
 
     private final ProjectService projectService;
+    @Autowired
+    private final UserService userService;
 
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, UserService userService) {
         this.projectService = projectService;
+        this.userService = userService;
     }
 
     /*
@@ -202,14 +207,20 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}/{subProjectID}")
-    public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) {
+    public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
         System.out.println("kommer vi ind i endpoint show SubProject?");
         System.out.println("projectID: "+projectID);
         System.out.println("subprojectID: "+subProjectID);
         System.out.println("EmployeeID: "+employeeID);
-        model.addAttribute("subProject", projectService.showSubProject(subProjectID));
-        model.addAttribute("tasks",projectService.getAllTasksInSpecificSubProject(subProjectID));
-        return "showSubProject";
+        if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
+            model.addAttribute("subProject", projectService.showSubProject(subProjectID));
+            model.addAttribute("tasks",projectService.getAllTasksInSpecificSubProject(subProjectID));
+            return "showSubProject"; //Manager = true
+        } else {
+            model.addAttribute("subProject", projectService.showSubProject(subProjectID));
+            model.addAttribute("tasks",projectService.getAllTasksInSpecificSubProject(subProjectID));
+            return "showSubProjectNotMgr"; //Manager = false
+        }
 
     }
 
