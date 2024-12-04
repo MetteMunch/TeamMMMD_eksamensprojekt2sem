@@ -88,7 +88,7 @@ public class Project {
     }
 
     public void setCustomerNameString(String customerName) {
-        this.customerNameString = customerNameString;
+        this.customerNameString = customerName;
     }
 
     public Date getOrderDate() {

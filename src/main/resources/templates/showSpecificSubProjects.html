@@ -21,7 +21,7 @@
     <td th:text="${subProject.getSubProjectTitle()}"></td>
     <td th:text="${subProject.getSubProjectDescription()}"></td>
     <td th:text="${subProject.getProjectID()}"></td>
-    <td th:text="${subProject.getStatus()}"></td>
+    <td th:text="${subProject.getStatusString()}"></td>
     <td>
       <form th:action="@{/project/{name}/delete(name=${subProject.getSubProjectTitle})}" method="post">
         <button type="submit">Delete</button>

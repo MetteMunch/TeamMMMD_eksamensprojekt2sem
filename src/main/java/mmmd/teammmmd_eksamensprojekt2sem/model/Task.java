@@ -8,13 +8,18 @@ public class Task {
     private String taskTitle;
     private String taskDescription;
     private Integer assignedEmployee;
+    private String assignedEmployeeString;
     private Double estimatedTime;
     private double actualTime;
     private Date plannedStartDate;
     private Integer dependingOnTask;
+    private String dependingOnTaskString;
     private Integer requiredRole;
+    private String requiredRoleString;
     private int subProjectID;
     private int status;
+    private String statusString;
+    private int projectID;
 
     // PM Constructor hvor actual time er sat default til 0 da denne kun skal kunne sættes af employee
     public Task(String taskTitle, String taskDescription, Integer assignedEmployee,
@@ -76,6 +81,14 @@ public class Task {
         this.assignedEmployee = assignedEmployee;
     }
 
+    public String getAssignedEmployeeString() {
+        return assignedEmployeeString;
+    }
+
+    public void setAssignedEmployeeString(String assignedEmployeeString) {
+        this.assignedEmployeeString = assignedEmployeeString;
+    }
+
     public Double getEstimatedTime() {
         return estimatedTime;
     }
@@ -108,12 +121,28 @@ public class Task {
         this.dependingOnTask = dependingOnTask;
     }
 
+    public String getDependingOnTaskString() {
+        return dependingOnTaskString;
+    }
+
+    public void setDependingOnTaskString(String dependingOnTaskString) {
+        this.dependingOnTaskString = dependingOnTaskString;
+    }
+
     public Integer getRequiredRole() {
         return requiredRole;
     }
 
     public void setRequiredRole(Integer requiredRole) {
         this.requiredRole = requiredRole;
+    }
+
+    public String getRequiredRoleString() {
+        return requiredRoleString;
+    }
+
+    public void setRequiredRoleString(String requiredRoleString) {
+        this.requiredRoleString = requiredRoleString;
     }
 
     public int getSubProjectID() {
@@ -130,5 +159,21 @@ public class Task {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getStatusString() {
+        return statusString;
+    }
+
+    public void setStatusString(String statusString) {
+        this.statusString = statusString;
+    }
+
+    public int getProjectID() {
+        return projectID;
+    }
+
+    public void setProjectID(int projectID) {
+        this.projectID = projectID;
     }
 }
