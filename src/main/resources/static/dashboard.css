@@ -2,12 +2,17 @@
 :root {
     --primary-bg-color: white;
     --secondary-bg-color: #dedede;
+    --sidebar-color: darkgray;
     --extra-bg-color: #e7eef1;
-    --link-color: black;
     --alpha-bg-color: #59869d;
+
+    --link-color: black;
+
     --primary-text-color: black;
     --secondary-text-color: white;
     --alpha-text-color: #59869d;
+
+    --alpha-overskift-type: Montserrat, sans-serif;
 }
 
 /* Grundlæggende layout og styling */
@@ -16,7 +21,7 @@
 body {
     min-height: 100vh;
     display: grid;
-    grid-gap: 1em;
+    grid-gap: 0.5em;
     grid-template-areas:
         'nav'
         'header'
@@ -35,7 +40,7 @@ body {
 @media (min-width: 60em) {
     body {
         grid-template-columns: 1fr auto;
-        grid-template-rows: auto 1fr 1fr 1fr auto;
+        grid-template-rows: auto auto 20em 20em auto;
         width: 80%;
         margin: 0 auto;
         grid-template-areas:
@@ -48,12 +53,22 @@ body {
 }
 
 /* Grid-områder */
+nav, header, main1, main2, sidebar, footer {
+    padding: 5px;
+}
+
 nav {
     grid-area: nav;
+    gap: 20px;
+    align-items: center; /* Juster indholdet vertikalt */
+    display: flex; /* Aktiver flexbox */
+    background-color: var(--alpha-bg-color);
+    height: 4em;
 }
 
 header {
     grid-area: header;
+    background-color: var(--secondary-bg-color);
 }
 
 main1 {
@@ -72,56 +87,61 @@ footer {
     grid-area: footer;
 }
 
-nav, footer {
-    background-color: var(--alpha-bg-color);
-    padding: 1em;
-    border-radius: 15px;
-}
-
-header {
-    background-color: #dedede;
-}
-
 main1, main2 {
-    background-color: #dedede;
+    background-color: var(--secondary-bg-color);
     overflow: auto; /* Tilføjer scroll */
 }
 
 sidebar {
-    background-color: darkgray;
+    background-color: var(--sidebar-color);
+}
+
+footer {
+    background-color: var(--alpha-bg-color);
 }
 
 /* Typografi og tekst */
 h1 {
-    text-align: center;
-    font-family: Montserrat, sans-serif;
-    font-size: 55px;
+    font-family: var(--alpha-overskift-type), serif;
+    font-size: 40px;
+    margin: 2px;
 }
 
 h2 {
     text-align: left;
-    font-family: Montserrat, sans-serif;
-    font-size: 40px;
+    font-family: var(--alpha-overskift-type), serif;
+    font-size: 25px;
+    margin: 2px;
+}
+
+h3 {
+    text-align: left;
+    font-family: var(--alpha-overskift-type), serif;
+    font-size: 20px;
+    margin: 2px;
 }
 
 .teksttabel {
     font-size: 18px;
     font-family: sans-serif;
 }
+
 .icon img {
-    width: 80px; /* Juster bredden */
-    height: 80px; /* Juster højden */
+    width: 60px; /* Juster bredden */
+    max-height: 60px; /* Juster højden */
     object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
     background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
     padding: 5px; /* Giver lidt luft omkring billederne */
 }
 
 .logo img {
-    width: 200px; /* Juster bredden */
-    height: 200px; /* Juster højden */
+    width: 150px; /* Juster bredden */
+    max-height: 150px; /* Juster højden */
     object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
     background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
     padding: 5px; /* Giver lidt luft omkring billederne */
+    display: block;
+    vertical-align: middle; /* Eller top eller bottom, afhængigt af behov */
 }
 
 /* Links */
@@ -151,12 +171,12 @@ form, a {
 /* Generelle tabelindstillinger */
 table {
     width: 100%;
-    margin: 20px 0;
+    margin: 8px 0;
     border-collapse: separate; /* Tillader runde hjørner */
     border-spacing: 0; /* Fjerner mellemrum mellem cellerne */
     border: 1px solid black;
     overflow: hidden; /* Sørger for, at indholdet følger runde hjørner */
-    border-radius: 15px; /* Runde hjørner */
+    border-radius: 5px; /* Runde hjørner */
     background-color: var(--extra-bg-color);
 }
 
@@ -174,6 +194,7 @@ th {
 tr:last-child td {
     border-bottom: none; /* Ingen kantlinje under den sidste række */
 }
+
 tr:last-child th {
     border-top: none;
 }
