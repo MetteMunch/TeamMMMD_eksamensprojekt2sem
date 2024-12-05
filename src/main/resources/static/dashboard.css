@@ -171,7 +171,7 @@ form, a {
 /* Generelle tabelindstillinger */
 table {
     width: 100%;
-    margin: 20px 0;
+    margin: 8px 0;
     border-collapse: separate; /* Tillader runde hjørner */
     border-spacing: 0; /* Fjerner mellemrum mellem cellerne */
     border: 1px solid black;
