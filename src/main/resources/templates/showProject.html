@@ -30,6 +30,9 @@ når der skal kaldes attributter-->
 
     <h3>Project agreed deliverydate<h3>
       <p th:text="${project.getDeliveryDate()}"></p>
+
+      <h3>Link to agreement<h3>
+        <a th:href="${project.getLinkAgreement()}" target="_blank" th:text="OrderConfirmation"></a>
 </header>
 
 <main>
