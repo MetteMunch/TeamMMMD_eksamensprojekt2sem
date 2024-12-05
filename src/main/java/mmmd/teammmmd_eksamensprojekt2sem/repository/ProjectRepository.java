@@ -258,7 +258,6 @@ public class ProjectRepository {
             dbConnection.setAutoCommit(true);
         }
     }
-
     /*
     #####################################
     #           CRUD SUBPROJECT        #
@@ -362,7 +361,6 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
-
     /*
     ##################################
     #             Task               #
@@ -638,6 +636,30 @@ public class ProjectRepository {
             throw new IllegalArgumentException("No project found with ID: " + projectID);
         }
         return project;
+    }
+
+    public int findProjectIDFromDB(Project project) {
+        String sql = "SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
+        int projectIDFromDB = -1;
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, project.getProjectTitle());
+            ps.setDate(2, project.getOrderDate());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    projectIDFromDB = rs.getInt(1);
+                    System.out.println("Successfully created project: " + project.getProjectTitle());
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (projectIDFromDB == -1) {
+            throw new IllegalArgumentException("No project found with title: " + project.getProjectTitle() + " and order date: " + project.getOrderDate() + ". PROJECT REPOSITORY LINE 45.");
+        }
+        return projectIDFromDB;
     }
 
     public Task getTaskByID(int taskID) throws SQLException {
