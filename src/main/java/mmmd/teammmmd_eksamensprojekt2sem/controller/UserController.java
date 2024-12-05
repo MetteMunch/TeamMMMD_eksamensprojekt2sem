@@ -86,14 +86,13 @@ public class UserController {
         model.addAttribute("projects", projectService.showAllProjectsSpecificEmployee(employeeID));
         model.addAttribute("employee", userService.getEmployee(employeeID));
         model.addAttribute("tasks", projectService.showAllTasksSpecificEmployee(employeeID));
+        model.addAttribute("employeeID",employeeID);
 
         if(userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
-            return "employeeDashboard";  //TODO: skal laves til PMdashboard
+            return "dashboardProjectManager";
         } else {
-            return "employeeDashboard";
+            return "dashboardEmployee";
         }
-
-
     }
 
 

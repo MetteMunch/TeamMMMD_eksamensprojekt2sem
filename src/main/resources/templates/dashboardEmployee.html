@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org">
+<!--her angives at vi arbejder med thymeleaf og prefix th skal anvendes,
+når der skal kaldes attributter-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+
+<nav>
+    <div th:insert="fragments.html :: nav"></div>
+</nav>
+
+<header>
+    <h1>Dashboard</h1>
+    <h2 th:text="${employee.getFullName()}"></h2>
+    <h2 th:text="${employee.getRoleName()}"></h2>
+</header>
+
+<main1>
+
+    <h3>Overview - Assigned Tasks</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Est.time</th>
+            <th>Act.time</th>
+            <th>Status</th>
+            <th>Functions</th>
+        </tr>
+        </thead>
+        <tbody th:each="task : ${tasks}">
+        <tr>
+            <td th:text="${task.getTaskTitle}"></td>
+            <td th:text="${task.getEstimatedTime()}"></td>
+            <td th:text="${task.getActualTime()}"></td>
+            <td th:text="${task.getStatusString()}"></td>
+            <td>
+                <a th:href="@{{employeeID}/{projectID}/{subProjectID}/{taskID}
+                (employeeID=${employeeID}, projectID=${task.getProjectID()}, subProjectID=${task.getSubProjectID()}, taskID=${task.getTaskID()})}">
+                    <button class="vedjegikke" type="button">Show task</button>
+                </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</main1>
+
+<main2>
+    <h3>Overview - Associated Projects</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Project Title</th>
+            <th>Project Description</th>
+            <th>Project Customer</th>
+            <th>Project Order Date</th>
+            <th>Project Delivery Date</th>
+            <th>Project Company Rep</th>
+            <th>Project Status</th>
+        </tr>
+        </thead>
+        <tbody th:each="project : ${projects}">
+        <tr>
+            <td>
+                <a th:href="@{{employeeID}/{projectID}(employeeID = ${employeeID}, projectID=${project.getID()})}"
+                   th:text="${project.getProjectTitle()}"></a>
+            </td>
+            <td th:text="${project.getProjectDescription()}"></td>
+            <td th:text="${project.getCustomerNameString()}"></td>
+            <td th:text="${project.getOrderDate()}"></td>
+            <td th:text="${project.getDeliveryDate()}"></td>
+            <td th:text="${project.getCompanyRepString()}"></td>
+            <td th:text="${project.getStatusString()}"></td>
+            <!--<td>
+              <form th:action="@{/project/{name}/delete(name=${project.getProjectTitle})}" method="post">
+                <button type="submit">Delete</button>
+
+              </form>
+            </td>-->
+        </tr>
+        </tbody>
+    </table>
+</main2>
+
+<sidebar>
+    <h3>Her kommer diverse visninger af data</h3>
+
+</sidebar>
+
+<footer>
+    <div th:insert="fragments.html :: footer"></div>
+</footer>
+
+</body>
+</html>
