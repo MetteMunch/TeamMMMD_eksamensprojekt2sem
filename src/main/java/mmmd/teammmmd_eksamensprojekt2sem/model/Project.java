@@ -48,11 +48,7 @@ public class Project {
     }
 
     public int getID() {
-        if (ID == -1) {
-            throw new IllegalStateException("The Project ID has not been corrected. PROJECT CLASS LINE 33.");
-        } else {
-            return ID;
-        }
+        return ID;
     }
     public void setID(int projectID) {
         this.ID = projectID;
