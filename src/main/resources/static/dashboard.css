@@ -98,7 +98,6 @@ sidebar {
 
 footer {
     background-color: var(--alpha-bg-color);
-
 }
 
 /* Typografi og tekst */
@@ -112,6 +111,13 @@ h2 {
     text-align: left;
     font-family: var(--alpha-overskift-type), serif;
     font-size: 25px;
+    margin: 2px;
+}
+
+h3 {
+    text-align: left;
+    font-family: var(--alpha-overskift-type), serif;
+    font-size: 20px;
     margin: 2px;
 }
 
@@ -170,7 +176,7 @@ table {
     border-spacing: 0; /* Fjerner mellemrum mellem cellerne */
     border: 1px solid black;
     overflow: hidden; /* Sørger for, at indholdet følger runde hjørner */
-    border-radius: 15px; /* Runde hjørner */
+    border-radius: 5px; /* Runde hjørner */
     background-color: var(--extra-bg-color);
 }
 
