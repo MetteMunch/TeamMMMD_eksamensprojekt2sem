@@ -17,7 +17,7 @@
 body {
     min-height: 100vh;
     display: grid;
-    grid-gap: 1em;
+    grid-gap: 0.5em;
     grid-template-areas:
         'nav'
         'header'
@@ -50,14 +50,21 @@ body {
 
 /* Grid-områder */
 nav, header, main1, main2, sidebar, footer {
-    padding: 1em;
+    padding: 5px;
 }
+
 nav {
     grid-area: nav;
+    gap: 20px;
+    align-items: center; /* Juster indholdet vertikalt */
+    display: flex; /* Aktiver flexbox */
+    background-color: var(--alpha-bg-color);
+    height: 4em;
 }
 
 header {
     grid-area: header;
+    background-color: var(--secondary-bg-color);
 }
 
 main1 {
@@ -76,14 +83,6 @@ footer {
     grid-area: footer;
 }
 
-nav, footer {
-    background-color: var(--alpha-bg-color);
-}
-
-header {
-    background-color: var(--secondary-bg-color);
-}
-
 main1, main2 {
     background-color: var(--secondary-bg-color);
     overflow: auto; /* Tilføjer scroll */
@@ -91,6 +90,11 @@ main1, main2 {
 
 sidebar {
     background-color: var(--sidebar-color);
+}
+
+footer {
+    background-color: var(--alpha-bg-color);
+
 }
 
 /* Typografi og tekst */
@@ -110,20 +114,23 @@ h2 {
     font-size: 18px;
     font-family: sans-serif;
 }
+
 .icon img {
-    width: 80px; /* Juster bredden */
-    height: 80px; /* Juster højden */
+    width: 60px; /* Juster bredden */
+    max-height: 60px; /* Juster højden */
     object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
     background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
     padding: 5px; /* Giver lidt luft omkring billederne */
 }
 
 .logo img {
-    width: 200px; /* Juster bredden */
-    height: 200px; /* Juster højden */
+    width: 150px; /* Juster bredden */
+    max-height: 150px; /* Juster højden */
     object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
     background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
     padding: 5px; /* Giver lidt luft omkring billederne */
+    display: block;
+    vertical-align: middle; /* Eller top eller bottom, afhængigt af behov */
 }
 
 /* Links */
@@ -176,16 +183,7 @@ th {
 tr:last-child td {
     border-bottom: none; /* Ingen kantlinje under den sidste række */
 }
+
 tr:last-child th {
     border-top: none;
-}
-
-/* Container Styling */
-.nav-container {
-    display: flex;
-    gap: 20px;
-}
-.nav-box {
-    text-align: center;
-    padding: 20px;
 }
