@@ -338,7 +338,7 @@ public class ProjectController {
         updatedTask.setTaskID(taskID);
         projectService.updateTask(updatedTask);
 
-        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+        return "redirect:/user/"+employeeID+"/"+projectID+"/"+subProjectID+"/"+taskID;
     }
 
     /*
