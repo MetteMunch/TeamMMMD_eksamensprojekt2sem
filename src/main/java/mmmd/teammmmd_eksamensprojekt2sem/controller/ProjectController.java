@@ -255,7 +255,7 @@ public class ProjectController {
         return "createTask";
     }
 
-    @PostMapping("/{projectID}/{subProjectID}/savetask")
+    @PostMapping("/{projectID}/{subProjectID}/save-task")
     public String saveTask(
             @PathVariable int employeeID,
             @PathVariable int projectID,

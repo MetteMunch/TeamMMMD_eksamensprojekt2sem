@@ -11,7 +11,7 @@
 </div>
 
 <!-- Adjust the form action to include projectID and subProjectID -->
-<form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/savetask(employeeID=${employeeID}, projectID=${projectID}, subProjectID=${subProjectID})}" method="post">
+<form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/save-task(employeeID=${employeeID}, projectID=${projectID}, subProjectID=${subProjectID})}" method="post">
 
     <!-- Task Title -->
     <label class="taskTitle" for="taskTitle">Task Title: </label>
