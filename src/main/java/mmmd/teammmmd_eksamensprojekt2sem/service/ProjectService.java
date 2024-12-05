@@ -111,29 +111,6 @@ public class ProjectService {
 
 
     /*
-    #####################################
-    #             Employee              #
-    #####################################
-    */
-
-    public List<Employee> findPMEmployees() {
-        return projectRepository.findPMEmployees();
-    }
-
-    public List<Employee> findBCEmployees() {
-        return projectRepository.findBCEmployees();
-    }
-
-    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
-        return projectRepository.getNonManagerRoles();
-    }
-
-    public List<Employee> findNonManagerEmployees() {
-        return projectRepository.findNonManagerEmployees();
-    }
-
-
-    /*
     ##################################
     #              Task              #
     ##################################
@@ -160,7 +137,36 @@ public class ProjectService {
 
 
     /*
+    #####################################
+    #             Employee              #
+    #####################################
+    */
+
+    public List<Employee> findPMEmployees() {
+        return projectRepository.findPMEmployees();
+    }
+
+    public List<Employee> findBCEmployees() {
+        return projectRepository.findBCEmployees();
+    }
+
+    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
+        return projectRepository.getNonManagerRoles();
+    }
+
+    public List<Employee> findNonManagerEmployees() {
+        return projectRepository.findNonManagerEmployees();
+    }
+
+
+    /*
     ###########---Helper Methods---###########
      */
+    public Task getTaskByID(int taskID) throws SQLException {
+        return projectRepository.getTaskByID(taskID);
+    }
 
+    public void submitHours(int taskID, double hours) throws SQLException {
+        projectRepository.submitHours(taskID, hours);
+    }
 }

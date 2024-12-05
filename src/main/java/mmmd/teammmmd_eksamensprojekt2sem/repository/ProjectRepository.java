@@ -27,10 +27,10 @@ public class ProjectRepository {
 
 
     /*
-#####################################
-#           CRUD Customer           #
-#####################################
- */
+    #####################################
+    #           CRUD Customer           #
+    #####################################
+     */
     public List<Customer> getListOfCurrentCustomers() {
         String sql = "SELECT customerID, companyName, repName FROM customer";
         List<Customer> customersToReturn = new ArrayList<>();
@@ -399,7 +399,6 @@ public class ProjectRepository {
         String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
                 "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status " +
                 "FROM Task WHERE subProjectID = ?";
-        //TODO: skal tilrettes så taskID er korrekt når man vælger en specifik task i dependingOnTask
 
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setInt(1, subProjectID);
@@ -550,6 +549,46 @@ public class ProjectRepository {
         return project;
     }
 
+    public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
+        String sql = "SELECT projectTitle FROM project WHERE LOWER (projectTitle)=LOWER(?)";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, projectTitle);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    if (projectTitle.equals(rs.getString(1))) {
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void setProjectID(Project project) {
+        String sql = "SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
+        int projectIDFromDB = -1;
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, project.getProjectTitle());
+            ps.setDate(2, project.getOrderDate());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    projectIDFromDB = rs.getInt(1);
+                    project.setID(projectIDFromDB);
+                    System.out.println("Successfully created project: " + project.getProjectTitle() + " with ID: " + project.getID());
+                } else {
+                    throw new IllegalArgumentException("No project found with title: " + project.getProjectTitle() + " and order date: " + project.getOrderDate() + ". PROJECT REPOSITORY LINE 45.");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Project fetchSpecificProject(int projectID) {
         Project project = null;
 
@@ -599,23 +638,6 @@ public class ProjectRepository {
         return project;
     }
 
-    public boolean checkIfProjectNameAlreadyExists(String projectTitle) {
-        String sql = "SELECT projectTitle FROM project WHERE LOWER (projectTitle)=LOWER(?)";
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            ps.setString(1, projectTitle);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    if (projectTitle.equals(rs.getString(1))) {
-                        return true;
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public int findProjectIDFromDB(Project project) {
         String sql = "SELECT projectID FROM project WHERE projectTitle=? AND orderDate=?";
         int projectIDFromDB = -1;
@@ -640,6 +662,52 @@ public class ProjectRepository {
         return projectIDFromDB;
     }
 
+    public Task getTaskByID(int taskID) throws SQLException {
+        String sql = "SELECT taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status FROM Task WHERE taskID = ?";
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, taskID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+
+                    // getObject metoden bruges så vi kan håndtere null værdier
+                    Integer assignedEmployee = rs.getObject("assignedEmployee", Integer.class);
+                    Double estimatedTime = rs.getObject("estimatedTime", Double.class);
+                    Integer dependingOnTask = rs.getObject("dependingOnTask", Integer.class);
+                    Integer requiredRole = rs.getObject("requiredRole", Integer.class);
+
+                    return new Task(
+                            rs.getString("taskTitle"),
+                            rs.getString("taskDescription"),
+                            assignedEmployee,
+                            estimatedTime,
+                            rs.getDate("plannedStartDate"),
+                            dependingOnTask,
+                            requiredRole,
+                            rs.getInt("subProjectID"),
+                            rs.getInt("status")
+                    );
+                }
+            }
+        }
+        return null; // Hvis ikke taskID findes returnerer vi null
+    }
+
+    public Status getStatusByID(int statusID) throws SQLException {
+        String sql = "SELECT statusID, status FROM Status WHERE statusID = ?";
+        Status status = null;
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, statusID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    status = new Status(rs.getInt("statusID"), rs.getString("status"));
+                }
+            }
+        }
+        return status;
+    }
+
     public List<Status> fetchAllStatus() {
         String sql = "SELECT statusID, status FROM status";
         List<Status> statusFromDB = new ArrayList<>();
@@ -656,44 +724,16 @@ public class ProjectRepository {
         return statusFromDB;
     }
 
-    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
-        String sql = "SELECT roleID, roleTitle, isManager FROM EmployeeRole WHERE isManager = false";
-
-        List<EmployeeRole> nonManagerRoles = new ArrayList<>();
-
-        try (var ps = dbConnection.prepareStatement(sql);
-             var rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                int roleID = rs.getInt("roleID");
-                String roleTitle = rs.getString("roleTitle");
-                boolean isManager = rs.getBoolean("isManager");
-
-                nonManagerRoles.add(new EmployeeRole(roleID, roleTitle, isManager));
-            }
-        }
-
-        return nonManagerRoles;
-    }
-
-    public List<Employee> findNonManagerEmployees() {
-        List<Employee> nonManagerEmployees = new ArrayList<>();
-        String sql = "SELECT e.employeeID, e.fullName FROM Employee e " +
-                "JOIN EmployeeRole r ON e.role = r.roleID " +
-                "WHERE r.isManager = false";
+    public void submitHours(int taskID, double hours) throws SQLException {
+        String sql = "UPDATE Task SET actualTime = actualTime + ? WHERE taskID = ?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), null, null, 0);
-                    nonManagerEmployees.add(emp);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            ps.setDouble(1, hours);
+            ps.setInt(2, taskID);
+            ps.executeUpdate();
         }
-        return nonManagerEmployees;
     }
+
     /*
         #####################################
         #          Employee Methods         #
@@ -734,6 +774,45 @@ public class ProjectRepository {
             e.printStackTrace();
         }
         return employeesFromDBBC;
+    }
+
+    public List<EmployeeRole> getNonManagerRoles() throws SQLException {
+        String sql = "SELECT roleID, roleTitle, isManager FROM EmployeeRole WHERE isManager = false";
+
+        List<EmployeeRole> nonManagerRoles = new ArrayList<>();
+
+        try (var ps = dbConnection.prepareStatement(sql);
+             var rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int roleID = rs.getInt("roleID");
+                String roleTitle = rs.getString("roleTitle");
+                boolean isManager = rs.getBoolean("isManager");
+
+                nonManagerRoles.add(new EmployeeRole(roleID, roleTitle, isManager));
+            }
+        }
+
+        return nonManagerRoles;
+    }
+
+    public List<Employee> findNonManagerEmployees() {
+        List<Employee> nonManagerEmployees = new ArrayList<>();
+        String sql = "SELECT e.employeeID, e.fullName FROM Employee e " +
+                "JOIN EmployeeRole r ON e.role = r.roleID " +
+                "WHERE r.isManager = false";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Employee emp = new Employee(rs.getInt(1), rs.getString(2), null, null, 0);
+                    nonManagerEmployees.add(emp);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nonManagerEmployees;
     }
 
 }
