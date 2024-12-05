@@ -4,20 +4,16 @@
 //import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
 //import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 //import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
-//import org.h2.tools.RunScript;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.test.annotation.DirtiesContext;
 //import org.springframework.test.context.ActiveProfiles;
-//import org.springframework.test.context.jdbc.Sql;
 //
 //import java.sql.Connection;
 //import java.sql.Date;
 //import java.sql.SQLException;
 //import java.sql.Statement;
-//import java.util.ArrayList;
 //import java.util.List;
 //
 //import static org.junit.jupiter.api.Assertions.*;
@@ -172,7 +168,7 @@
 //                2, 1 ); //Vi laver et helt nyt projekt for at bruge vores createMetode.
 //        //Act
 //        projectRepository.createProject(newProject); //Tilføjer det til databasen.
-//        projectRepository.setProjectID(newProject); //Bemærk, ikke en almindelige setter metode. Laver et lookup i DB for at finde autogenererede ID.
+//        projectRepository.findProjectIDFromDB(newProject); //Bemærk, ikke en almindelige setter metode. Laver et lookup i DB for at finde autogenererede ID.
 //
 //        Project updateProject = projectRepository.fetchSpecificProject("Project Title Test"); //Vi henter vores projekt i DB efter det er oprettet.
 //        updateProject.setProjectDescription("Updated Description"); //Vi opdaterer beskrivelsen.
@@ -194,7 +190,7 @@
 //
 //        //Act
 //        projectRepository.createProject(newProject);
-//        projectRepository.setProjectID(newProject);
+//        projectRepository.findProjectIDFromDB(newProject);
 //        List<Project> list = projectRepository.showAllProjects();
 //        int actualSizeAfterInsertion = list.size();
 //        int expectedSizeAfterInsertion = 2+1; //2 projekter eksisterer allerede i h2. +1 efter insertion.
@@ -230,7 +226,7 @@
 //                2, 1 );
 //        //Act
 //        projectRepository.createProject(newProject);
-//        projectRepository.setProjectID(newProject);
+//        projectRepository.findProjectIDFromDB(newProject);
 //
 //        //Assert
 //        assertTrue(projectRepository.checkIfProjectNameAlreadyExists(newProject.getProjectTitle()));
@@ -243,7 +239,7 @@
 //                2, 1 );
 //        //Act
 //        projectRepository.createProject(newProject);
-//        projectRepository.setProjectID(newProject);
+//        projectRepository.findProjectIDFromDB(newProject);
 //
 //        //Assert
 //        assertFalse(projectRepository.checkIfProjectNameAlreadyExists(newProject.getProjectTitle()+" 2")); //Indsætter +2 for: Project Title Test 2
@@ -257,7 +253,7 @@
 //
 //        //Act
 //        projectRepository.createProject(newProject);
-//        projectRepository.setProjectID(newProject); //Vi laver lookup i DB og retter til autogenererede ID.
+//        projectRepository.findProjectIDFromDB(newProject); //Vi laver lookup i DB og retter til autogenererede ID.
 //
 //        //Assert
 //        assertNotEquals(-1, newProject.getID());

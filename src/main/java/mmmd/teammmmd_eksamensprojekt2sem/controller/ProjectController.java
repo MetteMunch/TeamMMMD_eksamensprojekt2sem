@@ -5,6 +5,8 @@ import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
+import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,12 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    public ProjectController(ProjectService projectService) {
+    private final UserService userService;
+
+    @Autowired
+    public ProjectController(ProjectService projectService, UserService userService) {
         this.projectService = projectService;
+        this.userService = userService;
     }
 
     /*
@@ -77,13 +83,16 @@ public class ProjectController {
             }
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
             projectService.createProject(project); // Projekt oprettes i DB
-            projectService.setProjectID(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
+//            projectService.findProjectIDFromDB(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
+            int pID = projectService.findProjectIDFromDB(project);
+            project.setID(pID);
 
-            redirectAttributes.addAttribute("projectID",project.getID());
+            redirectAttributes.addAttribute("projectID",pID);
             redirectAttributes.addAttribute("employeeID", employeeID);
             //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
             //TODO: Tilføj gå tilbage eller return to PM Dashboard i html
             return "redirect:/user/{employeeID}/{projectID}"; //DENNE GÅR TILBAGE TIL LOGINPAGE ER DET FORDI DEN IKKE HAR EMPLOYEEID MED?
+//            return "redirect:/user/"+employeeID+"/"+project.getID();
         }
     }
 //    @GetMapping("/success") //TODO: Udelukkende til demokode for at se om metode eksekveres korrekt med redirect. Slet når ikke længere nødvendig sammen med html fil.
@@ -202,14 +211,20 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}/{subProjectID}")
-    public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) {
+    public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
         System.out.println("kommer vi ind i endpoint show SubProject?");
         System.out.println("projectID: "+projectID);
         System.out.println("subprojectID: "+subProjectID);
         System.out.println("EmployeeID: "+employeeID);
-        model.addAttribute("subProject", projectService.showSubProject(subProjectID));
-        model.addAttribute("tasks",projectService.getAllTasksInSpecificSubProject(subProjectID));
-        return "showSubProject";
+        if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
+            model.addAttribute("subProject", projectService.showSubProject(subProjectID));
+            model.addAttribute("tasks",projectService.getAllTasksInSpecificSubProject(subProjectID));
+            return "showSubProject"; //Manager = true
+        } else {
+            model.addAttribute("subProject", projectService.showSubProject(subProjectID));
+            model.addAttribute("tasks",projectService.getAllTasksInSpecificSubProject(subProjectID));
+            return "showSubProjectNotMgr"; //Manager = false
+        }
 
     }
 
@@ -229,7 +244,8 @@ public class ProjectController {
     ###########---CREATE---###########
      */
     @GetMapping("/{projectID}/{subProjectID}/create-task")
-    public String createTask(@PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
+    public String createTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
+        model.addAttribute("employeeID", employeeID);
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
         model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
@@ -239,8 +255,9 @@ public class ProjectController {
         return "createTask";
     }
 
-    @PostMapping("/{projectID}/{subProjectID}/savetask")
+    @PostMapping("/{projectID}/{subProjectID}/save-task")
     public String saveTask(
+            @PathVariable int employeeID,
             @PathVariable int projectID,
             @PathVariable int subProjectID,
             @RequestParam String taskTitle,
@@ -258,7 +275,7 @@ public class ProjectController {
 
         projectService.createTask(projectID, subProjectID, newTask);
 
-        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+        return "redirect:/user/"+employeeID+"/"+projectID+"/"+subProjectID;
     }
 
 
