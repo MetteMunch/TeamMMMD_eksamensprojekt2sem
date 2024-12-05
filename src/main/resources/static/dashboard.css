@@ -4,11 +4,15 @@
     --secondary-bg-color: #dedede;
     --sidebar-color: darkgray;
     --extra-bg-color: #e7eef1;
-    --link-color: black;
     --alpha-bg-color: #59869d;
+
+    --link-color: black;
+
     --primary-text-color: black;
     --secondary-text-color: white;
     --alpha-text-color: #59869d;
+
+    --alpha-overskift-type: Montserrat, sans-serif;
 }
 
 /* Grundlæggende layout og styling */
@@ -36,7 +40,7 @@ body {
 @media (min-width: 60em) {
     body {
         grid-template-columns: 1fr auto;
-        grid-template-rows: auto 1fr 1fr 1fr auto;
+        grid-template-rows: auto auto 20em 20em auto;
         width: 80%;
         margin: 0 auto;
         grid-template-areas:
@@ -99,15 +103,16 @@ footer {
 
 /* Typografi og tekst */
 h1 {
-    text-align: center;
-    font-family: Montserrat, sans-serif;
-    font-size: 55px;
+    font-family: var(--alpha-overskift-type), serif;
+    font-size: 40px;
+    margin: 2px;
 }
 
 h2 {
     text-align: left;
-    font-family: Montserrat, sans-serif;
-    font-size: 40px;
+    font-family: var(--alpha-overskift-type), serif;
+    font-size: 25px;
+    margin: 2px;
 }
 
 .teksttabel {
