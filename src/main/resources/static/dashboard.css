@@ -167,7 +167,6 @@ form, a {
     cursor: pointer;
 }
 
-
 /* Generelle tabelindstillinger */
 table {
     width: 100%;
@@ -189,12 +188,4 @@ th, td {
 th {
     font-weight: bold;
     border-top: 2px solid black;
-}
-
-tr:last-child td {
-    border-bottom: none; /* Ingen kantlinje under den sidste række */
-}
-
-tr:last-child th {
-    border-top: none;
 }
