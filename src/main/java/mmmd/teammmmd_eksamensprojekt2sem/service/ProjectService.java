@@ -80,6 +80,10 @@ public class ProjectService {
         return projectRepository.showAllProjectsSpecificEmployee(employeeID);
     }
 
+    public List<Project> showAllProjectSpecificProjectManager(int employeeID) {
+        return projectRepository.showAllProjectsSpecificProjectManager(employeeID);
+    }
+
     /*
       ####################################
                 SubProject
@@ -125,6 +129,10 @@ public class ProjectService {
 
     public List<Task> showAllTasksSpecificEmployee(int employeeID) {
         return projectRepository.showAllTasksSpecificEmployee(employeeID);
+    }
+
+    public List<Task> showAllTasksSpecificProjectManager(int employeeID) {
+        return projectRepository.showAllTasksSpecificProjectManager(employeeID);
     }
 
     public void updateTask(Task task) throws SQLException {

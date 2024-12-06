@@ -214,6 +214,41 @@ public class ProjectRepository {
         return listOfProjectsSpecificEmployee;
     }
 
+    public List<Project> showAllProjectsSpecificProjectManager(int employeeID) {
+        String SQL = "SELECT DISTINCT project.projectID, projectTitle, project.projectDescription, project.customer, customer.companyName, \n" +
+                "orderDate, deliveryDate, linkAgreement, project.status, status.status FROM project\n" +
+                "INNER JOIN customer ON customer.customerID = project.customer\n" +
+                "INNER JOIN status ON status.statusID = project.status WHERE companyRep =?";
+
+        List<Project> listOfProjectsSpecificPM = new ArrayList<>();
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, employeeID);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int projectID = rs.getInt(1);
+                String projectTitle = rs.getString(2);
+                String projectDescription = rs.getString(3);
+                int customerID = rs.getInt(4);
+                String customerName = rs.getString(5);
+                Date orderDate = rs.getDate(6);
+                Date agreedDeliveryDate = rs.getDate(7);
+                String linkAgreement = rs.getString(8);
+                int projectStatusID = rs.getInt(9);
+                String projectStatus = rs.getString(10);
+                Project project = new Project(projectID, projectTitle, projectDescription, customerID, orderDate, agreedDeliveryDate, linkAgreement, employeeID, projectStatusID);
+                project.setCustomerNameString(customerName);
+                project.setStatusString(projectStatus);
+
+                listOfProjectsSpecificPM.add(project);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listOfProjectsSpecificPM;
+    }
+
     /*
     ###########---UPDATE PROJECT---###########
      */
@@ -487,6 +522,59 @@ public class ProjectRepository {
             throw new RuntimeException(e);
         }
         return listOfTasksSpecificEmployee;
+    }
+
+    public List<Task> showAllTasksSpecificProjectManager(int employeeID) {
+
+        List<Task> listOfTasksSpecificPM = new ArrayList<>();
+
+        String SQL = "SELECT task.taskID, task.taskTitle, task.taskDescription, task.assignedEmployee, employee.fullName,\n" +
+                "task.estimatedTime, task.actualTime, task.plannedStartDate,task.dependingOnTask, task2.taskTitle AS dependingOnTaskTitle, \n" +
+                "task.requiredRole, task.subProjectID, task.status, status.status, subproject.projectID FROM task\n" +
+                "LEFT JOIN task task2 ON task.dependingOntask = task2.taskID\n" +
+                "INNER JOIN subproject ON subproject.subprojectID = task.subProjectID\n" +
+                "INNER JOIN project ON project.projectID = subproject.projectID\n" +
+                "INNER JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
+                "INNER JOIN status ON status.statusID = task.status\n" +
+
+                "WHERE project.companyRep = ?";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, employeeID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+
+                    int taskID = rs.getInt(1);
+                    String taskTitle = rs.getString(2);
+                    String taskDescription = rs.getString(3);
+                    int assignedEmp = rs.getInt(4);
+                    String assignedEmpFullName = rs.getString(5);
+                    double estTime = rs.getDouble(6);
+                    double actTime = rs.getDouble(7);
+                    Date plannedStartDate = rs.getDate(8);
+                    int dependingOnTaskID = rs.getInt(9);
+                    String dependingOnTaskTitle = rs.getString(10);
+                    int requiredRole = rs.getInt(11);
+                    int subProjectID = rs.getInt(12);
+                    int statusID = rs.getInt(13);
+                    String status = rs.getString(14);
+                    int projectID = rs.getInt(15);
+
+                    Task task = new Task(taskID, taskTitle, taskDescription, assignedEmp, estTime, plannedStartDate, dependingOnTaskID, requiredRole, subProjectID, statusID);
+                    task.setActualTime(actTime);
+                    task.setAssignedEmployeeString(assignedEmpFullName);
+                    task.setDependingOnTaskString(dependingOnTaskTitle);
+                    task.setStatusString(status);
+                    task.setProjectID(projectID);
+
+                    listOfTasksSpecificPM.add(task);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return listOfTasksSpecificPM;
     }
 
 

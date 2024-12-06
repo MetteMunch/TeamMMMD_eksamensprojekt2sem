@@ -25,13 +25,13 @@ når der skal kaldes attributter-->
   <h3>Description</h3>
   <p th:text="${project.getProjectDescription()}"></p>
 
-  <h3>Project startup date<h3>
+  <h3>Project startup date</h3>
     <p th:text="${project.getOrderDate()}"></p>
 
-    <h3>Project agreed deliverydate<h3>
+    <h3>Project agreed deliverydate</h3>
       <p th:text="${project.getDeliveryDate()}"></p>
 
-      <h3>Link to agreement<h3>
+      <h3>Link to agreement</h3>
         <a th:href="${project.getLinkAgreement()}" target="_blank" th:text="OrderConfirmation"></a>
 </header>
 
@@ -74,6 +74,9 @@ når der skal kaldes attributter-->
   <form th:action="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}" method=get>
     <button class="createResetPasswordButton" type="submit">Create new subproject</button>
   </form>
+  <a th:href="@{/user/{employeeID} (employeeID=${employeeID})}">
+    <button class="createResetPasswordButton" style="margin-right:5%" type="button">Go Back</button>
+  </a>
 </main>
 
 <sidebar>

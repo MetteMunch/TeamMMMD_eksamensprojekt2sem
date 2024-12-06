@@ -23,7 +23,7 @@ når der skal kaldes attributter-->
 
 <main1>
 
-<h3>Overview - Assigned Tasks</h3>
+<h3>Overview - Tasks</h3>
 
 <table>
   <thead>
@@ -35,7 +35,7 @@ når der skal kaldes attributter-->
     <th>Functions</th>
   </tr>
   </thead>
-  <tbody th:each="task : ${tasks}">
+  <tbody th:each="task : ${PMtasks}">
   <tr>
     <td th:text="${task.getTaskTitle}"></td>
     <td th:text="${task.getEstimatedTime()}"></td>
@@ -63,7 +63,10 @@ når der skal kaldes attributter-->
 </main1>
 
 <main2>
-<h3>Overview - Associated Projects</h3>
+<h3>Overview - Projects </h3>
+    <form th:action="@{/user/{employeeID}/show-create-project (employeeID=${employeeID})}" method=get>
+        <button class="createResetPasswordButton" type="submit">Create new project</button>
+    </form>
 <table>
     <thead>
     <tr>
@@ -76,7 +79,7 @@ når der skal kaldes attributter-->
         <th>Project Status</th>
     </tr>
     </thead>
-    <tbody th:each="project : ${projects}">
+    <tbody th:each="project : ${PMprojects}">
     <tr>
         <td>
             <a th:href="@{{employeeID}/{projectID}(employeeID = ${employeeID}, projectID=${project.getID()})}"
