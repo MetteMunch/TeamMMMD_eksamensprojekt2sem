@@ -9,7 +9,7 @@
 
 <!-- Include Navigation Bar -->
 <nav>
-    <div th:insert="fragments.html :: nav(employeeID=${employeeID})"></div>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
 </nav>
 
 <header>
@@ -65,7 +65,7 @@
 </sidebar>
 
 <footer>
-    <div th:insert="fragments.html :: footer"></div>
+    <div th:insert="~{fragments.html :: footer}"></div>
 </footer>
 
 </body>

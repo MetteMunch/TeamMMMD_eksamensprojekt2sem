@@ -12,7 +12,7 @@ når der skal kaldes attributter-->
 <body>
 
 <nav>
-    <div th:insert="fragments.html :: nav(employeeID=${employeeID})"></div>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
 </nav>
 
 <header>
@@ -68,7 +68,7 @@ når der skal kaldes attributter-->
 </sidebar>
 
 <footer>
-    <div th:insert="fragments.html :: footer"></div>
+    <div th:insert="~{fragments.html :: footer}"></div>
 </footer>
 
 </body>

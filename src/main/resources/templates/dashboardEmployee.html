@@ -12,7 +12,7 @@ når der skal kaldes attributter-->
 <body>
 
 <nav>
-    <div th:insert="fragments.html :: nav(employeeID=${employeeID})"></div>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
 </nav>
 
 <header>
@@ -42,8 +42,7 @@ når der skal kaldes attributter-->
             <td th:text="${task.getActualTime()}"></td>
             <td th:text="${task.getStatusString()}"></td>
             <td>
-                <a th:href="@{{employeeID}/{projectID}/{subProjectID}/{taskID}
-                (employeeID=${employeeID}, projectID=${task.getProjectID()}, subProjectID=${task.getSubProjectID()}, taskID=${task.getTaskID()})}">
+                <a th:href="@{/user/{employeeID}/project/task/{taskID}}">  <!--jeg kender ikke korrekt view-->
                     <button class="vedjegikke" type="button">Show task</button>
                 </a>
             </td>
@@ -96,7 +95,7 @@ når der skal kaldes attributter-->
 </sidebar>
 
 <footer>
-    <div th:insert="fragments.html :: footer"></div>
+    <div th:insert="~{fragments.html :: footer}"></div>
 </footer>
 
 </body>
