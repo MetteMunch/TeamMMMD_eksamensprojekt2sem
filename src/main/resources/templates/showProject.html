@@ -74,6 +74,9 @@ når der skal kaldes attributter-->
   <form th:action="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}" method=get>
     <button class="createResetPasswordButton" type="submit">Create new subproject</button>
   </form>
+  <a th:href="@{/user/{employeeID} (employeeID=${employeeID})}">
+    <button class="createResetPasswordButton" style="margin-right:5%" type="button">Go Back</button>
+  </a>
 </main>
 
 <sidebar>

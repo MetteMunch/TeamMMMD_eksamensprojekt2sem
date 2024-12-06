@@ -83,6 +83,7 @@
             </select>
         </div>
 
+
         <!-- Conditional Action Buttons -->
         <div class="action-buttons">
             <div th:if="${isManager}">
@@ -92,6 +93,11 @@
                     </a>
                 </p>
             </div>
+
+            <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID = ${subProjectID})}">
+                <button class="createResetPasswordButton" style="margin-right:5%" type="button">Go Back</button>
+            </a>
+        </div>
     </main>
 
     <!-- Sidebar -->
