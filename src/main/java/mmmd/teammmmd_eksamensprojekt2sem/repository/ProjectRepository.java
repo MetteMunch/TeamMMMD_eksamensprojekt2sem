@@ -680,6 +680,7 @@ public class ProjectRepository {
                             rs.getString("taskDescription"),
                             assignedEmployee,
                             estimatedTime,
+                            rs.getDouble("actualTime"),
                             rs.getDate("plannedStartDate"),
                             dependingOnTask,
                             requiredRole,
@@ -725,14 +726,28 @@ public class ProjectRepository {
     }
 
     public void submitHours(int taskID, double hours) throws SQLException {
-        String sql = "UPDATE Task SET actualTime = actualTime + ? WHERE taskID = ?";
+        String fetchActualTimeSql = "SELECT actualTime FROM Task WHERE taskID = ?";
 
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            ps.setDouble(1, hours);
+        double currentActualTime = 0.0;
+        try (PreparedStatement ps = dbConnection.prepareStatement(fetchActualTimeSql)) {
+            ps.setInt(1, taskID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    currentActualTime = rs.getDouble("actualTime");
+                }
+            }
+        }
+
+        double updatedActualTime = currentActualTime + hours;
+        String updateActualTimeSql = "UPDATE Task SET actualTime = ? WHERE taskID = ?";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(updateActualTimeSql)) {
+            ps.setDouble(1, updatedActualTime);
             ps.setInt(2, taskID);
             ps.executeUpdate();
         }
     }
+
 
     /*
         #####################################
@@ -814,5 +829,22 @@ public class ProjectRepository {
         }
         return nonManagerEmployees;
     }
+
+    public boolean isManager(int employeeID) {
+        String sql = "SELECT COUNT(*) FROM employee WHERE employeeID = ? AND role = 1";  // 1 represents Project Manager role
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setInt(1, employeeID);  // Set the employeeID parameter in the query
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // If the count is greater than 0, the employee is a Project Manager
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;  // Default return value if no match is found
+    }
+
 
 }

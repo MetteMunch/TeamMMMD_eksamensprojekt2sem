@@ -37,6 +37,21 @@ public class Task {
         this.status = status;
     }
 
+    public Task(String taskTitle, String taskDescription, Integer assignedEmployee,
+                Double estimatedTime, double actualTime, Date plannedStartDate, Integer dependingOnTask,
+                Integer requiredRole, int subProjectID, int status) {
+        this.taskTitle = taskTitle;
+        this.taskDescription = taskDescription;
+        this.assignedEmployee = assignedEmployee;
+        this.estimatedTime = estimatedTime != null ? estimatedTime : 0.0; // Default sat til 0.0 hvis den er null
+        this.actualTime = actualTime;
+        this.plannedStartDate = plannedStartDate;
+        this.dependingOnTask = dependingOnTask;
+        this.requiredRole = requiredRole;
+        this.subProjectID = subProjectID;
+        this.status = status;
+    }
+
     public Task(int taskID, String taskTitle, String taskDescription, Integer assignedEmployee,
                 Double estimatedTime, Date plannedStartDate, Integer dependingOnTask,
                 Integer requiredRole, int subProjectID, int status) {

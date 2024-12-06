@@ -158,6 +158,10 @@ public class ProjectService {
         return projectRepository.findNonManagerEmployees();
     }
 
+    public boolean isManager(int employeeID) {
+        return projectRepository.isManager(employeeID);
+    }
+
 
     /*
     ###########---Helper Methods---###########

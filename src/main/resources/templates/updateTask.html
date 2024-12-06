@@ -11,7 +11,7 @@
 </div>
 
 <!-- Adjust the form action to include projectID and subProjectID -->
-<form th:action="@{/project/{projectID}/{subProjectID}/update-task/{taskID}(projectID=${projectID}, subProjectID=${subProjectID}, taskID=${taskID})}" method="post">
+<form th:action="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/update-task'}" method="post">
 
     <!-- Task Title -->
     <label class="taskTitle" for="taskTitle">Task Title: </label>
@@ -36,7 +36,7 @@
 
     <!-- Estimated Time (Optional) -->
     <label class="estimatedTime" for="estimatedTime">Estimated Time (hours): </label>
-    <input type="number" step="0.5" id="estimatedTime" name="estimatedTime" th:value="${task.estimatedTime}">
+    <input type="number" step="0.25" id="estimatedTime" name="estimatedTime" th:value="${task.estimatedTime}">
     <br>
 
     <!-- Planned Start Date (Optional) -->
