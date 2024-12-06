@@ -12,7 +12,7 @@ når der skal kaldes attributter-->
 <body>
 
 <nav>
-<div th:insert="fragments.html :: nav"></div>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
 </nav>
 
 <header>
@@ -45,9 +45,8 @@ når der skal kaldes attributter-->
           <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID} (employeeID=${employeeID}, projectID=${task.getProjectID()}, subProjectID=${task.getSubProjectID()}, taskID=${task.getTaskID()})}">
               <button class="vedjegikke" type="button">Show Task</button>
           </a>
-
-          <form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/delete-task/{taskID}
-          (employeeID = ${employeeID},projectID = ${task.getProjectID}, subProjectID =${task.getTaskID()})}" method="post"
+          <form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID}/delete-task
+          (employeeID = ${employeeID},projectID = ${task.getProjectID}, subProjectID =${task.getSubProjectID})}" method="post"
           onsubmit="return confirmDeletion()">
             <button type="submit">Delete</button>
           </form>
@@ -73,19 +72,20 @@ når der skal kaldes attributter-->
         <th>Project Customer</th>
         <th>Project Order Date</th>
         <th>Project Delivery Date</th>
-        <th>Project Link Agreement</th>
         <th>Project Company Rep</th>
         <th>Project Status</th>
     </tr>
     </thead>
     <tbody th:each="project : ${projects}">
     <tr>
-        <td th:text="${project.getProjectTitle()}"></td>
+        <td>
+            <a th:href="@{{employeeID}/{projectID}(employeeID = ${employeeID}, projectID=${project.getID()})}"
+               th:text="${project.getProjectTitle()}"></a>
+        </td>
         <td th:text="${project.getProjectDescription()}"></td>
         <td th:text="${project.getCustomerNameString()}"></td>
         <td th:text="${project.getOrderDate()}"></td>
         <td th:text="${project.getDeliveryDate()}"></td>
-        <td><a th:href="${project.getLinkAgreement()}" target="_blank" th:text="${project.getLinkAgreement()}"></a></td>
         <td th:text="${project.getCompanyRepString()}"></td>
         <td th:text="${project.getStatusString()}"></td>
         <!--<td>
@@ -105,7 +105,7 @@ når der skal kaldes attributter-->
 </sidebar>
 
 <footer>
-<div th:insert="fragments.html :: footer"></div>
+<div th:insert="~{fragments.html :: footer}"></div>
 </footer>
 
 </body>

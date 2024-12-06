@@ -212,17 +212,16 @@ public class ProjectController {
 
     @GetMapping("/{projectID}/{subProjectID}")
     public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
-        System.out.println("kommer vi ind i endpoint show SubProject?");
-        System.out.println("projectID: "+projectID);
-        System.out.println("subprojectID: "+subProjectID);
-        System.out.println("EmployeeID: "+employeeID);
+
         if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
             model.addAttribute("subProject", projectService.showSubProject(subProjectID));
             model.addAttribute("tasks",projectService.getAllTasksInSpecificSubProject(subProjectID));
+            model.addAttribute("employeeID", employeeID);
             return "showSubProject"; //Manager = true
         } else {
             model.addAttribute("subProject", projectService.showSubProject(subProjectID));
             model.addAttribute("tasks",projectService.getAllTasksInSpecificSubProject(subProjectID));
+            model.addAttribute("employeeID",employeeID);
             return "showSubProjectNotMgr"; //Manager = false
         }
 
@@ -291,6 +290,7 @@ public class ProjectController {
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
         model.addAttribute("taskID", taskID);
+        model.addAttribute("employeeID",employeeID);
         model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
         model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
         model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
