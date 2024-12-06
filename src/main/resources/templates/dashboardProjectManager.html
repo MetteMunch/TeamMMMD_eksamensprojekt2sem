@@ -42,8 +42,8 @@ når der skal kaldes attributter-->
     <td th:text="${task.getActualTime()}"></td>
     <td th:text="${task.getStatusString()}"></td>
       <td>
-          <a th:href="@{/user/{employeeID}/project/task/{taskID}}">  <!--jeg kender ikke korrekt view-->
-              <button class="vedjegikke" type="button">Show task</button>
+          <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID} (employeeID=${employeeID}, projectID=${task.getProjectID()}, subProjectID=${task.getSubProjectID()}, taskID=${task.getTaskID()})}">
+              <button class="vedjegikke" type="button">Show Task</button>
           </a>
           <form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID}/delete-task
           (employeeID = ${employeeID},projectID = ${task.getProjectID}, subProjectID =${task.getSubProjectID})}" method="post"

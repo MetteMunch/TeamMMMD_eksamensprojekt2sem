@@ -291,6 +291,11 @@ public class ProjectController {
         model.addAttribute("subProjectID", subProjectID);
         model.addAttribute("taskID", taskID);
         model.addAttribute("employeeID",employeeID);
+        model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+        model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
+        model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
+        model.addAttribute("statusobjects", projectService.fetchAllStatus());
+        model.addAttribute("isManager", projectService.isManager(employeeID));
         return "showTask";
     }
     /*
@@ -333,7 +338,7 @@ public class ProjectController {
         updatedTask.setTaskID(taskID);
         projectService.updateTask(updatedTask);
 
-        return "redirect:/project/" + projectID + "/" + subProjectID + "/tasks";
+        return "redirect:/user/"+employeeID+"/"+projectID+"/"+subProjectID+"/"+taskID;
     }
 
     /*
@@ -353,6 +358,41 @@ public class ProjectController {
     #             Other            #
     ################################
     */
+
+    @GetMapping("/{projectID}/{subProjectID}/{taskID}/submit-hours")
+    public String submitHours(@PathVariable int projectID,
+                                      @PathVariable int subProjectID,
+                                      @PathVariable int taskID,
+                                      @PathVariable int employeeID,
+                                      Model model) {
+
+        model.addAttribute("employeeID", employeeID);
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjectID", subProjectID);
+        model.addAttribute("taskID", taskID);
+
+        return "submitHours";
+    }
+
+    @PostMapping("/{projectID}/{subProjectID}/{taskID}/save-submit-hours")
+    public String saveSubmitHours(@PathVariable int projectID,
+                              @PathVariable int subProjectID,
+                              @PathVariable int taskID,
+                              @PathVariable int employeeID,
+                              @RequestParam double hours,
+                              Model model) throws SQLException {
+
+        projectService.submitHours(taskID, hours);
+
+        Task task = projectService.getTaskByID(taskID);
+        model.addAttribute("task", task);
+        model.addAttribute("employeeID", employeeID);
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjectID", subProjectID);
+        model.addAttribute("taskID", taskID);
+
+        return "redirect:/user/{employeeID}/{projectID}/{subProjectID}/{taskID}";
+    }
 
 
 
