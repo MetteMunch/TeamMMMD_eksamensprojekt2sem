@@ -7,16 +7,16 @@
     <link rel="stylesheet" href="/dashboard.css">
 </head>
 <body>
-<nav th:fragment="nav">
-        <a th:href="@{https://www.alpha-solutions.com/da}" class="logo">
-            <img src="/images/logo_farve.png" alt="logo">
-        </a>
-        <a th:href="@{/user/logout}" class="icon">
-            <img src="/icons/home.png" alt="home">
-        </a>
-        <a th:href="@{/user/logout}" class="icon">
-            <img src="/icons/logud_farve.png" alt="logud">
-        </a>
+<nav th:fragment="nav(employeeID)">
+    <a th:href="@{https://www.alpha-solutions.com/da}" class="logo">
+        <img src="/images/logo_farve.png" alt="logo">
+    </a>
+    <a th:href="@{{employeeID}/logout(employeeID=${employeeID})}" class="icon">
+        <img src="/icons/home.png" alt="home">
+    </a>
+    <a th:href="@{{employeeID}/logout(employeeID=${employeeID})}" class="icon">
+        <img src="/icons/logud_farve.png" alt="logud">
+    </a>
 </nav>
 
 <footer th:fragment="footer">
