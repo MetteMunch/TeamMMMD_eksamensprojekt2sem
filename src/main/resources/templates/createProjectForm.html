@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Create Project</title>
@@ -10,9 +11,9 @@
     <p th:text="${titleAlreadyExistsError}" style="color:red"></p>
 </div>
 
-<form th:action="@{/user/{employeeID}/create-project(employeeID=${employeeID})}" method="post">
+<form th:action="@{/user/{employeeID}/handle-customer-selection(employeeID=${employeeID})}" method="post">
 
-    <input type="hidden" name="employeeID" th:value="${employeeID}">
+    <!--<input type="hidden" name="employeeID" th:value="${employeeID}"> -->
     <!--String title, string description, int customer, Date orderDate, Date Delivery, string linkagreement, int companyrep, int status -->
     <label class="projectTitle" for="projectTitle">Project Title: </label>
     <input type="text" id="projectTitle" name="projectTitle" required>
@@ -20,23 +21,26 @@
     <label class="projectDescription" for="projectDescription">Project Description: </label>
     <input type="text" id="projectDescription" name="projectDescription" required>
     <br>
+    <!-- Dropdown-menu til kunder hvor det skal være muligt at vælge intern projekt plus oprette ny kunde -->
     <label class="customer" for="customer">Project Customer: </label>
     <select id="customer" name="customer" required>
         <option value="" disabled selected>Select Customer</option>
         <option value="99">Internal Project</option>
         <option th:each="customer : ${customers}" th:value="${customer.getCustomerID()}" th:text="${customer.getCompanyName()+' | '+customer.getRepName()}"></option>
+        <option value="new">New Customer</option>
     </select>
+
     <br>
     <label class="orderDate" for="orderDate">Order Date: </label>
     <input type="date" id="orderDate" name="orderDate" required>
     <br>
-    <label class="deliveryDate" for="deliveryDate">Order Date: </label>
+    <label class="deliveryDate" for="deliveryDate">Agreed Delivery Date: </label>
     <input type="date" id="deliveryDate" name="deliveryDate" required>
     <br>
     <label class="linkAgreement" for="linkAgreement">Link Agreement: </label>
     <input type="text" id="linkAgreement" name="linkAgreement" placeholder="Leave empty if no agreement">
     <br>
-    <label class="companyRep" for="companyRep">Company rep.: </label>
+    <label class="companyRep" for="companyRep">Project Manager: </label>
     <select id="companyRep" name="companyRep" required>
         <option value="" disabled selected>Select a Company Representative</option>
         <!--Project managers -->

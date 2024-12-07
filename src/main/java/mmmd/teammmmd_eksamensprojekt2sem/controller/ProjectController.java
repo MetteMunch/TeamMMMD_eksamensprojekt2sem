@@ -48,16 +48,18 @@ public class ProjectController {
     }
 
     @GetMapping("/show-create-customer")
-    public String showCreateCustomer() {
+    public String showCreateCustomer(@PathVariable int employeeID, Model model) {
+        model.addAttribute("employeeID", employeeID);
         return "createCustomer";
     }
 
     @PostMapping("/create-customer")
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
         Customer customer = new Customer(companyName, repName);
-        projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
-        return "succes"; //TODO slet html, bare til verifikation. Husk at ændre i ProjectControllerTest.
+        projectService.createCustomer(customer);
+        return "createProjectForm";
     }
+
 
     /*
     #####################################
@@ -74,7 +76,7 @@ public class ProjectController {
         if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) { //returnerer true, hvis navnet allerede eksisterer i DB.
             redirectAttributes.addFlashAttribute("titleAlreadyExistsError", "The selected project title already exists. " +
                     "Please select another title for this project.");
-            return "redirect:/user/{employeeID}/project/create-project";
+            return "redirect:/user/{employeeID}/create-project";
         }
         else {
             if (customer == 99) { //TODO: Problem med skalerbarhed ;) - En mere dynamisk måde at tjekke for dette sammenholdt med html eftertragtes. Måske skal 'Internal Project' kunde bare sættes ind som den allerførste kunde i databasen.
@@ -91,8 +93,8 @@ public class ProjectController {
             redirectAttributes.addAttribute("employeeID", employeeID);
             //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
             //TODO: Tilføj gå tilbage eller return to PM Dashboard i html
-            return "redirect:/user/{employeeID}/{projectID}"; //DENNE GÅR TILBAGE TIL LOGINPAGE ER DET FORDI DEN IKKE HAR EMPLOYEEID MED?
-//            return "redirect:/user/"+employeeID+"/"+project.getID();
+            return "redirect:/user/{employeeID}/{projectID}";
+
         }
     }
 //    @GetMapping("/success") //TODO: Udelukkende til demokode for at se om metode eksekveres korrekt med redirect. Slet når ikke længere nødvendig sammen med html fil.
