@@ -54,10 +54,16 @@ public class ProjectController {
     }
 
     @PostMapping("/create-customer")
-    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
+    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName,
+                                       RedirectAttributes redirectAttributes, @PathVariable int employeeID) {
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer);
-        return "createProjectForm";
+
+        // Vi skal have fat i den oprettede kundes ID og videresende det til createProjectAction.
+        int customerId = customer.getCustomerID();
+        redirectAttributes.addAttribute("customer", customerId);
+        redirectAttributes.addAttribute("employeeID", employeeID);
+        return "redirect:/user/{employeeID}/create-project";
     }
 
 
@@ -72,18 +78,27 @@ public class ProjectController {
     @PostMapping("/create-project") //CREATE
     public String createProjectAction(@RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
-                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status,@RequestParam int employeeID, RedirectAttributes redirectAttributes) {
+                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep,
+                                      @RequestParam int status,@PathVariable int employeeID, RedirectAttributes redirectAttributes, Model model) {
         if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) { //returnerer true, hvis navnet allerede eksisterer i DB.
             redirectAttributes.addFlashAttribute("titleAlreadyExistsError", "The selected project title already exists. " +
                     "Please select another title for this project.");
-            return "redirect:/user/{employeeID}/create-project";
+            return "redirect:/user/{employeeID}/show-create-project";
         }
         else {
             if (customer == 99) { //TODO: Problem med skalerbarhed ;) - En mere dynamisk måde at tjekke for dette sammenholdt med html eftertragtes. Måske skal 'Internal Project' kunde bare sættes ind som den allerførste kunde i databasen.
                 Customer internalProject = projectService.fetchInternalProjectCustomer();
                 customer = internalProject.getCustomerID();
             }
+
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
+
+            if (customer == -2) {
+                model.addAttribute("employeeID", employeeID);
+                return "createCustomer";
+            }
+
+
             projectService.createProject(project); // Projekt oprettes i DB
 //            projectService.findProjectIDFromDB(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
             int pID = projectService.findProjectIDFromDB(project);
