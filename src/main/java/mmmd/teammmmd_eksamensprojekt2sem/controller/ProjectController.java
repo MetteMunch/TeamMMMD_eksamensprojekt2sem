@@ -55,15 +55,17 @@ public class ProjectController {
 
     @PostMapping("/create-customer")
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName,
-                                       RedirectAttributes redirectAttributes, @PathVariable int employeeID) {
+                                       @RequestParam int projectID, RedirectAttributes redirectAttributes, @PathVariable int employeeID, Model model) {
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer);
 
-        // Vi skal have fat i den oprettede kundes ID og videresende det til createProjectAction.
-        int customerId = customer.getCustomerID();
-        redirectAttributes.addAttribute("customer", customerId);
+        // Vi skal have fat i den oprettede kundes ID så dette kan sættes på rette projekt i stedet for id for new
+        int customerId = projectService.lookUpCustomerIDFromDB(customer);
+        projectService.updateProjectsCustomerID(projectID,customerId);
+
+        redirectAttributes.addAttribute("projectID", projectID);
         redirectAttributes.addAttribute("employeeID", employeeID);
-        return "redirect:/user/{employeeID}/create-project";
+        return "redirect:/user/{employeeID}/{projectID}";
     }
 
 
@@ -92,17 +94,16 @@ public class ProjectController {
             }
 
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
-
-            if (customer == -2) {
-                model.addAttribute("employeeID", employeeID);
-                return "createCustomer";
-            }
-
-
             projectService.createProject(project); // Projekt oprettes i DB
-//            projectService.findProjectIDFromDB(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
+//          projectService.findProjectIDFromDB(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
             int pID = projectService.findProjectIDFromDB(project);
             project.setID(pID);
+
+            if (customer == 100) {
+                model.addAttribute("employeeID", employeeID);
+                model.addAttribute("projectID", pID);
+                return "createCustomer";
+            }
 
             redirectAttributes.addAttribute("projectID",pID);
             redirectAttributes.addAttribute("employeeID", employeeID);

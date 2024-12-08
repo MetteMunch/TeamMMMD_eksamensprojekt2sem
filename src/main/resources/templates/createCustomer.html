@@ -7,7 +7,14 @@
 <body>
 <h1>Create new customer</h1>
 
+
+
+
 <form th:action="@{/user/{employeeID}/create-customer (employeeID=${employeeID})}" method="post">
+
+    <!--skjult felt for at medsende projectID ved save af formularen-->
+    <input type="hidden" name="projectID" th:value="${projectID}">
+
     <input type ="text" id="companyName" name="companyName" placeholder="Company Name" required>
     <br>
     <input type ="text" id="repName" name="repName" placeholder="Company Representative" required>
