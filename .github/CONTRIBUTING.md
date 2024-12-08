@@ -15,6 +15,7 @@ Remember GitHub Flow:
 8. Reviewer reviews the changes
 9. Merge the changes
 10. Delete the feature branch
+    
 *We have created a rule in Github, so it is not possible by mistake to push directly to main.*
 
 ## Agreed Code of Conduct (in brief):
