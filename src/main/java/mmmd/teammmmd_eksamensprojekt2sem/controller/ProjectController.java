@@ -122,6 +122,7 @@ public class ProjectController {
         model.addAttribute("project",project);
         model.addAttribute("listOfSubProjects",listOfSpecificSubProjects);
         model.addAttribute("employeeID",employeeID);
+        model.addAttribute("isManager", projectService.isManager(employeeID));
 
         return "showProject";
 
