@@ -88,7 +88,7 @@ public class ProjectController {
             return "redirect:/user/{employeeID}/show-create-project";
         }
         else {
-            if (customer == 99) { //TODO: Problem med skalerbarhed ;) - En mere dynamisk måde at tjekke for dette sammenholdt med html eftertragtes. Måske skal 'Internal Project' kunde bare sættes ind som den allerførste kunde i databasen.
+            if (customer == 1) { //TODO: Problem med skalerbarhed ;) - En mere dynamisk måde at tjekke for dette sammenholdt med html eftertragtes. Måske skal 'Internal Project' kunde bare sættes ind som den allerførste kunde i databasen.
                 Customer internalProject = projectService.fetchInternalProjectCustomer();
                 customer = internalProject.getCustomerID();
             }
@@ -99,7 +99,7 @@ public class ProjectController {
             int pID = projectService.findProjectIDFromDB(project);
             project.setID(pID);
 
-            if (customer == 100) {
+            if (customer == 2) {
                 model.addAttribute("employeeID", employeeID);
                 model.addAttribute("projectID", pID);
                 return "createCustomer";
