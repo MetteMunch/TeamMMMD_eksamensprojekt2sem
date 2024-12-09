@@ -5,9 +5,10 @@
     <title>Project Update</title>
 </head>
 <body>
-<form action="/project/updateProject" method="post">
+<form action="/user/{employeeID}/updateProject" method="post">
 
     <input type="hidden" id="projectID" name="projectID" th:value="${project.getID()}">
+    <input type="hidden" id="employeeID" name="employeeID" th:value="${employeeID}">
     <!--String title, string description, int customer, Date orderDate, Date Delivery, string linkagreement, int companyrep, int status -->
     <label class="projectTitle" for="projectTitle">Project Title: </label>
     <input type="text" id="projectTitle" name="projectTitle" th:value="${project.getProjectTitle()}"required>

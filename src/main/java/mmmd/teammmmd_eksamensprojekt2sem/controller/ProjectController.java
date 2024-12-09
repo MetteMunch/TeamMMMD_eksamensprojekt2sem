@@ -139,34 +139,40 @@ public class ProjectController {
     /*
     ###########---UPDATE---###########
      */
-    @GetMapping("/{name}/edit") //button
-    public String goToEditProject(@PathVariable String name, Model model) {
-        Project project = projectService.fetchSpecificProject(name);
+    @GetMapping("/{projectID}/edit") //button
+    public String goToEditProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) {
+        Project project = projectService.fetchSpecificProject(projectID);
         model.addAttribute("project", project);
         model.addAttribute("projectCustomer", projectService.getListOfCurrentCustomers());
         model.addAttribute("projectPMEmployees", projectService.findPMEmployees());
         model.addAttribute("projectBCEmployees", projectService.findBCEmployees());
         model.addAttribute("projectStatusAll", projectService.fetchAllStatus());
+        model.addAttribute("employeeID", employeeID);
         return "updateProject";
     }
 
     @PostMapping("/updateProject")
     public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
-                                      @RequestParam(required = false) String linkAgreement, @RequestParam int companyRep, @RequestParam int status) {
+                                      @RequestParam(required = false) String linkAgreement, @RequestParam int companyRep, @RequestParam int status,
+                                      @RequestParam int employeeID, RedirectAttributes redirectAttributes) {
+
         Project project = new Project(projectID, projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
         projectService.updateProject(project);
-        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard. Husk at korriger i ProjectControllerTest også.
+
+        redirectAttributes.addAttribute("employeeID", employeeID);
+        return "redirect:/user/{employeeID}";
     }
 
     /*
     ###########---DELETE---###########
      */
-    @PostMapping("/{name}/delete") //Button
-    public String deleteProject(@PathVariable String name) throws SQLException {
-        Project project = projectService.fetchSpecificProject(name);
+    @PostMapping("/{projectID}/delete") //Button
+    public String deleteProject(@PathVariable int projectID, @PathVariable int employeeID, RedirectAttributes redirectAttributes) throws SQLException {
+        Project project = projectService.fetchSpecificProject(projectID);
         projectService.deleteProject(project);
-        return "redirect:/project/success"; //TODO: Ændre redirect til PM Dashboard. Husk at ændre test i projectControllerTest.
+        redirectAttributes.addAttribute("employeeID", employeeID);
+        return "redirect:/user/{employeeID}";
     }
 
 
