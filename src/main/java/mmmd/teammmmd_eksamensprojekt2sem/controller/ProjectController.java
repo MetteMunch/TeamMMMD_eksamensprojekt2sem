@@ -102,13 +102,17 @@ public class ProjectController {
 
     @GetMapping("/show-create-project")
     public String showCreateProject(@PathVariable("employeeID") int employeeID, Model model) {
-        model.addAttribute("PMEmployees", projectService.findPMEmployees());
-        model.addAttribute("BCEmployees", projectService.findBCEmployees());
-        model.addAttribute("statusobjects", projectService.fetchAllStatus());
-        model.addAttribute("customers", projectService.getListOfCurrentCustomers());
-        model.addAttribute("employeeID", employeeID);
+        if(projectService.isManager(employeeID)) {
+            model.addAttribute("PMEmployees", projectService.findPMEmployees());
+            model.addAttribute("BCEmployees", projectService.findBCEmployees());
+            model.addAttribute("statusobjects", projectService.fetchAllStatus());
+            model.addAttribute("customers", projectService.getListOfCurrentCustomers());
+            model.addAttribute("employeeID", employeeID);
 
-        return "createProjectForm";
+            return "createProjectForm";
+        } else {
+            return "redirect:/user/{employeeID}";
+        }
     }
 
     /*
@@ -179,10 +183,15 @@ public class ProjectController {
     */
     @GetMapping("/{projectID}/create-subproject")
     public String createSubProject(@PathVariable int projectID, @PathVariable int employeeID, Model model, RedirectAttributes redirectAttributes) {
-        model.addAttribute("projectID", projectID);
-        model.addAttribute("employeeID",employeeID);
-        redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
-        return "createSubProjectForm";
+        if(projectService.isManager(employeeID)) {
+            model.addAttribute("projectID", projectID);
+            model.addAttribute("employeeID", employeeID);
+            redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
+            return "createSubProjectForm";
+        } else {
+            return "redirect:/user/{employeeID}";
+        }
+
     }
 
     @PostMapping("/{projectID}/save-subproject")
@@ -205,7 +214,6 @@ public class ProjectController {
 
     @PostMapping("/{projectID}/{subProjectID}/delete-subproject")
     public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID, @PathVariable int projectID, RedirectAttributes redirectAttributes) {
-        System.out.println("subID: "+subProjectID);
         projectService.deleteSubProject(subProjectID);
         redirectAttributes.addAttribute("employeeID", employeeID);
         redirectAttributes.addAttribute("projectID", projectID);
@@ -246,14 +254,19 @@ public class ProjectController {
      */
     @GetMapping("/{projectID}/{subProjectID}/create-task")
     public String createTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
-        model.addAttribute("employeeID", employeeID);
-        model.addAttribute("projectID", projectID);
-        model.addAttribute("subProjectID", subProjectID);
-        model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
-        model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
-        model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
-        model.addAttribute("statusobjects", projectService.fetchAllStatus());
-        return "createTask";
+        if(projectService.isManager(employeeID)) {
+            model.addAttribute("employeeID", employeeID);
+            model.addAttribute("projectID", projectID);
+            model.addAttribute("subProjectID", subProjectID);
+            model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+            model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
+            model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
+            model.addAttribute("statusobjects", projectService.fetchAllStatus());
+            return "createTask";
+        } else {
+            return "redirect:/user/{employeeID}";
+        }
+
     }
 
     @PostMapping("/{projectID}/{subProjectID}/save-task")
