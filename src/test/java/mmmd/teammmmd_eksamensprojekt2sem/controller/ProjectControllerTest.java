@@ -2,6 +2,7 @@ package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
+import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +44,7 @@ public class ProjectControllerTest {
     String requestMapping = "/user/{employeeID}";
     private Project project;
     private int employeeID;
+    private SubProject subProject;
 
     @BeforeEach
     public void setup() {
@@ -67,15 +69,15 @@ public class ProjectControllerTest {
     void createProjectActionSuccess() throws Exception {
         int employeeID = 4;
         mockMvc.perform(post("/user/{employeeID}/create-project", employeeID)
-                .param("projectTitle", project.getProjectTitle())
-                .param("projectDescription", project.getProjectDescription())
-                .param("customer", String.valueOf(project.getCustomer()))
-                .param("orderDate", String.valueOf(project.getOrderDate()))
-                .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
-                .param("linkAgreement", project.getLinkAgreement())
-                .param("companyRep", String.valueOf(project.getCompanyRep()))
-                .param("status", String.valueOf(project.getStatus()))
-                .param("employeeID", String.valueOf(employeeID)))
+                        .param("projectTitle", project.getProjectTitle())
+                        .param("projectDescription", project.getProjectDescription())
+                        .param("customer", String.valueOf(project.getCustomer()))
+                        .param("orderDate", String.valueOf(project.getOrderDate()))
+                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
+                        .param("linkAgreement", project.getLinkAgreement())
+                        .param("companyRep", String.valueOf(project.getCompanyRep()))
+                        .param("status", String.valueOf(project.getStatus()))
+                        .param("employeeID", String.valueOf(employeeID)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, project.getID()));
     }
@@ -165,7 +167,25 @@ public class ProjectControllerTest {
 //    }
 //
 //
-//
-//
-//
+@BeforeEach
+public void setUp() {
+        subProject.setSubProjectTitle("Test SubTitle");
+        subProject.setSubProjectDescription("Test SubDescription");
+        subProject.setSubProjectID(1);
+        subProject.setStatusID(1);
 }
+
+    @Test
+    void createSubProjectActionSucces() throws Exception {
+        int projectID = 1;
+        employeeID = 1;
+        mockMvc.perform(get("/{projectID}/create-subproject", projectID)
+                .param("subProjectTitle", subProject.getSubProjectTitle())
+                .param("subProjectDescription", subProject.getSubProjectDescription())
+                .param("subProject", String.valueOf(subProject.getProjectID()))
+                .param("subProjectStatus", String.valueOf(subProject.getStatusID())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, subProject.getSubProjectID()));
+    }
+}
+

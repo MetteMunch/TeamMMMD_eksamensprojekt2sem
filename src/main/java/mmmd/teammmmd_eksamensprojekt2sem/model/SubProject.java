@@ -16,6 +16,9 @@ public class SubProject {
         this.statusID = statusID;
     }
 
+    public SubProject() {
+    }
+
 
     public int getSubProjectID() {
         return subProjectID;
