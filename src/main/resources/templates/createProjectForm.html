@@ -24,8 +24,8 @@
     <label class="customer" for="customer">Project Customer: </label>
     <select id="customer" name="customer" required>
         <option value="" disabled selected>Select Customer</option>
-        <option value="99">Internal Project</option>
-        <option value="100">New Customer</option>
+        <option value="1">Internal Project</option>
+        <option value="2">New Customer</option>
         <option th:each="customer : ${customers}"
                 th:value="${customer.getCustomerID()}"
                 th:text="${customer.getCompanyName()+' | '+customer.getRepName()}"></option>
