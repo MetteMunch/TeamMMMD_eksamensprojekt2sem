@@ -123,6 +123,10 @@ public class ProjectService {
         projectRepository.createTask(projectID, subProjectID, task);
     }
 
+    public List<Task> getAllTasks() {
+        return projectRepository.getAllTasks();
+    }
+
     public List<Task> getAllTasksInSpecificSubProject(int subProjectID) {
         return projectRepository.getAllTasksInSpecificSubProject(subProjectID);
     }

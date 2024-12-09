@@ -1,9 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.repository;
 
-import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
+import mmmd.teammmmd_eksamensprojekt2sem.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,6 +201,102 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertEquals(actualSizeAfterDeletion, expectedSizeAfterDeletion);
     }
+
+    /*
+    ##################################
+    #           CRUD Task            #
+    ##################################
+     */
+
+    @Test
+    void createTask() throws Exception {
+        // Arrange
+        Task newTask = new Task("Task Title Test", "Task Description", 1, 5.0, Date.valueOf("2024-12-12"),
+                null, null, 1, 1);
+        int subProjectID = 1;
+        int projectID = 1;
+
+        List<Task> tasksBefore = projectRepository.getAllTasksInSpecificSubProject(subProjectID);
+        int expectedNumOfTasks = tasksBefore.size() + 1; //forventer at antallet af tasks stiger med 1
+
+        // Act
+        projectRepository.createTask(projectID, subProjectID, newTask);
+        List<Task> tasksAfter = projectRepository.getAllTasksInSpecificSubProject(subProjectID);
+
+        // Assert
+        assertEquals(expectedNumOfTasks, tasksAfter.size());
+    }
+
+    @Test
+    void getAllTasksInSpecificSubProject() throws Exception {
+        // Arrange
+        int subProjectID = 1;
+        List<Task> tasks = projectRepository.getAllTasksInSpecificSubProject(subProjectID);
+
+        int expectedNumOfTasks = 2; //forventer 2 da der ligger 2 tasks under subprojectID 1
+
+        // Act
+        int actualNumOfTasks = tasks.size();
+
+        // Assert
+        assertEquals(expectedNumOfTasks, actualNumOfTasks);
+    }
+
+    /*
+    @Test
+    void updateTask() throws Exception {
+        // Arrange
+        Task taskToUpdate = new Task("Task Title", "Task Description", 1, 5.0, Date.valueOf("2024-12-12"),
+                null, null, 1, 1);
+        int subProjectID = 1;
+        int projectID = 1;
+
+        projectRepository.createTask(projectID, subProjectID, taskToUpdate);
+        int taskID = taskToUpdate.getTaskID(); // Assuming the TaskRepository assigns taskID automatically.
+        taskToUpdate.setTaskID(taskID);
+
+        taskToUpdate.setTaskTitle("Updated Task Title");
+        taskToUpdate.setEstimatedTime(10.0);
+
+        // Act
+        projectRepository.updateTask(taskToUpdate);
+        List<Task> tasks = projectRepository.getAllTasksInSpecificSubProject(subProjectID);
+
+        Task updatedTask = tasks.stream()
+                .filter(task -> task.getTaskID() == taskID)
+                .findFirst()
+                .orElse(null);
+
+        // Assert
+        assertNotNull(updatedTask);
+        assertEquals("Updated Task Title", updatedTask.getTaskTitle());
+        assertEquals(10.0, updatedTask.getEstimatedTime());
+    }
+
+    @Test
+    void deleteTask() throws Exception {
+        // Arrange
+        Task taskToDelete = new Task("Task to Delete", "Description", 1, 5.0, Date.valueOf("2024-12-12"),
+                null, null, 1, 1);
+        int subProjectID = 1;
+        int projectID = 1;
+
+        projectRepository.createTask(projectID, subProjectID, taskToDelete);
+        int taskID = taskToDelete.getTaskID(); // Assuming TaskRepository assigns taskID automatically.
+
+        List<Task> tasksBefore = projectRepository.getAllTasksInSpecificSubProject(subProjectID);
+        int expectedNumOfTasksAfterDeletion = tasksBefore.size() - 1;
+
+        // Act
+        projectRepository.deleteTask(taskID);
+        List<Task> tasksAfter = projectRepository.getAllTasksInSpecificSubProject(subProjectID);
+
+        // Assert
+        assertEquals(expectedNumOfTasksAfterDeletion, tasksAfter.size());
+        assertFalse(tasksAfter.stream().anyMatch(task -> task.getTaskID() == taskID));
+    }
+     */
+
     @Test
     void fetchSpecificProject() {
         //Arrange

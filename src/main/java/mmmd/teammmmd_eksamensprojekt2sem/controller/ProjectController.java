@@ -394,7 +394,4 @@ public class ProjectController {
 
         return "redirect:/user/{employeeID}/{projectID}/{subProjectID}/{taskID}";
     }
-
-
-
 }
