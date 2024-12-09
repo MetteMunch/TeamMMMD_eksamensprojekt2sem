@@ -41,11 +41,6 @@ public class ProjectController {
     #####################################
     */
 
-    @GetMapping("/get-customers") //TODO: Demo kode
-    public String getCustomers(Model model) {
-        model.addAttribute("listofcustomers", projectService.getListOfCurrentCustomers());
-        return "customers"; //Husk at slette html //TODO: Slette html
-    }
 
     @GetMapping("/show-create-customer")
     public String showCreateCustomer() {
@@ -56,7 +51,7 @@ public class ProjectController {
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
-        return "succes"; //TODO slet html, bare til verifikation. Husk at ændre i ProjectControllerTest.
+        return "";
     }
 
     /*
@@ -126,15 +121,6 @@ public class ProjectController {
         return "showProject";
 
     }
-
-
-    @GetMapping("/show_all_projects")
-    public String showAllProjects(Model model) {
-        model.addAttribute("projects", projectService.showAllProjects());
-        return "showAllProjectsTest"; //TODO: Husk at rette showAllProjectsTest() ved sletning af demo html.
-        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
-    }
-
 
     /*
     ###########---UPDATE---###########
