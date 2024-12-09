@@ -61,7 +61,7 @@ public class ProjectController {
 
         // Vi skal have fat i den oprettede kundes ID så dette kan sættes på rette projekt i stedet for id for new
         int customerId = projectService.lookUpCustomerIDFromDB(customer);
-        //projectService.updateProjectsCustomerID(projectID,customerId);
+        projectService.updateProjectsCustomerID(projectID,customerId);
 
         redirectAttributes.addAttribute("projectID", projectID);
         redirectAttributes.addAttribute("employeeID", employeeID);
