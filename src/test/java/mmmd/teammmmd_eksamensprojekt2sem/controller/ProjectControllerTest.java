@@ -32,8 +32,8 @@ public class ProjectControllerTest {
     @Autowired // med denne annotation fortæller vi Spring, at den automatisk skal indsætte (injecte) en instans
     //af denne afhængighed. Dvs vi skal ikke oprette instansen manuelt med new. Spring håndterer instansieringen.
     private MockMvc mockMvc;
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
     @MockBean //med denne annotation instruere vi Spring Boot i at oprette en Mock-version af UserService, som
     //vi kan manipulere med under testen
     private ProjectService mockProjectService;
@@ -79,26 +79,27 @@ public class ProjectControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, project.getID()));
     }
-//    @Test
-//    void createProjectActionFailNameAlreadyExists() throws Exception {
-//        when(projectService.checkIfProjectNameAlreadyExists(anyString())).thenReturn(true);
-//
-//        mockMvc.perform(post(requestMapping+"/create_project")
-//                        .param("projectTitle", project.getProjectTitle())
-//                        .param("projectDescription", project.getProjectDescription())
-//                        .param("customer", String.valueOf(project.getCustomer()))
-//                        .param("orderDate", String.valueOf(project.getOrderDate()))
-//                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
-//                        .param("linkAgreement", project.getLinkAgreement())
-//                        .param("companyRep", String.valueOf(project.getCompanyRep()))
-//                        .param("status", String.valueOf(project.getStatus())))
-//                .andDo(print())
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl(requestMapping+"/show_create_project"))
-//                .andExpect(flash().attribute("titleAlreadyExistsError", "The selected project title already exists. " +
-//                        "Please select another title for this project."));
-//
-//    }
+    @Test
+    void createProjectActionFailNameAlreadyExists() throws Exception {
+        when(mockProjectService.checkIfProjectNameAlreadyExists(anyString())).thenReturn(true);
+
+        mockMvc.perform(post(requestMapping+"/create_project")
+                        .param("projectTitle", project.getProjectTitle())
+                        .param("projectDescription", project.getProjectDescription())
+                        .param("customer", String.valueOf(project.getCustomer()))
+                        .param("orderDate", String.valueOf(project.getOrderDate()))
+                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
+                        .param("linkAgreement", project.getLinkAgreement())
+                        .param("companyRep", String.valueOf(project.getCompanyRep()))
+                        .param("status", String.valueOf(project.getStatus()))
+                        .param("employeeID", String.valueOf(employeeID)))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/show_create_project"))
+                .andExpect(flash().attribute("titleAlreadyExistsError", "The selected project title already exists. " +
+                        "Please select another title for this project."));
+
+    }
 //    @Test
 //    void showCreateProject() throws Exception {
 //        mockMvc.perform(get(requestMapping+"/show_create_project"))
