@@ -24,8 +24,6 @@
     <label class="customer" for="customer">Project Customer: </label>
     <select id="customer" name="customer" required>
         <option value="" disabled selected>Select Customer</option>
-        <option value="1">Internal Project</option>
-        <option value="2">New Customer</option>
         <option th:each="customer : ${customers}"
                 th:value="${customer.getCustomerID()}"
                 th:text="${customer.getCompanyName()+' | '+customer.getRepName()}"></option>
@@ -56,7 +54,8 @@
     <label class="status" for="status">Status: </label>
     <select id="status" name="status" required>
         <option value="" disabled selected>Select Project Status</option>
-        <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}" th:text="${status.getStatus()}"></option>
+        <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}"
+                th:text="${status.getStatus()}"></option>
     </select>
     <br>
     <button type="submit">Create Project</button>

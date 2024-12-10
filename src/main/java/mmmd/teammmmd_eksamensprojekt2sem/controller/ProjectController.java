@@ -88,10 +88,10 @@ public class ProjectController {
             return "redirect:/user/{employeeID}/show-create-project";
         }
         else {
-            if (customer == 1) {
-                Customer internalProject = projectService.fetchInternalProjectCustomer();
-                customer = internalProject.getCustomerID();
-            }
+//            if (customer == 1) {
+//                Customer internalProject = projectService.fetchInternalProjectCustomer();
+//                customer = internalProject.getCustomerID();
+//            }
 
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
             projectService.createProject(project); // Projekt oprettes i DB
