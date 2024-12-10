@@ -548,7 +548,7 @@ public class ProjectRepository {
                 "LEFT JOIN task task2 ON task.dependingOntask = task2.taskID\n" +
                 "INNER JOIN subproject ON subproject.subprojectID = task.subProjectID\n" +
                 "INNER JOIN project ON project.projectID = subproject.projectID\n" +
-                "INNER JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
+                "LEFT JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
                 "INNER JOIN status ON status.statusID = task.status\n" +
 
                 "WHERE project.companyRep = ?";
