@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,10 +180,25 @@ public class ProjectService {
     */
 
     public LocalDate calculatedEndDateProject(int employeeID, int projectID) {
+        LocalDate calculatedEnddate = null;
+
         for(Task task: listOfTasksSpecificProject(employeeID,projectID)) {
             LocalDate startDate = task.getPlannedStartDate().toLocalDate();
 
+            // Beregn arbejdsdage baseret på estimatedTime og 6 timer pr. dag
+            int estimatedDays = (int) Math.ceil(task.getEstimatedTime() / 6.0);
+
+            // Beregn slutdato for denne task
+            LocalDate taskEndDate = startDate.plus(estimatedDays, ChronoUnit.DAYS);
+
+            // Opdater projektets slutdato, hvis denne task's slutdato er senere
+            if (calculatedEnddate == null || taskEndDate.isAfter(calculatedEnddate)) {
+                calculatedEnddate= taskEndDate;
+            }
+
         }
+
+        return calculatedEnddate;
     }
 
 
