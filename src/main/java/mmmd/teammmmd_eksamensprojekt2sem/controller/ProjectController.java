@@ -107,8 +107,9 @@ public class ProjectController {
     }
 
     @GetMapping("/show-create-project")
-    public String showCreateProject(@PathVariable("employeeID") int employeeID, Model model) {
-        if(projectService.isManager(employeeID)) {
+    public String showCreateProject(@PathVariable("employeeID") int employeeID, Model model) throws SQLException {
+//        if(projectService.isManager(employeeID)) {
+            if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
             model.addAttribute("PMEmployees", projectService.findPMEmployees());
             model.addAttribute("BCEmployees", projectService.findBCEmployees());
             model.addAttribute("statusobjects", projectService.fetchAllStatus());

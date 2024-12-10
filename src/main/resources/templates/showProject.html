@@ -69,9 +69,6 @@ når der skal kaldes attributter-->
     </table>
 
     <div class="action-buttons" th:if="${isManager}">
-        <form th:action="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}" method=get>
-            <button class="createResetPasswordButton" type="submit">Create new subproject</button>
-        </form>
         <a th:href="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}">
             <button class="createResetPasswordButton" type="button">Create New Subproject</button>
         </a>
