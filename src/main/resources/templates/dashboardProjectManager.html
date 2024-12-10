@@ -6,7 +6,7 @@ når der skal kaldes attributter-->
 
 <head>
     <meta charset="UTF-8">
-    <title>Employee Dashboard</title>
+    <title>Project Manager Dashboard</title>
     <link rel="stylesheet" href="/dashboard.css">
 </head>
 <body>
@@ -75,7 +75,6 @@ når der skal kaldes attributter-->
         <th>Project Customer</th>
         <th>Project Order Date</th>
         <th>Project Delivery Date</th>
-        <th>Project Company Rep</th>
         <th>Project Status</th>
     </tr>
     </thead>
@@ -89,7 +88,6 @@ når der skal kaldes attributter-->
         <td th:text="${project.getCustomerNameString()}"></td>
         <td th:text="${project.getOrderDate()}"></td>
         <td th:text="${project.getDeliveryDate()}"></td>
-        <td th:text="${project.getCompanyRepString()}"></td>
         <td th:text="${project.getStatusString()}"></td>
         <!--<td>
           <form th:action="@{/project/{name}/delete(name=${project.getProjectTitle})}" method="post">

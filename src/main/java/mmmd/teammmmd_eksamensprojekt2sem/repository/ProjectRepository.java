@@ -270,6 +270,20 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
+    /*
+    ###########---UPDATE CUSTOMER ID ON PROJECT USED IN CONNECTION WITH NEW AND INTERNAL---###########
+     */
+    public void updateProjectsCustomerID(int projectID, int customerID) {
+        String SQL = "UPDATE project SET customer=? WHERE projectID=?";
+
+        try(PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, customerID);
+            ps.setInt(2, projectID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /*
     ###########---DELETE PROJECT---###########
@@ -534,7 +548,7 @@ public class ProjectRepository {
                 "LEFT JOIN task task2 ON task.dependingOntask = task2.taskID\n" +
                 "INNER JOIN subproject ON subproject.subprojectID = task.subProjectID\n" +
                 "INNER JOIN project ON project.projectID = subproject.projectID\n" +
-                "INNER JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
+                "LEFT JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
                 "INNER JOIN status ON status.statusID = task.status\n" +
 
                 "WHERE project.companyRep = ?";
