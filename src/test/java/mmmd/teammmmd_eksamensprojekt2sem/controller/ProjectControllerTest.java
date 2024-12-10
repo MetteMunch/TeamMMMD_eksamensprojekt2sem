@@ -65,7 +65,7 @@ public class ProjectControllerTest {
 
     @Test
     void createProjectActionSuccess() throws Exception {
-        int employeeID = 4;
+//        int employeeID = 4;
         mockMvc.perform(post("/user/{employeeID}/create-project", employeeID)
                 .param("projectTitle", project.getProjectTitle())
                 .param("projectDescription", project.getProjectDescription())
@@ -83,7 +83,7 @@ public class ProjectControllerTest {
     void createProjectActionFailNameAlreadyExists() throws Exception {
         when(mockProjectService.checkIfProjectNameAlreadyExists(anyString())).thenReturn(true);
 
-        mockMvc.perform(post(requestMapping+"/create_project")
+        mockMvc.perform(post("/user/{employeeID}/create-project", employeeID)
                         .param("projectTitle", project.getProjectTitle())
                         .param("projectDescription", project.getProjectDescription())
                         .param("customer", String.valueOf(project.getCustomer()))
@@ -95,7 +95,7 @@ public class ProjectControllerTest {
                         .param("employeeID", String.valueOf(employeeID)))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlTemplate("/show_create_project"))
+                .andExpect(redirectedUrlTemplate("/user/{employeeID}/show-create-project", employeeID))
                 .andExpect(flash().attribute("titleAlreadyExistsError", "The selected project title already exists. " +
                         "Please select another title for this project."));
 
