@@ -101,14 +101,14 @@ public class ProjectControllerTest {
 
     }
 //    @Test
-//    void showCreateProject() throws Exception {
-//        mockMvc.perform(get(requestMapping+"/show_create_project"))
+//    void showCreateProjectMngr() throws Exception {
+//        mockMvc.perform(get("/user/{employeeID}/show-create-project", employeeID))
 //                .andExpect(status().isOk())
 //                .andExpect(view().name("createProjectForm"))
-//                .andExpect(model().attribute("PMEmployees", projectService.findPMEmployees()))
-//                .andExpect(model().attribute("BCEmployees", projectService.findBCEmployees()))
-//                .andExpect(model().attribute("statusobjects", projectService.fetchAllStatus()))
-//                .andExpect(model().attribute("customers", projectService.getListOfCurrentCustomers()));
+//                .andExpect(model().attribute("PMEmployees", mockProjectService.findPMEmployees()))
+//                .andExpect(model().attribute("BCEmployees", mockProjectService.findBCEmployees()))
+//                .andExpect(model().attribute("statusobjects", mockProjectService.fetchAllStatus()))
+//                .andExpect(model().attribute("customers", mockProjectService.getListOfCurrentCustomers()));
 //    }
 //    @Test
 //    void showAllProjects() throws Exception {
