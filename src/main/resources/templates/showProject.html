@@ -72,6 +72,7 @@ når der skal kaldes attributter-->
     <button class="createResetPasswordButton" type="submit">Create new subproject</button>
   </form>
   -->
+  <div class="action-buttons" th:if="${isManager}">
   <a th:href="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}">
     <button class="createResetPasswordButton" type="button">Create New Subproject</button>
   </a>
@@ -83,6 +84,7 @@ når der skal kaldes attributter-->
   <form th:action="@{/user/{employeeID}/{projectID}/delete (employeeID=${employeeID}, projectID=${project.getID()})}" method="post" onsubmit="confirmDeletion()">
     <button class="createResetPasswordButton" type="submit">Delete Project</button>
   </form>
+  </div>
 
   <a th:href="@{/user/{employeeID} (employeeID=${employeeID})}">
     <button class="createResetPasswordButton" style="margin-right:5%" type="button">Go Back</button>

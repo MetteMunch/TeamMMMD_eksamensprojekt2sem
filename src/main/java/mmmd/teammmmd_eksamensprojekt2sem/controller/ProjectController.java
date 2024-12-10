@@ -111,12 +111,14 @@ public class ProjectController {
      */
 
     @GetMapping("/{projectID}")
-    public String showProject(@PathVariable int projectID, Model model,@PathVariable int employeeID) {
+    public String showProject(@PathVariable int projectID, Model model,@PathVariable int employeeID) throws SQLException {
         Project project = projectService.fetchSpecificProject(projectID);
         List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
         model.addAttribute("project",project);
         model.addAttribute("listOfSubProjects",listOfSpecificSubProjects);
+        model.addAttribute("isManager", userService.getIsEmployeeManagerInfoFromDB(employeeID));
         model.addAttribute("employeeID",employeeID);
+        //TODO: Forskelligt view til employee og PM ShowProject Brug th:if ismanager fra showtask til at vise ekstra knapper
 
         return "showProject";
 
@@ -137,7 +139,7 @@ public class ProjectController {
         return "updateProject";
     }
 
-    @PostMapping("/updateProject")
+    @PostMapping("/update-project")
     public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
                                       @RequestParam(required = false) String linkAgreement, @RequestParam int companyRep, @RequestParam int status,
