@@ -34,6 +34,10 @@ public class ProjectService {
         projectRepository.createCustomer(customer);
     }
 
+    public int lookUpCustomerIDFromDB(Customer customer) {
+        return projectRepository.lookUpCustomerIDFromDB(customer);
+    }
+
     /*
     #####################################
     #             Project               #
@@ -85,6 +89,10 @@ public class ProjectService {
 
     public List<Project> showAllProjectSpecificProjectManager(int employeeID) {
         return projectRepository.showAllProjectsSpecificProjectManager(employeeID);
+    }
+
+    public void updateProjectsCustomerID(int projectID, int customerID) {
+        projectRepository.updateProjectsCustomerID(projectID, customerID);
     }
 
     /*

@@ -48,16 +48,26 @@ public class ProjectController {
     }
 
     @GetMapping("/show-create-customer")
-    public String showCreateCustomer() {
+    public String showCreateCustomer(@PathVariable int employeeID, Model model) {
+        model.addAttribute("employeeID", employeeID);
         return "createCustomer";
     }
 
     @PostMapping("/create-customer")
-    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
+    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName,
+                                       @RequestParam int projectID, RedirectAttributes redirectAttributes, @PathVariable int employeeID, Model model) {
         Customer customer = new Customer(companyName, repName);
-        projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
-        return "succes"; //TODO slet html, bare til verifikation. Husk at ændre i ProjectControllerTest.
+        projectService.createCustomer(customer);
+
+        // Vi skal have fat i den oprettede kundes ID så dette kan sættes på rette projekt i stedet for id for new
+        int customerId = projectService.lookUpCustomerIDFromDB(customer);
+        projectService.updateProjectsCustomerID(projectID,customerId);
+
+        redirectAttributes.addAttribute("projectID", projectID);
+        redirectAttributes.addAttribute("employeeID", employeeID);
+        return "redirect:/user/{employeeID}/{projectID}";
     }
+
 
     /*
     #####################################
@@ -70,45 +80,50 @@ public class ProjectController {
     @PostMapping("/create-project") //CREATE
     public String createProjectAction(@RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
-                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status,@RequestParam int employeeID, RedirectAttributes redirectAttributes) {
+                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep,
+                                      @RequestParam int status,@PathVariable int employeeID, RedirectAttributes redirectAttributes, Model model) {
         if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) { //returnerer true, hvis navnet allerede eksisterer i DB.
             redirectAttributes.addFlashAttribute("titleAlreadyExistsError", "The selected project title already exists. " +
                     "Please select another title for this project.");
-            return "redirect:/user/{employeeID}/project/create-project";
+            return "redirect:/user/{employeeID}/show-create-project";
         }
         else {
-            if (customer == 99) { //TODO: Problem med skalerbarhed ;) - En mere dynamisk måde at tjekke for dette sammenholdt med html eftertragtes. Måske skal 'Internal Project' kunde bare sættes ind som den allerførste kunde i databasen.
-                Customer internalProject = projectService.fetchInternalProjectCustomer();
-                customer = internalProject.getCustomerID();
-            }
+//            if (customer == 1) {
+//                Customer internalProject = projectService.fetchInternalProjectCustomer();
+//                customer = internalProject.getCustomerID();
+//            }
+
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
             projectService.createProject(project); // Projekt oprettes i DB
-//            projectService.findProjectIDFromDB(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
             int pID = projectService.findProjectIDFromDB(project);
             project.setID(pID);
 
+            if (customer == 2) {
+                model.addAttribute("employeeID", employeeID);
+                model.addAttribute("projectID", pID);
+                return "createCustomer";
+            }
+
             redirectAttributes.addAttribute("projectID",pID);
             redirectAttributes.addAttribute("employeeID", employeeID);
-            //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
-            //TODO: Tilføj gå tilbage eller return to PM Dashboard i html
-            return "redirect:/user/{employeeID}/{projectID}"; //DENNE GÅR TILBAGE TIL LOGINPAGE ER DET FORDI DEN IKKE HAR EMPLOYEEID MED?
-//            return "redirect:/user/"+employeeID+"/"+project.getID();
+            return "redirect:/user/{employeeID}/{projectID}";
+
         }
     }
-//    @GetMapping("/success") //TODO: Udelukkende til demokode for at se om metode eksekveres korrekt med redirect. Slet når ikke længere nødvendig sammen med html fil.
-//    public String showSuccess() {
-//        return "succes";
-//    }
 
     @GetMapping("/show-create-project")
     public String showCreateProject(@PathVariable("employeeID") int employeeID, Model model) {
-        model.addAttribute("PMEmployees", projectService.findPMEmployees());
-        model.addAttribute("BCEmployees", projectService.findBCEmployees());
-        model.addAttribute("statusobjects", projectService.fetchAllStatus());
-        model.addAttribute("customers", projectService.getListOfCurrentCustomers());
-        model.addAttribute("employeeID", employeeID);
+        if(projectService.isManager(employeeID)) {
+            model.addAttribute("PMEmployees", projectService.findPMEmployees());
+            model.addAttribute("BCEmployees", projectService.findBCEmployees());
+            model.addAttribute("statusobjects", projectService.fetchAllStatus());
+            model.addAttribute("customers", projectService.getListOfCurrentCustomers());
+            model.addAttribute("employeeID", employeeID);
 
-        return "createProjectForm";
+            return "createProjectForm";
+        } else {
+            return "redirect:/user/{employeeID}";
+        }
     }
 
     /*
@@ -122,6 +137,7 @@ public class ProjectController {
         model.addAttribute("project",project);
         model.addAttribute("listOfSubProjects",listOfSpecificSubProjects);
         model.addAttribute("employeeID",employeeID);
+        model.addAttribute("isManager", projectService.isManager(employeeID));
 
         return "showProject";
 
@@ -178,10 +194,15 @@ public class ProjectController {
     */
     @GetMapping("/{projectID}/create-subproject")
     public String createSubProject(@PathVariable int projectID, @PathVariable int employeeID, Model model, RedirectAttributes redirectAttributes) {
-        model.addAttribute("projectID", projectID);
-        model.addAttribute("employeeID",employeeID);
-        redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
-        return "createSubProjectForm";
+        if(projectService.isManager(employeeID)) {
+            model.addAttribute("projectID", projectID);
+            model.addAttribute("employeeID", employeeID);
+            redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
+            return "createSubProjectForm";
+        } else {
+            return "redirect:/user/{employeeID}";
+        }
+
     }
 
     @PostMapping("/{projectID}/save-subproject")
@@ -204,7 +225,6 @@ public class ProjectController {
 
     @PostMapping("/{projectID}/{subProjectID}/delete-subproject")
     public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID, @PathVariable int projectID, RedirectAttributes redirectAttributes) {
-        System.out.println("subID: "+subProjectID);
         projectService.deleteSubProject(subProjectID);
         redirectAttributes.addAttribute("employeeID", employeeID);
         redirectAttributes.addAttribute("projectID", projectID);
@@ -245,14 +265,19 @@ public class ProjectController {
      */
     @GetMapping("/{projectID}/{subProjectID}/create-task")
     public String createTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
-        model.addAttribute("employeeID", employeeID);
-        model.addAttribute("projectID", projectID);
-        model.addAttribute("subProjectID", subProjectID);
-        model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
-        model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
-        model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
-        model.addAttribute("statusobjects", projectService.fetchAllStatus());
-        return "createTask";
+        if(projectService.isManager(employeeID)) {
+            model.addAttribute("employeeID", employeeID);
+            model.addAttribute("projectID", projectID);
+            model.addAttribute("subProjectID", subProjectID);
+            model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+            model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
+            model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
+            model.addAttribute("statusobjects", projectService.fetchAllStatus());
+            return "createTask";
+        } else {
+            return "redirect:/user/{employeeID}";
+        }
+
     }
 
     @PostMapping("/{projectID}/{subProjectID}/save-task")
