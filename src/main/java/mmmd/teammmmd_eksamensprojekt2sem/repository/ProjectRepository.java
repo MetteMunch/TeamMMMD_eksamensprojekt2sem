@@ -270,6 +270,20 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
+    /*
+    ###########---UPDATE CUSTOMER ID ON PROJECT USED IN CONNECTION WITH NEW AND INTERNAL---###########
+     */
+    public void updateProjectsCustomerID(int projectID, int customerID) {
+        String SQL = "UPDATE project SET customer=? WHERE projectID=?";
+
+        try(PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, customerID);
+            ps.setInt(2, projectID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /*
     ###########---DELETE PROJECT---###########

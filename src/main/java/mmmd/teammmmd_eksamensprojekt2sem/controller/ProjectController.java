@@ -48,16 +48,26 @@ public class ProjectController {
     }
 
     @GetMapping("/show-create-customer")
-    public String showCreateCustomer() {
+    public String showCreateCustomer(@PathVariable int employeeID, Model model) {
+        model.addAttribute("employeeID", employeeID);
         return "createCustomer";
     }
 
     @PostMapping("/create-customer")
-    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName) {
+    public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName,
+                                       @RequestParam int projectID, RedirectAttributes redirectAttributes, @PathVariable int employeeID, Model model) {
         Customer customer = new Customer(companyName, repName);
-        projectService.createCustomer(customer); //TODO: Mangler go back knap, mangler kontrol af eksisterende navn og rep.
-        return "succes"; //TODO slet html, bare til verifikation. Husk at ændre i ProjectControllerTest.
+        projectService.createCustomer(customer);
+
+        // Vi skal have fat i den oprettede kundes ID så dette kan sættes på rette projekt i stedet for id for new
+        int customerId = projectService.lookUpCustomerIDFromDB(customer);
+        projectService.updateProjectsCustomerID(projectID,customerId);
+
+        redirectAttributes.addAttribute("projectID", projectID);
+        redirectAttributes.addAttribute("employeeID", employeeID);
+        return "redirect:/user/{employeeID}/{projectID}";
     }
+
 
     /*
     #####################################
@@ -70,35 +80,36 @@ public class ProjectController {
     @PostMapping("/create-project") //CREATE
     public String createProjectAction(@RequestParam String projectTitle, @RequestParam String projectDescription,
                                       @RequestParam int customer, @RequestParam Date orderDate, @RequestParam Date deliveryDate,
-                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep, @RequestParam int status,@RequestParam int employeeID, RedirectAttributes redirectAttributes) {
+                                      @RequestParam(required = false)String linkAgreement, @RequestParam int companyRep,
+                                      @RequestParam int status,@PathVariable int employeeID, RedirectAttributes redirectAttributes, Model model) {
         if (projectService.checkIfProjectNameAlreadyExists(projectTitle)) { //returnerer true, hvis navnet allerede eksisterer i DB.
             redirectAttributes.addFlashAttribute("titleAlreadyExistsError", "The selected project title already exists. " +
                     "Please select another title for this project.");
-            return "redirect:/user/{employeeID}/project/create-project";
+            return "redirect:/user/{employeeID}/show-create-project";
         }
         else {
-            if (customer == 99) { //TODO: Problem med skalerbarhed ;) - En mere dynamisk måde at tjekke for dette sammenholdt med html eftertragtes. Måske skal 'Internal Project' kunde bare sættes ind som den allerførste kunde i databasen.
-                Customer internalProject = projectService.fetchInternalProjectCustomer();
-                customer = internalProject.getCustomerID();
-            }
+//            if (customer == 1) {
+//                Customer internalProject = projectService.fetchInternalProjectCustomer();
+//                customer = internalProject.getCustomerID();
+//            }
+
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
             projectService.createProject(project); // Projekt oprettes i DB
-//            projectService.findProjectIDFromDB(project); // Projekt ID sættes i tilfælde af, at objektets ID benyttes andre steder
             int pID = projectService.findProjectIDFromDB(project);
             project.setID(pID);
 
+            if (customer == 2) {
+                model.addAttribute("employeeID", employeeID);
+                model.addAttribute("projectID", pID);
+                return "createCustomer";
+            }
+
             redirectAttributes.addAttribute("projectID",pID);
             redirectAttributes.addAttribute("employeeID", employeeID);
-            //TODO: Kræver et kundenummer på 99 for internal projects. I html er der en select form, hvor internal project=99. Skal akkomoderes i SQL scripts ved næste merge.
-            //TODO: Tilføj gå tilbage eller return to PM Dashboard i html
-            return "redirect:/user/{employeeID}/{projectID}"; //DENNE GÅR TILBAGE TIL LOGINPAGE ER DET FORDI DEN IKKE HAR EMPLOYEEID MED?
-//            return "redirect:/user/"+employeeID+"/"+project.getID();
+            return "redirect:/user/{employeeID}/{projectID}";
+
         }
     }
-//    @GetMapping("/success") //TODO: Udelukkende til demokode for at se om metode eksekveres korrekt med redirect. Slet når ikke længere nødvendig sammen med html fil.
-//    public String showSuccess() {
-//        return "succes";
-//    }
 
     @GetMapping("/show-create-project")
     public String showCreateProject(@PathVariable("employeeID") int employeeID, Model model) {
