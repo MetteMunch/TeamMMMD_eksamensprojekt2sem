@@ -134,11 +134,12 @@ public class ProjectController {
     public String showProject(@PathVariable int projectID, Model model,@PathVariable int employeeID) {
         Project project = projectService.fetchSpecificProject(projectID);
         List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
+        List<Task> listOfTasksWithEndDateLaterThanProjectDeadline = projectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, projectID);
         model.addAttribute("project",project);
         model.addAttribute("listOfSubProjects",listOfSpecificSubProjects);
         model.addAttribute("employeeID",employeeID);
         model.addAttribute("isManager", projectService.isManager(employeeID));
-
+        model.addAttribute("TasksWithEndDateToLate", listOfTasksWithEndDateLaterThanProjectDeadline);
         return "showProject";
 
     }

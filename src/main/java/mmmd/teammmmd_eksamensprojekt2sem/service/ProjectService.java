@@ -5,6 +5,7 @@ import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -207,6 +208,7 @@ public class ProjectService {
             // Hvis task har slutdato senere end projekts aftalte levering, så tilføjer vi til listen.
             if (taskEndDate.isAfter(agreedDeliveryDateProject)) {
                 tasksWithCalculatedEndDateLaterThanProjectDeadline.add(task);
+                task.setCalculatedEndDate(Date.valueOf(taskEndDate));
             }
         }
         return tasksWithCalculatedEndDateLaterThanProjectDeadline;
