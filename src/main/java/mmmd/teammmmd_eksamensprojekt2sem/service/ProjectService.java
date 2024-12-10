@@ -187,26 +187,29 @@ public class ProjectService {
     #####################################
     */
 
-    public LocalDate calculatedEndDateProject(int employeeID, int projectID) {
-        LocalDate calculatedEnddate = null;
+    public List<Task> tasksWithCalculatedEndDateLaterThanProjectDeadline(int employeeID, int projectID) {
+       List<Task> tasksWithCalculatedEndDateLaterThanProjectDeadline = new ArrayList<>();
+
+        Project projectToBeChecked = projectRepository.fetchSpecificProject(projectID);
 
         for(Task task: listOfTasksSpecificProject(employeeID,projectID)) {
             LocalDate startDate = task.getPlannedStartDate().toLocalDate();
 
-            // Beregn arbejdsdage baseret på estimatedTime og 6 timer pr. dag
-            int estimatedDays = (int) Math.ceil(task.getEstimatedTime() / 6.0);
+            // Beregn arbejdsdage baseret på estimatedTime og 6 timers effektiv arbejdstid pr. dag
+            // datatype ændres til int, da vi kun er interesseret i hele dage og oprunding (derfor Math-ceil)
+            int estimatedDaysOfWork = (int) Math.ceil(task.getEstimatedTime()/ 6.0);
 
-            // Beregn slutdato for denne task
-            LocalDate taskEndDate = startDate.plus(estimatedDays, ChronoUnit.DAYS);
+            // Beregnet slutdato for denne task
+            LocalDate taskEndDate = startDate.plus(estimatedDaysOfWork,ChronoUnit.DAYS);
 
-            // Opdater projektets slutdato, hvis denne task's slutdato er senere
-            if (calculatedEnddate == null || taskEndDate.isAfter(calculatedEnddate)) {
-                calculatedEnddate= taskEndDate;
+            LocalDate agreedDeliveryDateProject = projectToBeChecked.getDeliveryDate().toLocalDate();
+
+            // Hvis task har slutdato senere end projekts aftalte levering, så tilføjer vi til listen.
+            if (taskEndDate.isAfter(agreedDeliveryDateProject)) {
+                tasksWithCalculatedEndDateLaterThanProjectDeadline.add(task);
             }
-
         }
-
-        return calculatedEnddate;
+        return tasksWithCalculatedEndDateLaterThanProjectDeadline;
     }
 
 
