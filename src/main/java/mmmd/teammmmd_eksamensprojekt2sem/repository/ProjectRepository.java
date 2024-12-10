@@ -492,7 +492,7 @@ public class ProjectRepository {
                 "task.requiredRole, employeerole.roleTitle, task.subProjectID, task.status, status.status, subproject.projectID FROM task\n" +
                 "LEFT JOIN task task2 ON task.dependingOntask = task2.taskID\n" +
                 "INNER JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
-                "INNER JOIN employeerole ON employeerole.roleID = task.requiredRole\n" +
+                "LEFT JOIN employeerole ON employeerole.roleID = task.requiredRole\n" +
                 "INNER JOIN status ON status.statusID = task.status\n" +
                 "INNER JOIN subproject ON subproject.subprojectID = task.subProjectID\n" +
                 "WHERE task.assignedEmployee = ?";
@@ -550,7 +550,6 @@ public class ProjectRepository {
                 "INNER JOIN project ON project.projectID = subproject.projectID\n" +
                 "LEFT JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
                 "INNER JOIN status ON status.statusID = task.status\n" +
-
                 "WHERE project.companyRep = ?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
