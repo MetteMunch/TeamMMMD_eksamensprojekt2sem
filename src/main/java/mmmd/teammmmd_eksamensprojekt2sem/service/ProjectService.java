@@ -5,6 +5,8 @@ import mmmd.teammmmd_eksamensprojekt2sem.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.sql.SQLException;
@@ -170,10 +172,42 @@ public class ProjectService {
         return projectRepository.isManager(employeeID);
     }
 
+    /*
+    #####################################
+    #             Calculations          #
+    #####################################
+    */
+
+    public LocalDate calculatedEndDateProject(int employeeID, int projectID) {
+        for(Task task: listOfTasksSpecificProject(employeeID,projectID)) {
+            LocalDate startDate = task.getPlannedStartDate().toLocalDate();
+
+        }
+    }
+
+
+
+    public List<Task> listOfTasksSpecificProject(int employeeID, int projectID) {
+
+        List<Task> listOfTasksSpecificPM = projectRepository.showAllTasksSpecificProjectManager(employeeID);
+        List<Task> listOfTasksSpecificProject = new ArrayList<>();
+
+        for(Task task: listOfTasksSpecificPM) {
+            if(task.getProjectID()==projectID) {
+                listOfTasksSpecificProject.add(task);
+            }
+        }
+        return listOfTasksSpecificProject;
+    }
+
 
     /*
-    ###########---Helper Methods---###########
-     */
+    #####################################
+    #             Helper Methods        #
+    #####################################
+    */
+
+
     public Task getTaskByID(int taskID) throws SQLException {
         return projectRepository.getTaskByID(taskID);
     }
