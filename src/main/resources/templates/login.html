@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" href="/login.css">
+    <link rel="stylesheet" href="/input.css">
 </head>
 <body>
 <nav>
@@ -16,13 +16,13 @@
             <p th:text="${errorMessage}" style="color: red;"></p>
         </div>
 
-        <form class="task-form" action="/user/loginvalidation" method="post">
+        <form class="input-form" action="/user/loginvalidation" method="post">
             <h1>Login</h1>
-            <label class="usernamePasswordText" for="username">Username:</label>
+            <label class="username" for="username">Username</label>
             <input type="text" id="username" name="username" required>
             <br>
             <br>
-            <label class="usernamePasswordText" for="password">Password: </label>
+            <label class="password" for="password">Password</label>
             <input type="password" id="password" name="password" required>
             <br>
             <button class="loginButton" type="submit">Login</button>

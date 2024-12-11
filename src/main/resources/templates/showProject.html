@@ -55,12 +55,12 @@ når der skal kaldes attributter-->
       <td>Metode mangler til at tage deadline fra task</td>
       <td>
         <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}}">
-          <button class="vedikke" type="button">Show subproject</button>
+          <button type="button">Show subproject</button>
         </a>
 
         <form th:action="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}+'/delete-subproject'}"
               method="post" onsubmit="return confirmDeletion()">
-          <button class="vedikke" type="submit">Delete</button>
+          <button type="submit">Delete</button>
         </form>
         <script>
           function confirmDeletion() {
@@ -72,10 +72,10 @@ når der skal kaldes attributter-->
     </tbody>
   </table>
   <form th:action="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}" method=get>
-    <button class="createResetPasswordButton" type="submit">Create new subproject</button>
+    <button type="submit">Create new subproject</button>
   </form>
   <a th:href="@{/user/{employeeID} (employeeID=${employeeID})}">
-    <button class="createResetPasswordButton" style="margin-right:5%" type="button">Go Back</button>
+    <button type="button">Go Back</button>
   </a>
 </main>
 

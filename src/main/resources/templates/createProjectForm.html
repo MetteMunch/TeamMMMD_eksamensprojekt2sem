@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Project</title>
-    <link rel="stylesheet" href="/login.css">
+    <link rel="stylesheet" href="/input.css">
 </head>
 <body>
+
+<nav>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
+</nav>
 
 <main>
     <div class="grid-container">
@@ -13,7 +17,7 @@
             <p th:text="${titleAlreadyExistsError}" style="color:red"></p>
         </div>
 
-        <form class="task-form" th:action="@{/user/{employeeID}/create-project(employeeID=${employeeID})}"
+        <form class="input-form" th:action="@{/user/{employeeID}/create-project(employeeID=${employeeID})}"
               method="post">
             <h1>Create Project</h1>
             <input type="hidden" name="employeeID" th:value="${employeeID}">
@@ -66,6 +70,10 @@
         </form>
     </div>
 </main>
+
+<footer>
+    <div th:insert="~{fragments.html :: footer}"></div>
+</footer>
 
 </body>
 </html>

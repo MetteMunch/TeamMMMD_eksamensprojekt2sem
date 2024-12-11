@@ -1,43 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Create SubProject</title>
+    <link rel="stylesheet" href="/input.css">
 </head>
 <body>
-<h1>Create SubProject</h1>
 
-<!-- Formular til oprettelse af SubProject -->
-<form th:action="@{'/user/'+${employeeID}+'/'+${projectID} + '/save-subproject'}" method="post">
-    <!-- Skjult felt til Project ID -->
-    <input type="hidden" th:value="${projectID}" name="projectID">
+<nav>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
+</nav>
 
-    <!-- Titel -->
-    <label for="subProjectTitle">SubProject Title:</label>
-    <input type="text" id="subProjectTitle" name="subProjectTitle" required>
-    <br>
 
-    <!-- Beskrivelse -->
-    <label for="subProjectDescription">Description:</label>
-    <textarea id="subProjectDescription" name="subProjectDescription" required></textarea>
-    <br>
+<main>
+    <div class="grid-container">
 
-    <!-- Status ID -->
-    <label for="statusID">Status:</label>
-    <select id="statusID" name="statusID" required>
-        <option value="" disabled selected>Select status</option>
-        <!-- Eksempel på muligheder -->
-        <option value="1">Pending</option>
-        <option value="2">In Progress</option>
-        <option value="3">Awaiting approval</option>
-        <option value="4">Done</option>
-    </select>
-    <br>
+        <!-- Formular til oprettelse af SubProject -->
+        <form class="input-form" th:action="@{'/user/'+${employeeID}+'/'+${projectID} + '/save-subproject'}"
+              method="post">
+            <!-- Skjult felt til Project ID -->
+            <input type="hidden" th:value="${projectID}" name="projectID">
 
-    <!-- Submit-knap -->
-    <button type="submit">Create SubProject</button>
-</form>
+            <h1>Create SubProject</h1>
+            <!-- Titel -->
+            <label for="subProjectTitle">SubProject Title</label>
+            <input type="text" id="subProjectTitle" name="subProjectTitle" required>
+            <br>
 
-<!-- Link tilbage til projektoversigten -->
-<a th:href="@{'/project/' + ${projectID} + '/subProject'}">Cancel</a>
+            <!-- Beskrivelse -->
+            <label for="subProjectDescription">Description</label>
+            <textarea id="subProjectDescription" name="subProjectDescription" required></textarea>
+            <br>
+
+            <!-- Status ID -->
+            <label for="statusID">Status</label>
+            <select id="statusID" name="statusID" required>
+                <option value="" disabled selected>Select status</option>
+                <!-- Eksempel på muligheder -->
+                <option value="1">Pending</option>
+                <option value="2">In Progress</option>
+                <option value="3">Awaiting approval</option>
+                <option value="4">Done</option>
+            </select>
+            <br>
+
+            <!-- Submit-knap -->
+            <button type="submit">Create SubProject</button>
+
+
+        <!-- Link tilbage til projektoversigten - VIRKER IKKE DA DEN KRÆVER MAN UDFULDER SUBPROJECT TITEL -->
+        <button th:href="@{'/project/' + ${projectID} + '/subProject'}">Cancel</button>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <div th:insert="~{fragments.html :: footer}"></div>
+</footer>
+
 </body>
 </html>
