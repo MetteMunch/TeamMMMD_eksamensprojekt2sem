@@ -931,21 +931,5 @@ public class ProjectRepository {
         return nonManagerEmployees;
     }
 
-    public boolean isManager(int employeeID) {
-        String sql = "SELECT COUNT(*) FROM employee WHERE employeeID = ? AND role = 1";  // 1 represents Project Manager role
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            ps.setInt(1, employeeID);  // Set the employeeID parameter in the query
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    // If the count is greater than 0, the employee is a Project Manager
-                    return rs.getInt(1) > 0;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;  // Default return value if no match is found
-    }
-
 
 }
