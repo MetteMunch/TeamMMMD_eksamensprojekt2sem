@@ -32,7 +32,7 @@ public class ProjectControllerTest {
     @Autowired // med denne annotation fortæller vi Spring, at den automatisk skal indsætte (injecte) en instans
     //af denne afhængighed. Dvs vi skal ikke oprette instansen manuelt med new. Spring håndterer instansieringen.
     private MockMvc mockMvc;
-//    @Autowired
+    //    @Autowired
 //    private UserService userService;
     @MockBean //med denne annotation instruere vi Spring Boot i at oprette en Mock-version af UserService, som
     //vi kan manipulere med under testen
@@ -67,18 +67,19 @@ public class ProjectControllerTest {
     void createProjectActionSuccess() throws Exception {
 //        int employeeID = 4;
         mockMvc.perform(post("/user/{employeeID}/create-project", employeeID)
-                .param("projectTitle", project.getProjectTitle())
-                .param("projectDescription", project.getProjectDescription())
-                .param("customer", String.valueOf(project.getCustomer()))
-                .param("orderDate", String.valueOf(project.getOrderDate()))
-                .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
-                .param("linkAgreement", project.getLinkAgreement())
-                .param("companyRep", String.valueOf(project.getCompanyRep()))
-                .param("status", String.valueOf(project.getStatus()))
-                .param("employeeID", String.valueOf(employeeID)))
+                        .param("projectTitle", project.getProjectTitle())
+                        .param("projectDescription", project.getProjectDescription())
+                        .param("customer", String.valueOf(project.getCustomer()))
+                        .param("orderDate", String.valueOf(project.getOrderDate()))
+                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
+                        .param("linkAgreement", project.getLinkAgreement())
+                        .param("companyRep", String.valueOf(project.getCompanyRep()))
+                        .param("status", String.valueOf(project.getStatus()))
+                        .param("employeeID", String.valueOf(employeeID)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, project.getID()));
     }
+
     @Test
     void createProjectActionFailNameAlreadyExists() throws Exception {
         when(mockProjectService.checkIfProjectNameAlreadyExists(anyString())).thenReturn(true);
@@ -100,16 +101,21 @@ public class ProjectControllerTest {
                         "Please select another title for this project."));
 
     }
-//    @Test
-//    void showCreateProjectMngr() throws Exception {
-//        mockMvc.perform(get("/user/{employeeID}/show-create-project", employeeID))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("createProjectForm"))
-//                .andExpect(model().attribute("PMEmployees", mockProjectService.findPMEmployees()))
-//                .andExpect(model().attribute("BCEmployees", mockProjectService.findBCEmployees()))
-//                .andExpect(model().attribute("statusobjects", mockProjectService.fetchAllStatus()))
-//                .andExpect(model().attribute("customers", mockProjectService.getListOfCurrentCustomers()));
-//    }
+
+    @Test
+    void showCreateProjectMngr() throws Exception {
+        when(mockUserService.getIsEmployeeManagerInfoFromDB(employeeID)).thenReturn(true);
+
+        mockMvc.perform(get("/user/{employeeID}/show-create-project", employeeID)
+                        .param("employeeID", String.valueOf(employeeID)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("createProjectForm"))
+                .andExpect(model().attribute("PMEmployees", mockProjectService.findPMEmployees()))
+                .andExpect(model().attribute("BCEmployees", mockProjectService.findBCEmployees()))
+                .andExpect(model().attribute("statusobjects", mockProjectService.fetchAllStatus()))
+                .andExpect(model().attribute("customers", mockProjectService.getListOfCurrentCustomers()))
+                .andExpect(model().attribute("employeeID", employeeID));
+    }
 //    @Test
 //    void showAllProjects() throws Exception {
 //        mockMvc.perform(get(requestMapping+"/show_all_projects"))
