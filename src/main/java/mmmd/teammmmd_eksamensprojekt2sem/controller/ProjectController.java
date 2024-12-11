@@ -121,7 +121,8 @@ public class ProjectController {
 
     @GetMapping("/{projectID}")
     public String showProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) throws SQLException {
-        Project project = projectService.fetchSpecificProject(projectID);
+        //Project project = projectService.fetchSpecificProject(projectID);
+        Project project = projectService.getDataSpecificProject(employeeID, projectID);
         List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
         List<Task> listOfTasksWithEndDateLaterThanProjectDeadline = projectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, projectID);
         model.addAttribute("project",project);

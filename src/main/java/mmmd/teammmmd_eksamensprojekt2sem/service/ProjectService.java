@@ -176,6 +176,7 @@ public class ProjectService {
     #####################################
     */
 
+
     public List<Task> tasksWithCalculatedEndDateLaterThanProjectDeadline(int employeeID, int projectID) {
        List<Task> tasksWithCalculatedEndDateLaterThanProjectDeadline = new ArrayList<>();
 
@@ -229,6 +230,17 @@ public class ProjectService {
             }
         }
         return listOfTasksSpecificPMWithNoAssignedEmployee;
+    }
+
+    public Project getDataSpecificProject(int employeeID, int projectID) {
+        Project projectToBeReturned = null;
+        List<Project> listOfProjects = projectRepository.showAllProjectsSpecificProjectManager(employeeID);
+        for(Project project: listOfProjects) {
+            if(project.getID() == projectID) {
+                projectToBeReturned = project;
+            }
+        }
+        return projectToBeReturned;
     }
 
 

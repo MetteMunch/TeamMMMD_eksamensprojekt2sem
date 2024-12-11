@@ -107,6 +107,23 @@ når der skal kaldes attributter-->
     </table>
   </div>
 
+    <h3>Overview Time</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Est Time (total hrs)</th>
+            <th>Act Time (total hrs)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${project.getEstimatedTimeTotal()}"></td>
+            <td th:text="${project.getActualTimeTotal()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
 
 </sidebar>
 
