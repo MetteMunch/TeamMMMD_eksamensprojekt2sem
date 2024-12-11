@@ -145,7 +145,7 @@ public class ProjectRepository {
             ps.setInt(8, project.getStatus());
 
             ps.executeUpdate();
-            System.out.println("Successfully created project: " + project.getProjectTitle()); //todo: delete
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -265,6 +265,20 @@ public class ProjectRepository {
             ps.setInt(7, project.getCompanyRep());
             ps.setInt(8, project.getStatus());
             ps.setInt(9, project.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /*
+    ###########---UPDATE CUSTOMER ID ON PROJECT USED IN CONNECTION WITH NEW AND INTERNAL---###########
+     */
+    public void updateProjectsCustomerID(int projectID, int customerID) {
+        String SQL = "UPDATE project SET customer=? WHERE projectID=?";
+
+        try(PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, customerID);
+            ps.setInt(2, projectID);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -514,7 +528,7 @@ public class ProjectRepository {
                 "task.requiredRole, employeerole.roleTitle, task.subProjectID, task.status, status.status, subproject.projectID FROM task\n" +
                 "LEFT JOIN task task2 ON task.dependingOntask = task2.taskID\n" +
                 "INNER JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
-                "INNER JOIN employeerole ON employeerole.roleID = task.requiredRole\n" +
+                "LEFT JOIN employeerole ON employeerole.roleID = task.requiredRole\n" +
                 "INNER JOIN status ON status.statusID = task.status\n" +
                 "INNER JOIN subproject ON subproject.subprojectID = task.subProjectID\n" +
                 "WHERE task.assignedEmployee = ?";
@@ -570,9 +584,8 @@ public class ProjectRepository {
                 "LEFT JOIN task task2 ON task.dependingOntask = task2.taskID\n" +
                 "INNER JOIN subproject ON subproject.subprojectID = task.subProjectID\n" +
                 "INNER JOIN project ON project.projectID = subproject.projectID\n" +
-                "INNER JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
+                "LEFT JOIN employee ON employee.employeeID = task.assignedEmployee\n" +
                 "INNER JOIN status ON status.statusID = task.status\n" +
-
                 "WHERE project.companyRep = ?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
@@ -702,7 +715,7 @@ public class ProjectRepository {
                 if (rs.next()) {
                     projectIDFromDB = rs.getInt(1);
                     project.setID(projectIDFromDB);
-                    System.out.println("Successfully created project: " + project.getProjectTitle() + " with ID: " + project.getID());
+
                 } else {
                     throw new IllegalArgumentException("No project found with title: " + project.getProjectTitle() + " and order date: " + project.getOrderDate() + ". PROJECT REPOSITORY LINE 45.");
                 }
@@ -745,10 +758,6 @@ public class ProjectRepository {
                     project.setCustomerNameString(customerName);
                     project.setCompanyRepString(nameCompanyRep);
 
-                    System.out.println("Her er kunde navn:" + customerName);
-                    System.out.println("Her er Projekt status:" + status);
-
-
                     return project;
                 }
             }
@@ -773,7 +782,6 @@ public class ProjectRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     projectIDFromDB = rs.getInt(1);
-                    System.out.println("Successfully created project: " + project.getProjectTitle());
                 }
             }
 
@@ -952,22 +960,6 @@ public class ProjectRepository {
             e.printStackTrace();
         }
         return nonManagerEmployees;
-    }
-
-    public boolean isManager(int employeeID) {
-        String sql = "SELECT COUNT(*) FROM employee WHERE employeeID = ? AND role = 1";  // 1 represents Project Manager role
-        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
-            ps.setInt(1, employeeID);  // Set the employeeID parameter in the query
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    // If the count is greater than 0, the employee is a Project Manager
-                    return rs.getInt(1) > 0;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;  // Default return value if no match is found
     }
 
 
