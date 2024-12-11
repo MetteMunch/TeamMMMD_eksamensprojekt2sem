@@ -120,6 +120,30 @@ når der skal kaldes attributter-->
         </tbody>
     </table>
 
+    <h3>Tasks not assigned</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Task Title</th>
+            <th>Planned StartDate</th>
+            <th>Est. Time</th>
+        </tr>
+        </thead>
+        <tbody th:each="task : ${tasksNotAssigned}">
+        <tr>
+            <td>
+                <a th:href="@{{employeeID}/{projectID}/{subprojectID}/{taskID}(employeeID = ${employeeID}, projectID=${task.getProjectID()},
+                subprojectID=${task.getSubProjectID()}, taskID=${task.getTaskID()})}"
+                   th:text="${task.getTaskTitle()}"></a>
+
+            </td>
+            <td th:text="${task.getPlannedStartDate()}"></td>
+            <td th:text="${task.getEstimatedTime()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
 </sidebar>
 
 <footer>

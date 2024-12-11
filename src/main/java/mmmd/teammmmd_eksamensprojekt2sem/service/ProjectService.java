@@ -203,7 +203,6 @@ public class ProjectService {
     }
 
 
-
     public List<Task> listOfTasksSpecificProject(int employeeID, int projectID) {
 
         List<Task> listOfTasksSpecificPM = projectRepository.showAllTasksSpecificProjectManager(employeeID);
@@ -215,6 +214,21 @@ public class ProjectService {
             }
         }
         return listOfTasksSpecificProject;
+    }
+
+
+    public List<Task> listOfTasksSpecificPMWithNoAssignedEmployee(int employeeID) {
+
+        List<Task> listOfTasksSpecificPM = projectRepository.showAllTasksSpecificProjectManager(employeeID);
+        List<Task> listOfTasksSpecificPMWithNoAssignedEmployee = new ArrayList<>();
+
+        for(Task task: listOfTasksSpecificPM) {
+            if(task.getAssignedEmployee() == 0) {
+                listOfTasksSpecificPMWithNoAssignedEmployee.add(task);
+
+            }
+        }
+        return listOfTasksSpecificPMWithNoAssignedEmployee;
     }
 
 
