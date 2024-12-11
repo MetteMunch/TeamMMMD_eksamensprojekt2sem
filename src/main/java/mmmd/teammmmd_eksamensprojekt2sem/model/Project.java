@@ -3,9 +3,7 @@ package mmmd.teammmmd_eksamensprojekt2sem.model;
 import java.sql.Date;
 
 public class Project {
-    /*
-    Daniel - DanielJensenKEA
-     */
+
     private int ID;
     private String projectTitle;
     private String projectDescription;
@@ -18,6 +16,8 @@ public class Project {
     private String companyRepString;
     private int status;
     private String statusString;
+    private double estimatedTimeTotal;
+    private double actualTimeTotal;
 
     public Project(String projectTitle, String projectDescription, int customer, Date orderDate, Date deliveryDate, String linkAgreement, int companyRep, int status) {
         ID = -1; //Vi retter ID til korrekte id ved lookup i DB. Kun relevant ved createProject() //Hvorfor er denne nødvendig?
@@ -128,9 +128,6 @@ public class Project {
     }
 
     public int getStatus() {
-        /*
-        TODO: Lav enum
-         */
         return status;
     }
 
@@ -143,9 +140,22 @@ public class Project {
     }
 
     public void setStatus(int status) {
-        /*
-        TODO: Lav enum
-         */
-        this.status = status;
+         this.status = status;
+    }
+
+    public double getEstimatedTimeTotal() {
+        return estimatedTimeTotal;
+    }
+
+    public void setEstimatedTimeTotal(double estimatedTimeTotal) {
+        this.estimatedTimeTotal = estimatedTimeTotal;
+    }
+
+    public double getActualTimeTotal() {
+        return actualTimeTotal;
+    }
+
+    public void setActualTimeTotal(double actualTimeTotal) {
+        this.actualTimeTotal = actualTimeTotal;
     }
 }

@@ -215,10 +215,16 @@ public class ProjectRepository {
     }
 
     public List<Project> showAllProjectsSpecificProjectManager(int employeeID) {
-        String SQL = "SELECT DISTINCT project.projectID, projectTitle, project.projectDescription, project.customer, customer.companyName, \n" +
-                "orderDate, deliveryDate, linkAgreement, project.status, status.status FROM project\n" +
-                "INNER JOIN customer ON customer.customerID = project.customer\n" +
-                "INNER JOIN status ON status.statusID = project.status WHERE companyRep =?";
+        String SQL = "SELECT project.projectID, project.projectTitle, project.projectDescription, project.customer, customer.companyName, \n" +
+                "project.orderDate, project.deliveryDate, project.linkAgreement, project.status, status.status,\n" +
+                "SUM(task.estimatedTime) AS estimatedTime, SUM(task.actualTime) AS actualTime FROM project\n" +
+                "INNER JOIN customer ON project.customer = customer.customerID\n" +
+                "INNER JOIN status ON project.status = status.statusID\n" +
+                "LEFT JOIN subproject ON project.projectID = subproject.projectID\n" +
+                "LEFT JOIN task ON subproject.subprojectID = task.subprojectID\n" +
+                "WHERE companyRep =?\n" +
+                "GROUP BY project.projectID, project.projectTitle, project.projectDescription, project.customer, customer.companyName, " +
+                "project.orderDate, project.deliveryDate, project.linkAgreement, project.status, status.status";
 
         List<Project> listOfProjectsSpecificPM = new ArrayList<>();
 
@@ -237,9 +243,16 @@ public class ProjectRepository {
                 String linkAgreement = rs.getString(8);
                 int projectStatusID = rs.getInt(9);
                 String projectStatus = rs.getString(10);
+                double totalEstimatedTime = rs.getDouble(11);
+                double totalActualTime = rs.getDouble(12);
+
+
                 Project project = new Project(projectID, projectTitle, projectDescription, customerID, orderDate, agreedDeliveryDate, linkAgreement, employeeID, projectStatusID);
                 project.setCustomerNameString(customerName);
                 project.setStatusString(projectStatus);
+                project.setActualTimeTotal(totalActualTime);
+                project.setEstimatedTimeTotal(totalEstimatedTime);
+
 
                 listOfProjectsSpecificPM.add(project);
             }
@@ -484,6 +497,7 @@ public class ProjectRepository {
     }
 
     public List<Task> showAllTasksSpecificEmployee(int employeeID) {
+        //Forespørgsel til at få alle tasks der er assigned til en specifik medarbejder
 
         List<Task> listOfTasksSpecificEmployee = new ArrayList<>();
 
@@ -539,6 +553,7 @@ public class ProjectRepository {
     }
 
     public List<Task> showAllTasksSpecificProjectManager(int employeeID) {
+        //Forespørgsel til at få alle tasks der er oprettet under projekter tilknyttet en specifik projekt manager
 
         List<Task> listOfTasksSpecificPM = new ArrayList<>();
 
@@ -925,6 +940,14 @@ public class ProjectRepository {
         }
         return nonManagerEmployees;
     }
+
+    /*
+        #####################################
+        #          Calculation Methods      #
+        #####################################
+     */
+
+
 
 
 }

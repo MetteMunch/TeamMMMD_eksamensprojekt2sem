@@ -101,7 +101,24 @@ når der skal kaldes attributter-->
 </main2>
 
 <sidebar>
-    <h3>Her kommer diverse visninger af data</h3>
+    <h3>Overview Time</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Project Title</th>
+            <th>Est Time (total hrs)</th>
+            <th>Act Time (total hrs)</th>
+        </tr>
+        </thead>
+        <tbody th:each="project : ${PMprojects}">
+        <tr>
+            <td th:text="${project.getProjectTitle()}"></td>
+            <td th:text="${project.getEstimatedTimeTotal()}"></td>
+            <td th:text="${project.getActualTimeTotal()}"></td>
+        </tr>
+        </tbody>
+    </table>
 
 </sidebar>
 
