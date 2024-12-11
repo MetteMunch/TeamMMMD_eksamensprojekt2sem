@@ -1,9 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.repository;
 
-import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Employee;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
-import mmmd.teammmmd_eksamensprojekt2sem.model.Status;
+import mmmd.teammmmd_eksamensprojekt2sem.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +11,10 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("testh2")
@@ -40,6 +37,7 @@ public class ProjectRepositoryIntegrationTest {
         Connection connection = connectionManager.getConnection(); //Her tester vi om der er forbindelse til H2 databasen
         assertNotNull(connection, "Forbindelse til H2-testdatabasen burde ikke være null");
     }
+
     /*
     #####################################
     #           CRUD Customer           #
@@ -53,6 +51,7 @@ public class ProjectRepositoryIntegrationTest {
         assertNotNull(customersToReturn);
         assertEquals(expectedNumOfCustomers, actualNumOfCustomers);
     }
+
     @Test
     void getListOfCurrentCustomersFail() throws Exception {
         List<Customer> customersToReturn = projectRepository.getListOfCurrentCustomers();
@@ -61,6 +60,7 @@ public class ProjectRepositoryIntegrationTest {
         assertNotNull(customersToReturn);
         assertNotEquals(expectedNumOfCustomers, actualNumOfCustomers);
     }
+
     @Test
     void createCustomer() throws Exception {
         //Arrange
@@ -75,6 +75,7 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertEquals(expectedSize, actualSize);
     }
+
     @Test
     void lookUpCustomerIDFromDB() {
         //Arrange
@@ -87,6 +88,7 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertEquals(expectedCustomerID, actualcustomerId);
     }
+
     @Test
     void lookUpCustomerIDFromDBFail() {
         //Arrange
@@ -99,6 +101,7 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertNotEquals(expectedCustomerID, actualcustomerId);
     }
+
     @Test
     void fetchInternalProjectCustomerEXISTSINDB() {
         //Arrange
@@ -115,6 +118,7 @@ public class ProjectRepositoryIntegrationTest {
         assertEquals(intTitle, fetchInternal.getCompanyName());
         assertEquals(intRep, fetchInternal.getRepName());
     }
+
     @Test
     void fetchInternalProjectCustomerDOESNOTEXISTINDB() {
         //Arrange
@@ -136,9 +140,9 @@ public class ProjectRepositoryIntegrationTest {
     #####################################
      */
     @Test
-    void createProject(){
+    void createProject() {
         //Arrange
-        Project newProject = new Project("Project Title Test", "Project Description", 1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link", 2, 1 );
+        Project newProject = new Project("Project Title Test", "Project Description", 1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link", 2, 1);
         int expectedNumOfProjects = 3; //2 eksisterende projekter. +1 for newProject.
 
         //Act
@@ -149,6 +153,7 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertEquals(expectedNumOfProjects, actualNumOfProjects);
     }
+
     @Test
     void showAllProjects() {
         //Arrange
@@ -161,12 +166,13 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertEquals(expectedNumOfProjects, actualNumOfProjects);
     }
+
     @Test
     void updateProject() {
         //Arrange
         Project newProject = new Project("Project Title Test", "Project Description",
                 1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
-                2, 1 ); //Vi laver et helt nyt projekt for at bruge vores createMetode.
+                2, 1); //Vi laver et helt nyt projekt for at bruge vores createMetode.
         //Act
         projectRepository.createProject(newProject); //Tilføjer det til databasen.
         newProject.setID(projectRepository.findProjectIDFromDB(newProject)); //Bemærk, ikke en almindelige setter metode. Laver et lookup i DB for at finde autogenererede ID.
@@ -182,34 +188,36 @@ public class ProjectRepositoryIntegrationTest {
         assertNotEquals(newProject.getProjectDescription(), updateProject.getProjectDescription());
         assertEquals("Updated Description", newProjectUpdated.getProjectDescription()); //Vi tjekker om opdatering er gået igennem.
     }
+
     @Test
     void deleteProject() throws Exception {
         //Arrange
         Project newProject = new Project("Project Title Test", "Project Description",
                 1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
-                2, 1 );
+                2, 1);
 
         //Act
         projectRepository.createProject(newProject);
         newProject.setID(projectRepository.findProjectIDFromDB(newProject));
         List<Project> list = projectRepository.showAllProjects();
         int actualSizeAfterInsertion = list.size();
-        int expectedSizeAfterInsertion = 2+1; //2 projekter eksisterer allerede i h2. +1 efter insertion.
-            assertEquals(expectedSizeAfterInsertion, actualSizeAfterInsertion);
+        int expectedSizeAfterInsertion = 2 + 1; //2 projekter eksisterer allerede i h2. +1 efter insertion.
+        assertEquals(expectedSizeAfterInsertion, actualSizeAfterInsertion);
         projectRepository.deleteProject(newProject);
         List<Project> listDeletion = projectRepository.showAllProjects();
         int actualSizeAfterDeletion = listDeletion.size();
-        int expectedSizeAfterDeletion = 3-1; //3 projekter før deletion. -1 efter deletion.
+        int expectedSizeAfterDeletion = 3 - 1; //3 projekter før deletion. -1 efter deletion.
 
         //Assert
         assertEquals(actualSizeAfterDeletion, expectedSizeAfterDeletion);
     }
+
     @Test
     void fetchSpecificProject() {
         //Arrange
         Project newProject = new Project("Project Title Test", "Project Description",
                 1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
-                2, 1 );
+                2, 1);
 
         //Act
         projectRepository.createProject(newProject);
@@ -219,12 +227,13 @@ public class ProjectRepositoryIntegrationTest {
         assertEquals("Project Title Test", fetchProject.getProjectTitle());
         assertEquals("Project Description", fetchProject.getProjectDescription());
     }
+
     @Test
     void checkIfProjectNameAlreadyExists() {
         //Arrange
         Project newProject = new Project("Project Title Test", "Project Description",
                 1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
-                2, 1 );
+                2, 1);
         //Act
         projectRepository.createProject(newProject);
         projectRepository.findProjectIDFromDB(newProject);
@@ -232,25 +241,27 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertTrue(projectRepository.checkIfProjectNameAlreadyExists(newProject.getProjectTitle()));
     }
+
     @Test
     void checkIfProjectNameAlreadyExistsFail() {
         //Arrange
         Project newProject = new Project("Project Title Test", "Project Description",
                 1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
-                2, 1 );
+                2, 1);
         //Act
         projectRepository.createProject(newProject);
         projectRepository.findProjectIDFromDB(newProject);
 
         //Assert
-        assertFalse(projectRepository.checkIfProjectNameAlreadyExists(newProject.getProjectTitle()+" 2")); //Indsætter +2 for: Project Title Test 2
+        assertFalse(projectRepository.checkIfProjectNameAlreadyExists(newProject.getProjectTitle() + " 2")); //Indsætter +2 for: Project Title Test 2
     }
+
     @Test
     void setProjectID() {
         //Arrange
         Project newProject = new Project("Project Title Test", "Project Description",
                 1, Date.valueOf("2024-12-12"), Date.valueOf("2025-01-01"), "Link",
-                2, 1 ); //Default constructor ID=-1;
+                2, 1); //Default constructor ID=-1;
 
 
         //Act
@@ -261,6 +272,7 @@ public class ProjectRepositoryIntegrationTest {
         assertNotEquals(-1, newProject);
         assertEquals(3, newProject.getID()); //Vi forventer ID=3, da der i forvejen eksisterer to projekter.
     }
+
     @Test
     void fetchAllStatus() {
         //Arrange
@@ -274,6 +286,7 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertEquals(expectedSize, list.size());
     }
+
     @Test
     void findPMEmployees() {
         //Arrange
@@ -286,6 +299,7 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertEquals(expectedSize, listPM.size());
     }
+
     @Test
     void findBCEmployees() {
         //Arrange
@@ -298,5 +312,26 @@ public class ProjectRepositoryIntegrationTest {
         assertEquals(expectedSize, listBC.size());
     }
 
+    /*
+   #####################################
+   #           CRUD SubProject            #
+   #####################################
+    */
+    @Test
+    void createSubProject() {
+
+        //Arrange
+        SubProject subProject = new SubProject("TestTitle", "TestDescription", 1, 1);
+        int expectedSubProjectID = 4;
+
+        //Act
+        projectRepository.createSubProject(subProject);
+        SubProject subProjectFromDB = projectRepository.showSubProject(expectedSubProjectID);
+
+        //Assert
+        String expectedTitle = subProject.getSubProjectTitle();
+        String actualTitle = subProjectFromDB.getSubProjectTitle();
+        assertEquals(expectedTitle, actualTitle);
+    }
 
 }

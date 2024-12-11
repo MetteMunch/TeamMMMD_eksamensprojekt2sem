@@ -61,6 +61,10 @@ public class ProjectControllerTest {
         project.setLinkAgreement("My link");
         project.setCompanyRep(4444);
         project.setStatus(1);
+        subProject.setSubProjectTitle("Test SubTitle");
+        subProject.setSubProjectDescription("Test SubDescription");
+        subProject.setSubProjectID(1);
+        subProject.setStatusID(1);
         when(mockProjectService.checkIfProjectNameAlreadyExists(anyString())).thenReturn(false);
         when(mockProjectService.findProjectIDFromDB(any(Project.class))).thenReturn(project.getID());
     }
@@ -167,13 +171,7 @@ public class ProjectControllerTest {
 //    }
 //
 //
-@BeforeEach
-public void setUp() {
-        subProject.setSubProjectTitle("Test SubTitle");
-        subProject.setSubProjectDescription("Test SubDescription");
-        subProject.setSubProjectID(1);
-        subProject.setStatusID(1);
-}
+
 
     @Test
     void createSubProjectActionSucces() throws Exception {
