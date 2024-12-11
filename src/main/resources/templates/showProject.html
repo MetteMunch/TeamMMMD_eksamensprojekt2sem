@@ -89,7 +89,24 @@ når der skal kaldes attributter-->
 </main>
 
 <sidebar>
-    <h3>Her kommer diverse visninger af data</h3>
+  <h3>Tasks which will cause delayed delivery!</h3>
+    <p>Change planned startdate or review estimated time</p>
+  <div th:if="${isManager}">
+    <table>
+      <thead>
+      <tr>
+        <th>Task Title</th>
+        <th>Calculated End Date</th>
+      </tr>
+      </thead>
+      <tbody th:each="taskToLateEndDate : ${TasksWithEndDateToLate}">
+      <tr>
+        <td th:text="${taskToLateEndDate.getTaskTitle()}"></td>
+        <td th:text="${taskToLateEndDate.getCalculatedEndDate()}"></td>
+      </tr>
+    </table>
+  </div>
+
 
 </sidebar>
 

@@ -12,6 +12,7 @@ public class Task {
     private Double estimatedTime;
     private double actualTime;
     private Date plannedStartDate;
+    private Date calculatedEndDate;
     private Integer dependingOnTask;
     private String dependingOnTaskString;
     private Integer requiredRole;
@@ -194,5 +195,13 @@ public class Task {
 
     public void setProjectID(int projectID) {
         this.projectID = projectID;
+    }
+
+    public Date getCalculatedEndDate() {
+        return calculatedEndDate;
+    }
+
+    public void setCalculatedEndDate(Date calculatedEndDate) {
+        this.calculatedEndDate = calculatedEndDate;
     }
 }

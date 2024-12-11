@@ -82,11 +82,6 @@ public class ProjectController {
                     "Please select another title for this project.");
             return "redirect:/user/{employeeID}/show-create-project";
         } else {
-//            if (customer == 1) {
-//                Customer internalProject = projectService.fetchInternalProjectCustomer();
-//                customer = internalProject.getCustomerID();
-//            }
-
             Project project = new Project(projectTitle, projectDescription, customer, orderDate, deliveryDate, linkAgreement, companyRep, status);
             projectService.createProject(project); // Projekt oprettes i DB
             int pID = projectService.findProjectIDFromDB(project);
@@ -128,11 +123,12 @@ public class ProjectController {
     public String showProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) throws SQLException {
         Project project = projectService.fetchSpecificProject(projectID);
         List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
-        model.addAttribute("project", project);
-        model.addAttribute("listOfSubProjects", listOfSpecificSubProjects);
+        List<Task> listOfTasksWithEndDateLaterThanProjectDeadline = projectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, projectID);
+        model.addAttribute("project",project);
+        model.addAttribute("listOfSubProjects",listOfSpecificSubProjects);
+        model.addAttribute("employeeID",employeeID);
         model.addAttribute("isManager", userService.getIsEmployeeManagerInfoFromDB(employeeID));
-        model.addAttribute("employeeID", employeeID);
-
+        model.addAttribute("TasksWithEndDateToLate", listOfTasksWithEndDateLaterThanProjectDeadline);
         return "showProject";
 
     }
