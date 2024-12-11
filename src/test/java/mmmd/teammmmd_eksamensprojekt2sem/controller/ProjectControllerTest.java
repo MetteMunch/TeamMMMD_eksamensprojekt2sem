@@ -222,7 +222,6 @@ public class ProjectControllerTest {
     @Test
     void createCustomerAction() throws Exception {
         Customer customer = new Customer("Name", "Rep");
-//        customer.setCustomerID(9999);
 
         mockMvc.perform(post("/user/{employeeID}/create-customer", employeeID)
                         .param("companyName", customer.getCompanyName())
@@ -232,9 +231,4 @@ public class ProjectControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, project.getID())); //Ændre mig til korrekt view
     }
-//
-//
-//
-//
-//
 }
