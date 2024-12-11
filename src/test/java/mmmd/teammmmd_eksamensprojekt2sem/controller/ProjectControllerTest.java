@@ -67,7 +67,12 @@ public class ProjectControllerTest {
 
     @Test
     void createProjectActionSuccess() throws Exception {
-//        int employeeID = 4;
+        /*
+        .param => Vi forventer at få alle disse argumenter med, som er angivet som parameter i endpoint.
+        Vi indsætter vores testobjekter som argumenter til endpointet.
+        Vi forventer derefter en 300 HTTP statuskode som er en redirect til vores ProjectController
+        requestmapping+projectID.
+         */
         mockMvc.perform(post("/user/{employeeID}/create-project", employeeID)
                         .param("projectTitle", project.getProjectTitle())
                         .param("projectDescription", project.getProjectDescription())
@@ -85,6 +90,10 @@ public class ProjectControllerTest {
     @Test
     void createProjectActionFailNameAlreadyExists() throws Exception {
         when(mockProjectService.checkIfProjectNameAlreadyExists(anyString())).thenReturn(true);
+        /*
+        Vi instruerer test i, at der allerede foreligger et eksisterende projektnavn, og vi vil redirecte med
+        en fejlbesked(flashAttribute) på html og fortæller dette til brugeren.
+         */
 
         mockMvc.perform(post("/user/{employeeID}/create-project", employeeID)
                         .param("projectTitle", project.getProjectTitle())
@@ -106,6 +115,10 @@ public class ProjectControllerTest {
 
     @Test
     void showCreateProjectMngr() throws Exception {
+        /*
+        Vi tester om viewet bliver vist, hvis brugeren, der logger ind er en Project Manager.
+        Kun PM må lave projekter. Denne boolean rolle bliver angivet i employeeRole tabellen.
+         */
         when(mockUserService.getIsEmployeeManagerInfoFromDB(employeeID)).thenReturn(true);
 
         mockMvc.perform(get("/user/{employeeID}/show-create-project", employeeID)
@@ -120,6 +133,10 @@ public class ProjectControllerTest {
     }
     @Test
     void showCreateProjectNOTPM() throws Exception {
+        /*
+        Brugere, som ikke er PM skal ikke være i stand til at lave projekter. Hvis de ikke har den
+        fornødne boolean rolle skal de redirectes tilbage til deres dashboard.
+         */
         when(mockUserService.getIsEmployeeManagerInfoFromDB(employeeID)).thenReturn(false);
 
         mockMvc.perform(get("/user/{employeeID}/show-create-project", employeeID)
@@ -138,6 +155,11 @@ public class ProjectControllerTest {
         when(mockProjectService.showListOfSpecificSubProjects(anyInt())).thenReturn(List.of(subProjectTest));
         when(mockProjectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, project.getID()))
                 .thenReturn(List.of(taskTest));
+        /*
+        when() kald => Vi mocker vores metodekald her. Når ovenstående metoder kaldes på vores /{projectID} endpoint
+        instruerer vi vores test til at returnere vores testobjekter og -lister. Vi imiterer derfor vores egentlige
+        endpoint logik i ProjectController.
+         */
 
         List<SubProject> listSub = mockProjectService.showListOfSpecificSubProjects(project.getID());
         List<Task> listTask = mockProjectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, project.getID());
