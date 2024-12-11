@@ -2,6 +2,8 @@ package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
+import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
+import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,14 +17,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
 
 
 import java.sql.Date;
+import java.sql.SQLException;
+import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -116,60 +118,98 @@ public class ProjectControllerTest {
                 .andExpect(model().attribute("customers", mockProjectService.getListOfCurrentCustomers()))
                 .andExpect(model().attribute("employeeID", employeeID));
     }
-//    @Test
-//    void showAllProjects() throws Exception {
-//        mockMvc.perform(get(requestMapping+"/show_all_projects"))
-//                .andExpect(status().isOk())
-//                .andExpect(model().attribute("projects", projectService.showAllProjects()))
-//                .andExpect(view().name("showAllProjectsTest")); //Ret mit navn til korrekte redirect html
-//    }
-//    @Test
-//    void goToEditProject() throws Exception {
-//        mockMvc.perform(get(requestMapping+"/"+project.getProjectTitle()+"/edit"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("updateProject"))
-//                .andExpect(model().attribute("project", project))
-//                .andExpect(model().attribute("projectCustomer", projectService.getListOfCurrentCustomers()))
-//                .andExpect(model().attribute("projectPMEmployees", projectService.findPMEmployees()))
-//                .andExpect(model().attribute("projectBCEmployees", projectService.findBCEmployees()))
-//                .andExpect(model().attribute("projectStatusAll", projectService.fetchAllStatus()));
-//    }
-//    @Test
-//    void updateProjectAction() throws Exception {
-//        mockMvc.perform(post(requestMapping+"/updateProject")
-//                        .param("projectID", String.valueOf(project.getID()))
-//                        .param("projectTitle", project.getProjectTitle())
-//                        .param("projectDescription", project.getProjectDescription())
-//                        .param("customer", String.valueOf(project.getCustomer()))
-//                        .param("orderDate", String.valueOf(project.getOrderDate()))
-//                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
-//                        .param("linkAgreement", project.getLinkAgreement())
-//                        .param("companyRep", String.valueOf(project.getCompanyRep()))
-//                        .param("status", String.valueOf(project.getStatus())))
-//                .andDo(print())
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl(requestMapping+"/success")); //Ændre mig til korrekte html redirect
-//    }
-//    @Test
-//    void deleteProject() throws Exception {
-//        mockMvc.perform(post(requestMapping+"/{name}/delete", project.getProjectTitle()))
-//                .andDo(print())
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl(requestMapping+"/success")); //Ændre mig til korrekte redirect view
-//    }
-//    @Test
-//    void showCreateCustomer() throws Exception {
-//        mockMvc.perform(get(requestMapping+"/show-create-customer"))
-//                .andExpect(view().name("createCustomer"));
-//    }
-//    @Test
-//    void createCustomerAction() throws Exception {
-//        Customer customer = new Customer("Name", "Rep");
-//        mockMvc.perform(post(requestMapping+"/create-customer")
-//                        .param("companyName", customer.getCompanyName())
-//                        .param("repName", customer.getRepName()))
-//                .andExpect(view().name("succes")); //Ændre mig til korrekt view
-//    }
+    @Test
+    void showCreateProjectNOTPM() throws Exception {
+        when(mockUserService.getIsEmployeeManagerInfoFromDB(employeeID)).thenReturn(false);
+
+        mockMvc.perform(get("/user/{employeeID}/show-create-project", employeeID)
+                .param("employeeID", String.valueOf(employeeID)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/user/{employeeID}", employeeID));
+    }
+    @Test
+    void showProject() throws Exception {
+
+        SubProject subProjectTest = new SubProject("TestTitle", "TestDescription", project.getID(), 1);
+        Task taskTest = new Task(99, "Test Task", "Test Description", employeeID,
+                40.0, Date.valueOf("2024-11-12"),null,
+                null, subProjectTest.getSubProjectID(), 1);
+        when(mockProjectService.fetchSpecificProject(anyInt())).thenReturn(project);
+        when(mockProjectService.showListOfSpecificSubProjects(anyInt())).thenReturn(List.of(subProjectTest));
+        when(mockProjectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, project.getID()))
+                .thenReturn(List.of(taskTest));
+
+        List<SubProject> listSub = mockProjectService.showListOfSpecificSubProjects(project.getID());
+        List<Task> listTask = mockProjectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, project.getID());
+
+        mockMvc.perform(get("/user/{employeeID}/{projectID}", employeeID, project.getID())
+                .param("projectID", String.valueOf(project.getID()))
+                .param("employeeID", String.valueOf(employeeID)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("showProject"))
+                .andExpect(model().attribute("project", project))
+                .andExpect(model().attribute("listOfSubProjects", listSub))
+                .andExpect(model().attribute("employeeID", employeeID))
+                .andExpect(model().attribute("isManager", mockUserService.getIsEmployeeManagerInfoFromDB(employeeID)))
+                .andExpect(model().attribute("TasksWithEndDateToLate", listTask));
+    }
+
+    @Test
+    void goToEditProject() throws Exception {
+        when(mockProjectService.fetchSpecificProject(project.getID())).thenReturn(project);
+
+        mockMvc.perform(get("/user/{employeeID}/{projectID}/edit", employeeID, project.getID()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("updateProject"))
+                .andExpect(model().attribute("project", project))
+                .andExpect(model().attribute("projectCustomer", mockProjectService.getListOfCurrentCustomers()))
+                .andExpect(model().attribute("projectPMEmployees", mockProjectService.findPMEmployees()))
+                .andExpect(model().attribute("projectBCEmployees", mockProjectService.findBCEmployees()))
+                .andExpect(model().attribute("projectStatusAll", mockProjectService.fetchAllStatus()));
+    }
+    @Test
+    void updateProjectAction() throws Exception {
+        mockMvc.perform(post("/user/{employeeID}/update-project", employeeID)
+                        .param("projectID", String.valueOf(project.getID()))
+                        .param("projectTitle", project.getProjectTitle())
+                        .param("projectDescription", project.getProjectDescription())
+                        .param("customer", String.valueOf(project.getCustomer()))
+                        .param("orderDate", String.valueOf(project.getOrderDate()))
+                        .param("deliveryDate", String.valueOf(project.getDeliveryDate()))
+                        .param("linkAgreement", project.getLinkAgreement())
+                        .param("companyRep", String.valueOf(project.getCompanyRep()))
+                        .param("status", String.valueOf(project.getStatus()))
+                        .param("employeeID", String.valueOf(employeeID)))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/user/{employeeID}", employeeID)); //Ændre mig til korrekte html redirect
+    }
+    @Test
+    void deleteProject() throws Exception {
+        when(mockProjectService.fetchSpecificProject(project.getID())).thenReturn(project);
+        mockMvc.perform(post("/user/{employeeID}/{projectID}/delete", employeeID, project.getID()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/user/{employeeID}", employeeID)); //Ændre mig til korrekte redirect view
+    }
+    @Test
+    void showCreateCustomer() throws Exception {
+        mockMvc.perform(get("/user/{employeeID}/show-create-customer", employeeID))
+                .andExpect(view().name("createCustomer"));
+    }
+    @Test
+    void createCustomerAction() throws Exception {
+        Customer customer = new Customer("Name", "Rep");
+//        customer.setCustomerID(9999);
+
+        mockMvc.perform(post("/user/{employeeID}/create-customer", employeeID)
+                        .param("companyName", customer.getCompanyName())
+                        .param("repName", customer.getRepName())
+                        .param("projectID", String.valueOf(project.getID()))
+                        .param("employeeID", String.valueOf(employeeID)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, project.getID())); //Ændre mig til korrekt view
+    }
 //
 //
 //
