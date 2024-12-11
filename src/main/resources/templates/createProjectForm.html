@@ -3,59 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Project</title>
+    <link rel="stylesheet" href="/login.css">
 </head>
 <body>
-<h1>Create Project</h1>
-<div th:if="${titleAlreadyExistsError}">
-    <p th:text="${titleAlreadyExistsError}" style="color:red"></p>
-</div>
 
-<form th:action="@{/user/{employeeID}/create-project(employeeID=${employeeID})}" method="post">
+<main>
+    <div class="grid-container">
+        <div th:if="${titleAlreadyExistsError}">
+            <p th:text="${titleAlreadyExistsError}" style="color:red"></p>
+        </div>
 
-    <input type="hidden" name="employeeID" th:value="${employeeID}">
-    <!--String title, string description, int customer, Date orderDate, Date Delivery, string linkagreement, int companyrep, int status -->
-    <label class="projectTitle" for="projectTitle">Project Title: </label>
-    <input type="text" id="projectTitle" name="projectTitle" required>
-    <br>
-    <label class="projectDescription" for="projectDescription">Project Description: </label>
-    <input type="text" id="projectDescription" name="projectDescription" required>
-    <br>
-    <label class="customer" for="customer">Project Customer: </label>
-    <select id="customer" name="customer" required>
-        <option value="" disabled selected>Select Customer</option>
-        <option value="99">Internal Project</option>
-        <option th:each="customer : ${customers}" th:value="${customer.getCustomerID()}" th:text="${customer.getCompanyName()+' | '+customer.getRepName()}"></option>
-    </select>
-    <br>
-    <label class="orderDate" for="orderDate">Order Date: </label>
-    <input type="date" id="orderDate" name="orderDate" required>
-    <br>
-    <label class="deliveryDate" for="deliveryDate">Order Date: </label>
-    <input type="date" id="deliveryDate" name="deliveryDate" required>
-    <br>
-    <label class="linkAgreement" for="linkAgreement">Link Agreement: </label>
-    <input type="text" id="linkAgreement" name="linkAgreement" placeholder="Leave empty if no agreement">
-    <br>
-    <label class="companyRep" for="companyRep">Company rep.: </label>
-    <select id="companyRep" name="companyRep" required>
-        <option value="" disabled selected>Select a Company Representative</option>
-        <!--Project managers -->
-        <option value="" disabled>---Project Managers---</option>
-        <option th:each="pm : ${PMEmployees}" th:value="${pm.getEmployeeID()}" th:text="${pm.getFullName()}"></option>
+        <form class="task-form" th:action="@{/user/{employeeID}/create-project(employeeID=${employeeID})}"
+              method="post">
+            <h1>Create Project</h1>
+            <input type="hidden" name="employeeID" th:value="${employeeID}">
+            <!--String title, string description, int customer, Date orderDate, Date Delivery, string linkagreement, int companyrep, int status -->
+            <label class="projectTitle" for="projectTitle">Project Title: </label>
+            <input type="text" id="projectTitle" name="projectTitle" required>
+            <br>
+            <label class="projectDescription" for="projectDescription">Project Description: </label>
+            <input type="text" id="projectDescription" name="projectDescription" required>
+            <br>
+            <label class="customer" for="customer">Project Customer: </label>
+            <select id="customer" name="customer" required>
+                <option value="" disabled selected>Select Customer</option>
+                <option value="99">Internal Project</option>
+                <option th:each="customer : ${customers}" th:value="${customer.getCustomerID()}"
+                        th:text="${customer.getCompanyName()+' | '+customer.getRepName()}"></option>
+            </select>
+            <br>
+            <label class="orderDate" for="orderDate">Order Date: </label>
+            <input type="date" id="orderDate" name="orderDate" required>
+            <br>
+            <label class="deliveryDate" for="deliveryDate">Order Date: </label>
+            <input type="date" id="deliveryDate" name="deliveryDate" required>
+            <br>
+            <label class="linkAgreement" for="linkAgreement">Link Agreement: </label>
+            <input type="text" id="linkAgreement" name="linkAgreement" placeholder="Leave empty if no agreement">
+            <br>
+            <label class="companyRep" for="companyRep">Company rep.: </label>
+            <select id="companyRep" name="companyRep" required>
+                <option value="" disabled selected>Select a Company Representative</option>
+                <!--Project managers -->
+                <option value="" disabled>---Project Managers---</option>
+                <option th:each="pm : ${PMEmployees}" th:value="${pm.getEmployeeID()}"
+                        th:text="${pm.getFullName()}"></option>
 
-        <!--Business consultants -->
-        <option value="" disabled>---Business Consultants---</option>
-        <option th:each="bc : ${BCEmployees}" th:value="${bc.getEmployeeID()}" th:text="${bc.getFullName()}"></option>
-    </select>
-    <br>
-    <label class="status" for="status">Status: </label>
-    <select id="status" name="status" required>
-        <option value="" disabled selected>Select Project Status</option>
-        <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}" th:text="${status.getStatus()}"></option>
-    </select>
-    <br>
-    <button type="submit">Create Project</button>
-</form>
+                <!--Business consultants -->
+                <option value="" disabled>---Business Consultants---</option>
+                <option th:each="bc : ${BCEmployees}" th:value="${bc.getEmployeeID()}"
+                        th:text="${bc.getFullName()}"></option>
+            </select>
+            <br>
+            <label class="status" for="status">Status: </label>
+            <select id="status" name="status" required>
+                <option value="" disabled selected>Select Project Status</option>
+                <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}"
+                        th:text="${status.getStatus()}"></option>
+            </select>
+            <br>
+            <button type="submit">Create Project</button>
+        </form>
+    </div>
+</main>
 
 </body>
 </html>

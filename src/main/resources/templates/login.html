@@ -10,15 +10,14 @@
     <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
 </nav>
 
-<main1>
-    <h1>Login</h1>
-    <div class="loginField">
-
+<main>
+    <div class="grid-container">
         <div th:if="${errorMessage}" class="error"> <!-- Fejlbesked, hvis login failer -->
             <p th:text="${errorMessage}" style="color: red;"></p>
         </div>
 
-        <form action="/user/loginvalidation" method="post">
+        <form class="task-form" action="/user/loginvalidation" method="post">
+            <h1>Login</h1>
             <label class="usernamePasswordText" for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             <br>
@@ -30,7 +29,7 @@
         </form>
     </div>
 
-</main1>
+</main>
 
 <footer>
     <div th:insert="~{fragments.html :: footer}"></div>

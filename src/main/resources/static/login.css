@@ -23,7 +23,7 @@ body {
     grid-gap: 0.5em;
     grid-template-areas:
         'nav'
-        'main1'
+        'main'
         'footer';
     grid-template-rows: auto 1fr auto;
     grid-template-columns: 1fr;
@@ -41,12 +41,12 @@ body {
         margin: 0 auto;
         grid-template-areas:
            'nav'
-           'main1'
+           'main'
            'footer';
     }
 }
 
-nav, main1, footer {
+nav, main, footer {
     padding: 5px;
 }
 
@@ -87,24 +87,55 @@ footer {
     vertical-align: middle; /* Eller top eller bottom, afhængigt af behov */
 }
 
-/* Knapper */
-.button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    font-size: 12px;
-    background-color: var(--alpha-bg-color);
-    color: var(--alpha-bg-color);
-    border-width: 1px;
-    border-radius: 5px;
+/* INPUT MAIN */
+
+.grid-container {
+    display: grid;
+    place-items: center; /* Centrerer indholdet i grid */
+    height: 100%;
+    width: 100%;
+}
+
+.task-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-form h1 {
+    margin-bottom: 10px;
+    font-size: 30px;
+}
+
+.task-form label {
+    font-weight: bold;
+}
+
+.task-form input,
+.task-form select,
+.task-form textarea,
+.task-form button {
+    padding: 8px;
+    font-size: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.task-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-.loginField {
-    display: flex;
-    justify-content: center; /* Centrerer indholdet horisontalt */
-    align-items: center; /* Centrerer indholdet vertikalt */
-    margin: auto;
-    padding: 5px;
+.task-form button:hover {
+    background-color: #0056b3;
 }
 
 .usernamePasswordText {
@@ -112,21 +143,9 @@ footer {
     font-family: "Century Gothic", serif;
 }
 
-.loginButton {
-    margin-top: 10px;
-    padding: 5px 10px;
-    font-size: 20px;
-    font-family: "Century Gothic", serif;
-    background-color: var(--alpha-bg-color);
-    color: black;
-    border-radius: 5px;
-    cursor: pointer;
-    width: fit-content;
-}
-
-input[type="text"], input[type="password"], input[type="url"] {
+input[type="text"], input[type="password"] {
     width: 200px;
-    height: 23px;
+    height: 30px;
     font-size: 20px;
     border: 1px solid black;
 }
