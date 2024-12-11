@@ -145,7 +145,7 @@ public class ProjectRepository {
             ps.setInt(8, project.getStatus());
 
             ps.executeUpdate();
-            System.out.println("Successfully created project: " + project.getProjectTitle()); //todo: delete
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -679,7 +679,7 @@ public class ProjectRepository {
                 if (rs.next()) {
                     projectIDFromDB = rs.getInt(1);
                     project.setID(projectIDFromDB);
-                    System.out.println("Successfully created project: " + project.getProjectTitle() + " with ID: " + project.getID());
+
                 } else {
                     throw new IllegalArgumentException("No project found with title: " + project.getProjectTitle() + " and order date: " + project.getOrderDate() + ". PROJECT REPOSITORY LINE 45.");
                 }
@@ -722,10 +722,6 @@ public class ProjectRepository {
                     project.setCustomerNameString(customerName);
                     project.setCompanyRepString(nameCompanyRep);
 
-                    System.out.println("Her er kunde navn:" + customerName);
-                    System.out.println("Her er Projekt status:" + status);
-
-
                     return project;
                 }
             }
@@ -750,7 +746,6 @@ public class ProjectRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     projectIDFromDB = rs.getInt(1);
-                    System.out.println("Successfully created project: " + project.getProjectTitle());
                 }
             }
 
