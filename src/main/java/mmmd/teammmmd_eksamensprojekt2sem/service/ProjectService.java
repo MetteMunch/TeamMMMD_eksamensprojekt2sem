@@ -44,20 +44,12 @@ public class ProjectService {
         projectRepository.createProject(project);
     }
 
-    public List<Project> showAllProjects() {
-        return projectRepository.showAllProjects();
-    }
-
     public void updateProject(Project project) {
         projectRepository.updateProject(project);
     }
 
     public void deleteProject(Project project) throws SQLException {
         projectRepository.deleteProject(project);
-    }
-
-    public Project fetchSpecificProject(String projectTitle) {
-        return projectRepository.fetchSpecificProject(projectTitle);
     }
 
     public Project fetchSpecificProject(int projectID) {
@@ -173,11 +165,6 @@ public class ProjectService {
     public List<Employee> findNonManagerEmployees() {
         return projectRepository.findNonManagerEmployees();
     }
-
-    public boolean isManager(int employeeID) {
-        return projectRepository.isManager(employeeID);
-    }
-
 
     /*
     ###########---Helper Methods---###########
