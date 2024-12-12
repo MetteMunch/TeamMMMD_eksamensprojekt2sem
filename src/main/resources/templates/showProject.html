@@ -43,16 +43,16 @@ når der skal kaldes attributter-->
             <thead>
             <tr>
                 <th>Subproject Title</th>
-                <th>Tasks</th>
-                <th>Deadline</th>
+                <th>Tasks within subproject</th>
+                <th>Status</th>
                 <th>Functions</th>
             </tr>
             </thead>
             <tbody th:each="subProject : ${listOfSubProjects}">
             <tr>
                 <td th:text="${subProject.getSubProjectTitle()}"></td>
-                <td>Metode mangler til count af tasks på subproject</td>
-                <td>Metode mangler til at tage deadline fra task</td>
+                <td th:text="${subProject.getCountOfTasks()}"></td>
+                <td th:text="${subProject.getStatusString()}"></td>
                 <td>
                     <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}}">
                         <button type="button">Show subproject</button>

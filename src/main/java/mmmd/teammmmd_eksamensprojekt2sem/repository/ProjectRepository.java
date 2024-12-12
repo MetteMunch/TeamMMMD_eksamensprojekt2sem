@@ -409,6 +409,7 @@ public class ProjectRepository {
                     SubProject subProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
                     subProject.setStatusString(statusString);
                     subProject.setSubProjectID(subProjectID);
+                    subProject.setCountOfTasks(countOfTasksWithinSubProject(subProjectID));
                     listOfSubProjects.add(subProject);
                 }
             }
@@ -416,6 +417,24 @@ public class ProjectRepository {
             e.printStackTrace();
         }
         return listOfSubProjects;
+    }
+
+    public int countOfTasksWithinSubProject(int subprojectID) {
+        int countOfTasks = 0;
+
+        String SQL = "SELECT COUNT(*) AS 'count of tasks within subproject' FROM task WHERE subprojectID = ?;";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, subprojectID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    countOfTasks = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return countOfTasks;
     }
 
     public void updateSubProject() {
