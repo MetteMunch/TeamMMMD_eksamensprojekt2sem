@@ -1,12 +1,12 @@
-/* Farvevariabler */
+/* === Farvevariabler === */
 :root {
-    --primary-bg-color: white;
-    --secondary-bg-color: #dedede;
+    --primary-bg-color: #ffffff; /* Hvid baggrund */
+    --neutral-bg-color: #dedede; /* Neutral grå baggrund */
+    --highlight-color: #59869d; /* Fremhævet blå */
     --sidebar-color: darkgray;
     --extra-bg-color: #e7eef1;
-    --alpha-bg-color: #59869d;
 
-    --link-color: black;
+    --link-color: grey;
 
     --primary-text-color: black;
     --secondary-text-color: white;
@@ -15,7 +15,7 @@
     --alpha-overskift-type: Montserrat, sans-serif;
 }
 
-/* Grundlæggende layout og styling */
+/* === Grundlæggende layout og styling === */
 
 /* Mobile first layout */
 body {
@@ -34,15 +34,18 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    font-family: Arial, sans-serif; /* Standard font */
+    line-height: 1.5;
+    color: var(--primary-text-color);
 }
 
 /* Medieforespørgsel for større skærme (min-width: 60em) */
 @media (min-width: 60em) {
     body {
+        max-width: 100%;
+        margin: 0 auto;
         grid-template-columns: 1fr auto;
         grid-template-rows: auto auto 20em 20em auto;
-        width: 80%;
-        margin: 0 auto;
         grid-template-areas:
            'nav nav'
            'header sidebar'
@@ -52,73 +55,87 @@ body {
     }
 }
 
-/* Grid-områder */
+/* === Grid-områder === */
 nav, header, main1, main2, sidebar, footer {
-    padding: 5px;
+    padding: 10px;
 }
 
 nav {
     grid-area: nav;
-    gap: 20px;
+    display: flex;
+    justify-content: space-between;
     align-items: center; /* Juster indholdet vertikalt */
-    display: flex; /* Aktiver flexbox */
-    background-color: var(--alpha-bg-color);
+    gap: 1em;
+    background-color: var(--highlight-color);
     height: 4em;
 }
 
 header {
     grid-area: header;
-    background-color: var(--secondary-bg-color);
-}
-
-main1 {
-    grid-area: main1;
-}
-
-main2 {
-    grid-area: main2;
-}
-
-sidebar {
-    grid-area: sidebar;
-}
-
-footer {
-    grid-area: footer;
+    background-color: var(--neutral-bg-color);
 }
 
 main1, main2 {
-    background-color: var(--secondary-bg-color);
+    grid-area: main1, main2;
+    background-color: var(--neutral-bg-color);
     overflow: auto; /* Tilføjer scroll */
 }
 
 sidebar {
+    grid-area: sidebar;
     background-color: var(--sidebar-color);
 }
 
 footer {
-    background-color: var(--alpha-bg-color);
+    grid-area: footer;
+    background-color: var(--highlight-color);
+    text-align: center;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    /*line-height: 1.6;*/
 }
 
-/* Typografi og tekst */
-h1 {
+footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+footer h4 {
+    color: var(--secondary-text-color);
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0px;
+}
+
+/* === Typografi === */
+h1, h2, h3 {
     font-family: var(--alpha-overskift-type), serif;
+    margin: 0.5em 0;
+    color: var(--primary-text-color);
+}
+
+h1 {
     font-size: 40px;
-    margin: 2px;
 }
 
 h2 {
-    text-align: left;
-    font-family: var(--alpha-overskift-type), serif;
     font-size: 25px;
-    margin: 2px;
+    /*text-align: left;*/
 }
 
 h3 {
-    text-align: left;
-    font-family: var(--alpha-overskift-type), serif;
     font-size: 20px;
-    margin: 2px;
+    /*text-align: left;*/
 }
 
 .teksttabel {
@@ -126,66 +143,76 @@ h3 {
     font-family: sans-serif;
 }
 
+/* === Ikoner og logo === */
+.icon img, .logo img {
+    object-fit: contain;
+    padding: 5px;
+    background-color: var(--highlight-color);
+}
+
 .icon img {
-    width: 60px; /* Juster bredden */
-    max-height: 60px; /* Juster højden */
-    object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
-    background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
-    padding: 5px; /* Giver lidt luft omkring billederne */
+    width: 60px;
+    max-height: 60px;
 }
 
 .logo img {
-    width: 150px; /* Juster bredden */
-    max-height: 150px; /* Juster højden */
-    object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
-    background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
-    padding: 5px; /* Giver lidt luft omkring billederne */
+    width: 150px;
+    max-height: 150px;
     display: block;
-    vertical-align: middle; /* Eller top eller bottom, afhængigt af behov */
+    vertical-align: middle;
 }
 
-/* Links */
-.linka {
-    color: var(--link-color);
-    transition: color 0.3s ease;
-    text-decoration: none;
-}
-
-form, a {
-    display: inline;
-}
-
-/* Knapper */
-.button {
+/* === Knapper === */
+button {
     margin-top: 10px;
     padding: 5px 10px;
     font-size: 12px;
-    background-color: var(--alpha-bg-color);
+    background-color: var(--highlight-color);
     color: var(--secondary-text-color);
-    border-width: 1px;
+    border: 1px solid black;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Generelle tabelindstillinger */
+/* === Tabelindstillinger === */
+.table-container {
+    padding: 5px;
+}
+
 table {
     width: 100%;
     margin: 8px 0;
-    border-collapse: separate; /* Tillader runde hjørner */
-    border-spacing: 0; /* Fjerner mellemrum mellem cellerne */
+    border-collapse: separate;
+    border-spacing: 0;
     border: 1px solid black;
-    overflow: hidden; /* Sørger for, at indholdet følger runde hjørner */
-    border-radius: 5px; /* Runde hjørner */
+    border-radius: 5px;
     background-color: var(--extra-bg-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
     padding: 10px;
     text-align: left;
-    border-bottom: 1px solid black; /* Lige linjer mellem rækker */
+    border-bottom: 1px solid black;
+    transition: background-color 0.3s ease;
 }
 
 th {
     font-weight: bold;
     border-top: 2px solid black;
 }
+
+tr:hover td {
+    background-color: var(--link-color);
+    color: var(--secondary-text-color);
+}
+
+.create-back-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
