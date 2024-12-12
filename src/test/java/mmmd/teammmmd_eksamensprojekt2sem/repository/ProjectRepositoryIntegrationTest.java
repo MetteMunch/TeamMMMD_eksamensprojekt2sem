@@ -243,8 +243,6 @@ public class ProjectRepositoryIntegrationTest {
         assertEquals(expectedNumOfTasks, actualNumOfTasks);
     }
 
-
-
     @Test
     void updateTask() throws Exception {
         // Arrange
@@ -259,12 +257,12 @@ public class ProjectRepositoryIntegrationTest {
         int taskID = projectRepository.findTaskIDFromDB(newTask);
         newTask.setTaskID(taskID);
 
-        Task fetchedTask = projectRepository.getTaskByID(taskID);
+        Task fetchedTask = projectRepository.fetchSpecificTask("Task Title");
         fetchedTask.setTaskTitle("Updated Task Title");
         fetchedTask.setEstimatedTime(10.0);
         projectRepository.updateTask(fetchedTask);
 
-        Task updatedTask = projectRepository.getTaskByID(taskID);
+        Task updatedTask = projectRepository.fetchSpecificTask("Updated Task Title");
 
         // Assert
         assertEquals(newTask.getTaskID(), updatedTask.getTaskID());
@@ -272,7 +270,6 @@ public class ProjectRepositoryIntegrationTest {
         assertEquals("Updated Task Title", updatedTask.getTaskTitle());
         assertEquals(10.0, updatedTask.getEstimatedTime());
     }
-
 
     @Test
     void deleteTask() throws Exception {
