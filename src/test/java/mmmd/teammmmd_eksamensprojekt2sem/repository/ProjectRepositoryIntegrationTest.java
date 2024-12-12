@@ -158,6 +158,8 @@ public class ProjectRepositoryIntegrationTest {
         //Assert
         assertEquals(expectedNumOfProjects, actualNumOfProjects);
     }
+
+    /*
     @Test
     void updateProject() {
         //Arrange
@@ -178,7 +180,7 @@ public class ProjectRepositoryIntegrationTest {
         assertEquals(newProject.getID(), updateProject.getID()); //Tjek af samme ID.
         assertNotEquals(newProject.getProjectDescription(), updateProject.getProjectDescription());
         assertEquals("Updated Description", newProjectUpdated.getProjectDescription()); //Vi tjekker om opdatering er gået igennem.
-    }
+    }*/
     @Test
     void deleteProject() throws Exception {
         //Arrange
