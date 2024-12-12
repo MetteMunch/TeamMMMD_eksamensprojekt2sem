@@ -46,7 +46,7 @@ når der skal kaldes attributter-->
               <button class="vedjegikke" type="button">Show Task</button>
           </a>
           <form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID}/delete-task
-          (employeeID = ${employeeID},projectID = ${task.getProjectID}, subProjectID =${task.getSubProjectID})}" method="post"
+          (employeeID = ${employeeID}, projectID = ${task.getProjectID}, subProjectID =${task.getSubProjectID}, taskID =${task.getTaskID()})}" method="post"
           onsubmit="return confirmDeletion()">
             <button type="submit">Delete</button>
           </form>
