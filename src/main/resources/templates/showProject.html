@@ -7,7 +7,7 @@ når der skal kaldes attributter-->
 <head>
     <meta charset="UTF-8">
     <title>Show Project</title>
-    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="/showtaskprojectsubproject.css">
 </head>
 <body>
 
@@ -16,97 +16,101 @@ når der skal kaldes attributter-->
 </nav>
 
 <header>
-    <h1>Project</h1>
-    <h2 th:text="${project.getProjectTitle()}"></h2>
+    <div class="container-project-view">
+        <h1>Project</h1>
+        <h2 th:text="${project.getProjectTitle()}"></h2>
 
-    <h3>Customer</h3>
-    <p th:text="${project.getCustomerNameString()}"></p>
+        <h3>Customer</h3>
+        <p th:text="${project.getCustomerNameString()}"></p>
 
-    <h3>Description</h3>
-    <p th:text="${project.getProjectDescription()}"></p>
+        <h3>Description</h3>
+        <p th:text="${project.getProjectDescription()}"></p>
 
-    <h3>Project startup date</h3>
-    <p th:text="${project.getOrderDate()}"></p>
+        <h3>Project startup date</h3>
+        <p th:text="${project.getOrderDate()}"></p>
 
-    <h3>Project agreed deliverydate</h3>
-    <p th:text="${project.getDeliveryDate()}"></p>
+        <h3>Project agreed deliverydate</h3>
+        <p th:text="${project.getDeliveryDate()}"></p>
 
-    <h3>Link to agreement</h3>
-    <a th:href="${project.getLinkAgreement()}" target="_blank" th:text="OrderConfirmation"></a>
+        <h3>Link to agreement</h3>
+        <a th:href="${project.getLinkAgreement()}" target="_blank" th:text="OrderConfirmation"></a>
+    </div>
 </header>
 
 <main>
     <div class="table-container">
         <h3>Overview - Assigned subprojects</h3>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Subproject Title</th>
-            <th>Tasks</th>
-            <th>Deadline</th>
-            <th>Functions</th>
-        </tr>
-        </thead>
-        <tbody th:each="subProject : ${listOfSubProjects}">
-        <tr>
-            <td th:text="${subProject.getSubProjectTitle()}"></td>
-            <td>Metode mangler til count af tasks på subproject</td>
-            <td>Metode mangler til at tage deadline fra task</td>
-            <td>
-                <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}}">
-                    <button type="button">Show subproject</button>
-                </a>
-                <div th:if="${isManager}">
-                    <form th:action="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}+'/delete-subproject'}"
-                          method="post" onsubmit="return confirmDeletion()">
-                        <button type="submit">Delete</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+            <tr>
+                <th>Subproject Title</th>
+                <th>Tasks</th>
+                <th>Deadline</th>
+                <th>Functions</th>
+            </tr>
+            </thead>
+            <tbody th:each="subProject : ${listOfSubProjects}">
+            <tr>
+                <td th:text="${subProject.getSubProjectTitle()}"></td>
+                <td>Metode mangler til count af tasks på subproject</td>
+                <td>Metode mangler til at tage deadline fra task</td>
+                <td>
+                    <div class="buttons-container-under-table">
+                        <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}}">
+                            <button type="button">Show subproject</button>
+                        </a>
+                        <div th:if="${isManager}">
+                            <form th:action="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}+'/delete-subproject'}"
+                                  method="post" onsubmit="return confirmDeletion()">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-    <div class="action-buttons" th:if="${isManager}">
-        <a th:href="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}">
-            <button type="button">Create New Subproject</button>
+        <div class="buttons-container-under-table" th:if="${isManager}">
+            <a th:href="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}">
+                <button type="button">Create New Subproject</button>
+            </a>
+
+            <a th:href="@{/user/{employeeID}/{projectID}/edit (employeeID=${employeeID}, projectID=${project.getID()})}">
+                <button type="button">Update Project</button>
+            </a>
+
+            <form th:action="@{/user/{employeeID}/{projectID}/delete (employeeID=${employeeID}, projectID=${project.getID()})}"
+                  method="post" onsubmit="confirmDeletion()">
+                <button type="submit">Delete Project</button>
+            </form>
+        </div>
+
+        <a th:href="@{/user/{employeeID} (employeeID=${employeeID})}">
+            <button class="go-back-button" type="button">Go Back</button>
         </a>
-
-        <a th:href="@{/user/{employeeID}/{projectID}/edit (employeeID=${employeeID}, projectID=${project.getID()})}">
-            <button type="button">Update Project</button>
-        </a>
-
-        <form th:action="@{/user/{employeeID}/{projectID}/delete (employeeID=${employeeID}, projectID=${project.getID()})}"
-              method="post" onsubmit="confirmDeletion()">
-            <button type="submit">Delete Project</button>
-        </form>
-    </div>
-
-    <a th:href="@{/user/{employeeID} (employeeID=${employeeID})}">
-        <button style="margin-right:5%" type="button">Go Back</button>
-    </a>
     </div>
 </main>
 
 <sidebar>
-  <h3>Tasks which will cause delayed delivery!</h3>
+    <h3>Tasks which will cause delayed delivery!</h3>
     <p>Change planned startdate or review estimated time</p>
-  <div th:if="${isManager}">
-    <table>
-      <thead>
-      <tr>
-        <th>Task Title</th>
-        <th>Calculated End Date</th>
-      </tr>
-      </thead>
-      <tbody th:each="taskToLateEndDate : ${TasksWithEndDateToLate}">
-      <tr>
-        <td th:text="${taskToLateEndDate.getTaskTitle()}"></td>
-        <td th:text="${taskToLateEndDate.getCalculatedEndDate()}"></td>
-      </tr>
-    </table>
-  </div>
+    <div th:if="${isManager}">
+        <table>
+            <thead>
+            <tr>
+                <th>Task Title</th>
+                <th>Calculated End Date</th>
+            </tr>
+            </thead>
+            <tbody th:each="taskToLateEndDate : ${TasksWithEndDateToLate}">
+            <tr>
+                <td th:text="${taskToLateEndDate.getTaskTitle()}"></td>
+                <td th:text="${taskToLateEndDate.getCalculatedEndDate()}"></td>
+            </tr>
+        </table>
+    </div>
 
 
 </sidebar>

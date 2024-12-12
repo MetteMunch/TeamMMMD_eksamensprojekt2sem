@@ -47,10 +47,10 @@
             <!-- Submit-knap -->
             <button type="submit">Create SubProject</button>
 
-
-        <!-- Link tilbage til projektoversigten - VIRKER IKKE DA DEN KRÆVER MAN UDFULDER SUBPROJECT TITEL -->
-        <button th:href="@{'/project/' + ${projectID} + '/subProject'}">Cancel</button>
         </form>
+
+        <button class="go-back-input-button" th:href="@{'/project/' + ${projectID} + '/subProject'}">Go Back</button>
+
     </div>
 </main>
 
