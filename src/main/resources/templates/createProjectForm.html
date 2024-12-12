@@ -55,27 +55,30 @@
                 <option th:each="pm : ${PMEmployees}" th:value="${pm.getEmployeeID()}"
                         th:text="${pm.getFullName()}"></option>
 
-        <!--Business consultants -->
-        <option value="" disabled>---Business Consultants---</option>
-        <option th:each="bc : ${BCEmployees}" th:value="${bc.getEmployeeID()}" th:text="${bc.getFullName()}"></option>
-    </select>
-    <br>
-    <label class="status" for="status">Status: </label>
-    <select id="status" name="status" required>
-        <option value="" disabled selected>Select Project Status</option>
-        <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}" th:text="${status.getStatus()}"></option>
-    </select>
-    <br>
-    <button type="submit">Create Project</button>
+                <!--Business consultants -->
+                <option value="" disabled>---Business Consultants---</option>
+                <option th:each="bc : ${BCEmployees}" th:value="${bc.getEmployeeID()}"
+                        th:text="${bc.getFullName()}"></option>
+            </select>
+            <br>
+            <label class="status" for="status">Status: </label>
+            <select id="status" name="status" required>
+                <option value="" disabled selected>Select Project Status</option>
+                <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}"
+                        th:text="${status.getStatus()}"></option>
+            </select>
+            <br>
+            <button type="submit">Create Project</button>
 
-</form>
+        </form>
         <a th:href="@{/user/{employeeID}(employeeID=${employeeID})}">
             <button class="vedikke" type="createResetPasswordButton">Go Back</button>
         </a>
-
-        <footer>
-            <div th:insert="~{fragments.html :: footer}"></div>
-        </footer>
+    </div>
+</main>
+<footer>
+    <div th:insert="~{fragments.html :: footer}"></div>
+</footer>
 
 </body>
 </html>
