@@ -44,7 +44,7 @@ public class Project {
         this.status = status;
     }
     public Project() {
-
+        //Tom konstruktør til test
     }
 
     public int getID() {

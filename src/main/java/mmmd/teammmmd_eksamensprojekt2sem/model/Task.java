@@ -69,6 +69,10 @@ public class Task {
         this.status = status;
     }
 
+    public Task() {
+        //Tom konstruktør til test
+    }
+
     public int getTaskID() {
         return taskID;
     }
