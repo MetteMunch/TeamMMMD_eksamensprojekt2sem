@@ -121,12 +121,10 @@ public class ProjectController {
 
     @GetMapping("/{projectID}")
     public String showProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) throws SQLException {
-        Project project = projectService.fetchSpecificProject(projectID);//TODO: skal sammelægge metoderne, så alle empID
-        Project project1 = projectService.getDataSpecificProject(employeeID, projectID);
+        Project project = projectService.fetchSpecificProject(projectID);
         List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
         List<Task> listOfTasksWithEndDateLaterThanProjectDeadline = projectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, projectID);
         model.addAttribute("project",project);
-        model.addAttribute("project1",project1);
         model.addAttribute("listOfSubProjects",listOfSpecificSubProjects);
         model.addAttribute("employeeID",employeeID);
         model.addAttribute("isManager", userService.getIsEmployeeManagerInfoFromDB(employeeID));

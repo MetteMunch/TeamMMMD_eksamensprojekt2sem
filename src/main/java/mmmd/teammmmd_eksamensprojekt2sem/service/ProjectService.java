@@ -236,9 +236,9 @@ public class ProjectService {
         return listOfTasksSpecificPMWithNoAssignedEmployee;
     }
 
-    public Project getDataSpecificProject(int employeeID, int projectID) {
+    public Project getSpecificProject(int employeeID, int projectID) {
         Project projectToBeReturned = null;
-        List<Project> listOfProjects = projectRepository.showAllProjectsSpecificProjectManager(employeeID);
+        List<Project> listOfProjects = projectRepository.showAllProjectsSpecificEmployee(employeeID);//denne er en liste med ass emp
         for(Project project: listOfProjects) {
             if(project.getID() == projectID) {
                 projectToBeReturned = project;
