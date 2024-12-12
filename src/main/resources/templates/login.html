@@ -3,26 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="/input.css">
 </head>
 <body>
+<nav>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
+</nav>
 
-<h3>Login</h3>
-<div th:if="${errorMessage}" class="error"> <!-- Fejlbesked, hvis login failer -->
-    <p th:text="${errorMessage}" style="color: red;"></p>
-</div>
+<main>
+    <div class="grid-container">
+        <div th:if="${errorMessage}" class="error"> <!-- Fejlbesked, hvis login failer -->
+            <p th:text="${errorMessage}" style="color: red;"></p>
+        </div>
 
-<form action="/user/loginvalidation" method="post">
-    <label class="usernamePasswordText" for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-    <br>
-    <br>
-    <label class="usernamePasswordText" for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <button class="loginButton" type="submit">Login</button>
-</form>
+        <form class="input-form" action="/user/loginvalidation" method="post">
+            <h1>Login</h1>
+            <label class="username" for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <br>
+            <label class="password" for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <button class="loginButton" type="submit">Login</button>
+        </form>
+    </div>
 
+</main>
 
+<footer>
+    <div th:insert="~{fragments.html :: footer}"></div>
+</footer>
 
 </body>
 </html>
