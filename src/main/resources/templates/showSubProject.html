@@ -25,6 +25,9 @@ når der skal kaldes attributter-->
     <h3>Status</h3>
     <p th:text="${subProject.getStatusString()}"></p>
 
+    <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/edit-subproject'}">
+        <button type="button">Edit Subproject</button>
+    </a>
 
 </header>
 

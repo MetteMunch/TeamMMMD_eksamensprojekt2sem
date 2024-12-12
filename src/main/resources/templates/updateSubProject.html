@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update SubProject</title>
+    <link rel="stylesheet" href="/input.css">
+
+</head>
+<body>
+
+<nav>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
+</nav>
+
+<main>
+    <div class="grid-container">
+
+        <form class="input-form" th:action="@{'/user/'+${employeeID}+'/'+${projectID} + '/save-subproject'}"
+              method="post">
+            <!-- Skjult felt til Project ID -->
+            <input type="hidden" th:value="${projectID}" name="projectID">
+
+            <h1>Update SubProject</h1>
+            <!-- Titel -->
+            <label for="subProjectTitle">SubProject Title</label>
+            <input type="text" id="subProjectTitle" name="subProjectTitle" required>
+            <br>
+
+            <!-- Beskrivelse -->
+            <label for="subProjectDescription">Description</label>
+            <textarea id="subProjectDescription" name="subProjectDescription" required></textarea>
+            <br>
+
+            <!-- Status ID -->
+            <label for="statusID">Status</label>
+            <select id="statusID" name="statusID" required>
+                <option value="" disabled selected>Select status</option>
+                <!-- Eksempel på muligheder -->
+                <option value="1">Pending</option>
+                <option value="2">In Progress</option>
+                <option value="3">Awaiting approval</option>
+                <option value="4">Done</option>
+            </select>
+            <br>
+
+            <!-- Submit-knap -->
+            <button type="submit">Update Subproject</button>
+
+        </form>
+
+        <!--KNAPPEN VIRKKER :( -->
+        <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID=${subProjectID})}">
+            <button class="go-back-input-button" type="button">Go Back</button>
+        </a>
+    </div>
+</main>
+
+<footer>
+    <div th:insert="~{fragments.html :: footer}"></div>
+</footer>
+
+</body>
+</html>

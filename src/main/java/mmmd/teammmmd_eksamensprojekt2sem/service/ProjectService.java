@@ -105,8 +105,8 @@ public class ProjectService {
         return projectRepository.showListOfSpecificSubProjects(projectID);
     }
 
-    public void updateSubProject() {
-        //TODO:
+    public void updateSubProject(SubProject subProject) {
+        projectRepository.updateSubProject(subProject);
     }
 
     public void deleteSubProject(int subProjectID) {

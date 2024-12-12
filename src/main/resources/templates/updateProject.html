@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Project Update</title>
+    <link rel="stylesheet" href="/input.css">
 </head>
 <body>
-<form action="/user/{employeeID}/update-project" method="post">
+
+<nav>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
+</nav>
+
+<main>
+
+    <div class="grid-container">
+
+<form class="input-form" action="/user/{employeeID}/update-project" method="post">
 
     <input type="hidden" id="projectID" name="projectID" th:value="${project.getID()}">
     <input type="hidden" id="employeeID" name="employeeID" th:value="${employeeID}">
@@ -75,8 +85,14 @@
     <button type="submit">Update Project</button>
 </form>
 <a th:href="@{/user/{employeeID}/{projectID}(employeeID=${employeeID}, projectID=${project.getID()})}">
-    <button class="vedikke" type="createResetPasswordButton">Go Back</button>
+    <button class="go-back-input-button" type="button">Go Back</button>
 </a>
+    </div>
+</main>
+
+<footer>
+    <div th:insert="~{fragments.html :: footer}"></div>
+</footer>
 
 </body>
 </html>
