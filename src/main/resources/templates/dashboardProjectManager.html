@@ -23,7 +23,7 @@ når der skal kaldes attributter-->
 
 <main1>
 
-<h3>Overview - Tasks</h3>
+    <h3>Overview - Tasks</h3>
 
 <table>
   <thead>
@@ -43,10 +43,10 @@ når der skal kaldes attributter-->
     <td th:text="${task.getStatusString()}"></td>
       <td>
           <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID} (employeeID=${employeeID}, projectID=${task.getProjectID()}, subProjectID=${task.getSubProjectID()}, taskID=${task.getTaskID()})}">
-              <button class="vedjegikke" type="button">Show Task</button>
+              <button type="button">Show Task</button>
           </a>
           <form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID}/delete-task
-          (employeeID = ${employeeID},projectID = ${task.getProjectID}, subProjectID =${task.getSubProjectID})}" method="post"
+          (employeeID = ${employeeID}, projectID = ${task.getProjectID}, subProjectID =${task.getSubProjectID}, taskID =${task.getTaskID()})}" method="post"
           onsubmit="return confirmDeletion()">
             <button type="submit">Delete</button>
           </form>
@@ -57,16 +57,13 @@ når der skal kaldes attributter-->
           </script>
         </td>
 
-  </tr>
-  </tbody>
-</table>
+        </tr>
+        </tbody>
+    </table>
 </main1>
 
 <main2>
 <h3>Overview - Projects </h3>
-    <form th:action="@{/user/{employeeID}/show-create-project (employeeID=${employeeID})}" method=get>
-        <button class="createResetPasswordButton" type="submit">Create new project</button>
-    </form>
 <table>
     <thead>
     <tr>
@@ -89,15 +86,13 @@ når der skal kaldes attributter-->
         <td th:text="${project.getOrderDate()}"></td>
         <td th:text="${project.getDeliveryDate()}"></td>
         <td th:text="${project.getStatusString()}"></td>
-        <!--<td>
-          <form th:action="@{/project/{name}/delete(name=${project.getProjectTitle})}" method="post">
-            <button type="submit">Delete</button>
 
-          </form>
-        </td>-->
     </tr>
     </tbody>
 </table>
+    <form th:action="@{/user/{employeeID}/show-create-project (employeeID=${employeeID})}" method=get>
+        <button class="create-back-button" type="submit">Create new project</button>
+    </form>
 </main2>
 
 <sidebar>
@@ -147,7 +142,7 @@ når der skal kaldes attributter-->
 </sidebar>
 
 <footer>
-<div th:insert="~{fragments.html :: footer}"></div>
+    <div th:insert="~{fragments.html :: footer}"></div>
 </footer>
 
 </body>

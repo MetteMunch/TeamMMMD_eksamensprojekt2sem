@@ -456,6 +456,42 @@ public class ProjectRepository {
 
     //###### Read Task #############
 
+    public List<Task> getAllTasks() {
+        String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
+                "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status FROM Task";
+        List<Task> listOfTasks = new ArrayList<>();
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    // getObject metoden bruges så vi kan håndtere null værdier
+                    Integer assignedEmployee = rs.getObject("assignedEmployee", Integer.class);
+                    Double estimatedTime = rs.getObject("estimatedTime", Double.class);
+                    Integer dependingOnTask = rs.getObject("dependingOnTask", Integer.class);
+                    Integer requiredRole = rs.getObject("requiredRole", Integer.class);
+
+                    Task task = new Task(
+                            rs.getInt("taskID"),
+                            rs.getString("taskTitle"),
+                            rs.getString("taskDescription"),
+                            assignedEmployee,
+                            estimatedTime,
+                            rs.getDate("plannedStartDate"),
+                            dependingOnTask,
+                            requiredRole,
+                            rs.getInt("subProjectID"),
+                            rs.getInt("status")
+                    );
+                    listOfTasks.add(task);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listOfTasks;
+    }
+
     public List<Task> getAllTasksInSpecificSubProject(int subProjectID) {
         List<Task> tasks = new ArrayList<>();
         String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
@@ -489,7 +525,6 @@ public class ProjectRepository {
                     );
                     task.setActualTime(actualTime);
                     tasks.add(task);
-
                 }
             }
 

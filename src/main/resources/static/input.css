@@ -1,0 +1,173 @@
+:root {
+    --primary-bg-color: white;
+    --secondary-bg-color: #dedede;
+    --sidebar-color: darkgray;
+    --extra-bg-color: #e7eef1;
+    --alpha-bg-color: #59869d;
+
+    --link-color: black;
+
+    --primary-text-color: black;
+    --secondary-text-color: white;
+    --alpha-text-color: #59869d;
+
+    --alpha-overskift-type: Montserrat, sans-serif;
+}
+
+/* Grundlæggende layout og styling */
+
+/* Mobile first layout */
+body {
+    min-height: 100vh;
+    display: grid;
+    grid-gap: 0.5em;
+    grid-template-areas:
+        'nav'
+        'main'
+        'footer';
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Medieforespørgsel for større skærme (min-width: 60em) */
+@media (min-width: 60em) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        width: 100%;
+        margin: 0 auto;
+        grid-template-areas:
+           'nav'
+           'main'
+           'footer';
+    }
+}
+
+nav, main, footer {
+    padding: 5px;
+}
+
+nav {
+    grid-area: nav;
+    gap: 20px;
+    align-items: center; /* Juster indholdet vertikalt */
+    display: flex; /* Aktiver flexbox */
+    background-color: var(--alpha-bg-color);
+    height: 4em;
+}
+
+main {
+    grid-area: main;
+    background-color: var(--secondary-bg-color);
+}
+
+footer {
+    grid-area: footer;
+    background-color: var(--alpha-bg-color);
+    text-align: center;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    /*line-height: 1.6;*/
+}
+
+footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+footer h4 {
+    color: var(--secondary-text-color);
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.icon img {
+    width: 60px; /* Juster bredden */
+    max-height: 60px; /* Juster højden */
+    object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
+    background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
+    padding: 5px; /* Giver lidt luft omkring billederne */
+}
+
+.logo img {
+    width: 150px; /* Juster bredden */
+    max-height: 150px; /* Juster højden */
+    object-fit: contain; /* Sørg for, at billedet bevarer proportionerne */
+    background-color: var(--alpha-bg-color); /* Match nav-baggrundsfarve */
+    padding: 5px; /* Giver lidt luft omkring billederne */
+    display: block;
+    vertical-align: middle; /* Eller top eller bottom, afhængigt af behov */
+}
+
+/* INPUT MAIN */
+
+.grid-container {
+    display: grid;
+    place-items: center; /* Centrerer indholdet i grid */
+    height: 100%;
+    width: 100%;
+}
+
+.input-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-form h1 {
+    margin-bottom: 10px;
+    font-size: 40px;
+}
+
+.input-form label {
+    font-weight: bold;
+}
+
+.input-form input,
+.input-form select,
+.input-form textarea,
+.input-form button {
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.input-form button:hover {
+    background-color: #0056b3;
+}
+
+
+input[type="text"], input[type="password"] {
+    width: 200px;
+    height: 30px;
+    font-size: 20px;
+    border: 1px solid black;
+}

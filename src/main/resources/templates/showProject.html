@@ -36,8 +36,8 @@ når der skal kaldes attributter-->
 </header>
 
 <main>
-
-    <h3>Overview - Assigned subprojects</h3>
+    <div class="table-container">
+        <h3>Overview - Assigned subprojects</h3>
 
     <table>
         <thead>
@@ -55,12 +55,12 @@ når der skal kaldes attributter-->
             <td>Metode mangler til at tage deadline fra task</td>
             <td>
                 <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}}">
-                    <button class="vedikke" type="button">Show subproject</button>
+                    <button type="button">Show subproject</button>
                 </a>
                 <div th:if="${isManager}">
                     <form th:action="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}+'/delete-subproject'}"
                           method="post" onsubmit="return confirmDeletion()">
-                        <button class="vedikke" type="submit">Delete</button>
+                        <button type="submit">Delete</button>
                     </form>
                 </div>
             </td>
@@ -70,22 +70,23 @@ når der skal kaldes attributter-->
 
     <div class="action-buttons" th:if="${isManager}">
         <a th:href="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}">
-            <button class="createResetPasswordButton" type="button">Create New Subproject</button>
+            <button type="button">Create New Subproject</button>
         </a>
 
         <a th:href="@{/user/{employeeID}/{projectID}/edit (employeeID=${employeeID}, projectID=${project.getID()})}">
-            <button class="createResetPasswordButton" type="button">Update Project</button>
+            <button type="button">Update Project</button>
         </a>
 
         <form th:action="@{/user/{employeeID}/{projectID}/delete (employeeID=${employeeID}, projectID=${project.getID()})}"
               method="post" onsubmit="confirmDeletion()">
-            <button class="createResetPasswordButton" type="submit">Delete Project</button>
+            <button type="submit">Delete Project</button>
         </form>
     </div>
 
     <a th:href="@{/user/{employeeID} (employeeID=${employeeID})}">
-        <button class="createResetPasswordButton" style="margin-right:5%" type="button">Go Back</button>
+        <button style="margin-right:5%" type="button">Go Back</button>
     </a>
+    </div>
 </main>
 
 <sidebar>
