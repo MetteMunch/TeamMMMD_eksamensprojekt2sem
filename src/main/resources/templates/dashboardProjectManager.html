@@ -6,7 +6,7 @@ når der skal kaldes attributter-->
 
 <head>
     <meta charset="UTF-8">
-    <title>Employee Dashboard</title>
+    <title>Project Manager Dashboard</title>
     <link rel="stylesheet" href="/dashboard.css">
 </head>
 <body>
@@ -25,38 +25,37 @@ når der skal kaldes attributter-->
 
     <h3>Overview - Tasks</h3>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Est.time</th>
-            <th>Act.time</th>
-            <th>Status</th>
-            <th>Functions</th>
-        </tr>
-        </thead>
-        <tbody th:each="task : ${PMtasks}">
-        <tr>
-            <td th:text="${task.getTaskTitle}"></td>
-            <td th:text="${task.getEstimatedTime()}"></td>
-            <td th:text="${task.getActualTime()}"></td>
-            <td th:text="${task.getStatusString()}"></td>
-            <td>
-                <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID} (employeeID=${employeeID}, projectID=${task.getProjectID()}, subProjectID=${task.getSubProjectID()}, taskID=${task.getTaskID()})}">
-                    <button type="button">Show Task</button>
-                </a>
-                <form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID}/delete-task
-          (employeeID = ${employeeID},projectID = ${task.getProjectID}, subProjectID =${task.getSubProjectID})}"
-                      method="post"
-                      onsubmit="return confirmDeletion()">
-                    <button type="submit">Delete</button>
-                </form>
-                <script>
-                    function confirmDeletion() {
-                        return confirm("Are you sure you want to delete this task? This action cannot be reversed.")
-                    }
-                </script>
-            </td>
+<table>
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Est.time</th>
+    <th>Act.time</th>
+    <th>Status</th>
+    <th>Functions</th>
+  </tr>
+  </thead>
+  <tbody th:each="task : ${PMtasks}">
+  <tr>
+    <td th:text="${task.getTaskTitle}"></td>
+    <td th:text="${task.getEstimatedTime()}"></td>
+    <td th:text="${task.getActualTime()}"></td>
+    <td th:text="${task.getStatusString()}"></td>
+      <td>
+          <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID} (employeeID=${employeeID}, projectID=${task.getProjectID()}, subProjectID=${task.getSubProjectID()}, taskID=${task.getTaskID()})}">
+              <button type="button">Show Task</button>
+          </a>
+          <form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID}/delete-task
+          (employeeID = ${employeeID}, projectID = ${task.getProjectID}, subProjectID =${task.getSubProjectID}, taskID =${task.getTaskID()})}" method="post"
+          onsubmit="return confirmDeletion()">
+            <button type="submit">Delete</button>
+          </form>
+          <script>
+              function confirmDeletion() {
+                  return confirm("Are you sure you want to delete this task? This action cannot be reversed.")
+              }
+          </script>
+        </td>
 
         </tr>
         </tbody>
@@ -64,40 +63,33 @@ når der skal kaldes attributter-->
 </main1>
 
 <main2>
-    <h3>Overview - Projects </h3>
-    <table>
-        <thead>
-        <tr>
-            <th>Project Title</th>
-            <th>Project Description</th>
-            <th>Project Customer</th>
-            <th>Project Order Date</th>
-            <th>Project Delivery Date</th>
-            <th>Project Company Rep</th>
-            <th>Project Status</th>
-        </tr>
-        </thead>
-        <tbody th:each="project : ${PMprojects}">
-        <tr>
-            <td>
-                <a th:href="@{{employeeID}/{projectID}(employeeID = ${employeeID}, projectID=${project.getID()})}"
-                   th:text="${project.getProjectTitle()}"></a>
-            </td>
-            <td th:text="${project.getProjectDescription()}"></td>
-            <td th:text="${project.getCustomerNameString()}"></td>
-            <td th:text="${project.getOrderDate()}"></td>
-            <td th:text="${project.getDeliveryDate()}"></td>
-            <td th:text="${project.getCompanyRepString()}"></td>
-            <td th:text="${project.getStatusString()}"></td>
-            <!--<td>
-              <form th:action="@{/project/{name}/delete(name=${project.getProjectTitle})}" method="post">
-                <button type="submit">Delete</button>
+<h3>Overview - Projects </h3>
+<table>
+    <thead>
+    <tr>
+        <th>Project Title</th>
+        <th>Project Description</th>
+        <th>Project Customer</th>
+        <th>Project Order Date</th>
+        <th>Project Delivery Date</th>
+        <th>Project Status</th>
+    </tr>
+    </thead>
+    <tbody th:each="project : ${PMprojects}">
+    <tr>
+        <td>
+            <a th:href="@{{employeeID}/{projectID}(employeeID = ${employeeID}, projectID=${project.getID()})}"
+               th:text="${project.getProjectTitle()}"></a>
+        </td>
+        <td th:text="${project.getProjectDescription()}"></td>
+        <td th:text="${project.getCustomerNameString()}"></td>
+        <td th:text="${project.getOrderDate()}"></td>
+        <td th:text="${project.getDeliveryDate()}"></td>
+        <td th:text="${project.getStatusString()}"></td>
 
-              </form>
-            </td>-->
-        </tr>
-        </tbody>
-    </table>
+    </tr>
+    </tbody>
+</table>
     <form th:action="@{/user/{employeeID}/show-create-project (employeeID=${employeeID})}" method=get>
         <button class="create-back-button" type="submit">Create new project</button>
     </form>
