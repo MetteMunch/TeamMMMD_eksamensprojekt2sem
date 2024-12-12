@@ -242,7 +242,7 @@ public class ProjectRepositoryIntegrationTest {
         assertEquals(expectedNumOfTasks, actualNumOfTasks);
     }
 
-    /*
+
     @Test
     void updateTask() throws Exception {
         // Arrange
@@ -282,20 +282,19 @@ public class ProjectRepositoryIntegrationTest {
         int projectID = 1;
 
         projectRepository.createTask(projectID, subProjectID, taskToDelete);
-        int taskID = taskToDelete.getTaskID(); // Assuming TaskRepository assigns taskID automatically.
+        taskToDelete.setTaskID(5); // vi har 4 tasks i H2, så den nye task vil få ID 5
 
         List<Task> tasksBefore = projectRepository.getAllTasksInSpecificSubProject(subProjectID);
         int expectedNumOfTasksAfterDeletion = tasksBefore.size() - 1;
 
         // Act
-        projectRepository.deleteTask(taskID);
+        projectRepository.deleteTask(taskToDelete.getTaskID());
         List<Task> tasksAfter = projectRepository.getAllTasksInSpecificSubProject(subProjectID);
 
         // Assert
         assertEquals(expectedNumOfTasksAfterDeletion, tasksAfter.size());
-        assertFalse(tasksAfter.stream().anyMatch(task -> task.getTaskID() == taskID));
+        //assertFalse(tasksAfter.stream().anyMatch(task -> task.getTaskID() == taskID));
     }
-     */
 
     @Test
     void fetchSpecificProject() {

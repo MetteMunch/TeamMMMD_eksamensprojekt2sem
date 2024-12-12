@@ -509,6 +509,8 @@ public class ProjectRepository {
                             rs.getInt("subProjectID"),
                             rs.getInt("status")
                     );
+                    double actualTime = rs.getDouble("actualTime");
+                    task.setActualTime(actualTime);
                     tasks.add(task);
                 }
             }
