@@ -796,6 +796,62 @@ public class ProjectRepository {
         return projectIDFromDB;
     }
 
+    public Task fetchSpecificTask(String taskTitle) {
+        String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, plannedStartDate, " +
+                "dependingOnTask, requiredRole, subProjectID, status FROM Task WHERE taskTitle=?";
+        Task task = null;
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, taskTitle);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    task = new Task(
+                            rs.getInt("taskID"),
+                            rs.getString("taskTitle"),
+                            rs.getString("taskDescription"),
+                            rs.getObject("assignedEmployee", Integer.class),
+                            rs.getObject("estimatedTime", Double.class),
+                            rs.getDate("plannedStartDate"),
+                            rs.getObject("dependingOnTask", Integer.class),
+                            rs.getObject("requiredRole", Integer.class),
+                            rs.getInt("subProjectID"),
+                            rs.getInt("status")
+                    );
+                    return task;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (task == null) {
+            throw new IllegalArgumentException("No task found with title: " + taskTitle);
+        }
+        return task;
+    }
+
+    public int findTaskIDFromDB(Task task) {
+        String sql = "SELECT taskID FROM Task WHERE taskTitle=? AND subProjectID=?";
+        int taskIDFromDB = -1;
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
+            ps.setString(1, task.getTaskTitle());
+            ps.setInt(2, task.getSubProjectID());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    taskIDFromDB = rs.getInt(1);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (taskIDFromDB == -1) {
+            throw new IllegalArgumentException("No task found with title: " + task.getTaskTitle() +
+                    " and subproject ID: " + task.getSubProjectID() + ". PROJECT REPOSITORY ERROR.");
+        }
+        return taskIDFromDB;
+    }
+
     public Task getTaskByID(int taskID) throws SQLException {
         String sql = "SELECT taskTitle, taskDescription, assignedEmployee, estimatedTime, actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status FROM Task WHERE taskID = ?";
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
