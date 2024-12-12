@@ -7,24 +7,28 @@
 </head>
 <body>
 
-<!-- Include Navigation Bar -->
 <nav>
     <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
 </nav>
 
 <header>
-    <h1>Submit Hours for Task</h1>
-    <p>Enter the number of hours you've worked on the task today.</p>
-</header>
+    <h1 th:text="'Submit Hours for: ' + ${task.taskTitle}">Submit Hours</h1>
+    <p>Enter the amount of hours you've worked on this task today.</p>
 
-<main>
     <div class="task-overview">
-        <form th:action="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/save-submit-hours'}" method="POST">
-            <label for="hours">Hours Submitted:</label>
+        <form th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID}/save-submit-hours (employeeID=${employeeID}, projectID=${projectID}, subProjectID = ${subProjectID}, taskID = ${taskID})}" method="POST">
+            <label for="hours">Hours:</label>
             <input type="number" id="hours" name="hours" step="0.25" min="0" required>
             <button type="submit">Submit Hours</button>
         </form>
+        <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID}/{taskID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID = ${subProjectID}, taskID = ${taskID})}">
+            <button style="margin-right:5%" type="button">Go Back</button>
+        </a>
     </div>
+</header>
+
+<main>
+
 </main>
 
 <footer>

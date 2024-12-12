@@ -377,12 +377,13 @@ public class ProjectController {
                               @PathVariable int subProjectID,
                               @PathVariable int taskID,
                               @PathVariable int employeeID,
-                              Model model) {
+                              Model model) throws SQLException {
 
         model.addAttribute("employeeID", employeeID);
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
         model.addAttribute("taskID", taskID);
+        model.addAttribute("task", projectService.getTaskByID(taskID));
 
         return "submitHours";
     }
