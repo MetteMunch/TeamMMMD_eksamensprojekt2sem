@@ -502,9 +502,9 @@ public class ProjectRepository {
 
     public List<Task> getAllTasksInSpecificSubProject(int subProjectID) {
         List<Task> tasks = new ArrayList<>();
-        String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
-                "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status " +
-                "FROM Task WHERE subProjectID = ?";
+        String sql = "SELECT task.taskID, task.taskTitle, task.taskDescription, task.assignedEmployee, employee.fullname, task.estimatedTime, " +
+                "task.actualTime, task.plannedStartDate, task.dependingOnTask, task.requiredRole, task.subProjectID, task.status FROM Task " +
+                "LEFT JOIN employee ON employee.employeeID = task.assignedEmployee WHERE subProjectID = ?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setInt(1, subProjectID);
@@ -518,6 +518,7 @@ public class ProjectRepository {
                     Integer dependingOnTask = rs.getObject("dependingOnTask", Integer.class);
                     Integer requiredRole = rs.getObject("requiredRole", Integer.class);
                     double actualTime = rs.getDouble("actualTime");
+                    String assignedEmpString = rs.getString("fullname");
 
                     Task task = new Task(
                             rs.getInt("taskID"),
@@ -532,6 +533,7 @@ public class ProjectRepository {
                             rs.getInt("status")
                     );
                     task.setActualTime(actualTime);
+                    task.setAssignedEmployeeString(assignedEmpString);
                     tasks.add(task);
                 }
             }
