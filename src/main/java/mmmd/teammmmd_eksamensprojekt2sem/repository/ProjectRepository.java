@@ -473,6 +473,7 @@ public class ProjectRepository {
                     Double estimatedTime = rs.getObject("estimatedTime", Double.class);
                     Integer dependingOnTask = rs.getObject("dependingOnTask", Integer.class);
                     Integer requiredRole = rs.getObject("requiredRole", Integer.class);
+                    double actualTime = rs.getDouble("actualTime");
 
                     Task task = new Task(
                             rs.getInt("taskID"),
@@ -486,7 +487,9 @@ public class ProjectRepository {
                             rs.getInt("subProjectID"),
                             rs.getInt("status")
                     );
+                    task.setActualTime(actualTime);
                     tasks.add(task);
+
                 }
             }
 
