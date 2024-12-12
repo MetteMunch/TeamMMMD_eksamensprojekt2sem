@@ -7,7 +7,6 @@
 </head>
 <body>
 
-<!-- Include Navigation Bar -->
 <nav>
     <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
 </nav>
@@ -23,9 +22,8 @@
 </header>
 
 <main>
-    <div class="task-overview">
+    <div class="table-container">
         <!-- Task Details Section -->
-        <div class="task-details">
 
             <h3>Status</h3>
             <select id="status" name="status" disabled>
@@ -98,7 +96,6 @@
                 <button class="createResetPasswordButton" style="margin-right:5%" type="button">Go Back</button>
             </a>
         </div>
-    </div>
 </main>
 
 <!-- Sidebar -->

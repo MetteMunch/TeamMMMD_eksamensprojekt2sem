@@ -37,7 +37,7 @@ body {
     body {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr auto;
-        width: 80%;
+        width: 100%;
         margin: 0 auto;
         grid-template-areas:
            'nav'
@@ -67,6 +67,32 @@ main {
 footer {
     grid-area: footer;
     background-color: var(--alpha-bg-color);
+    text-align: center;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    /*line-height: 1.6;*/
+}
+
+footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+footer h4 {
+    color: var(--secondary-text-color);
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0px;
 }
 
 .icon img {

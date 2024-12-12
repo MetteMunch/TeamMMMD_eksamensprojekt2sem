@@ -29,7 +29,7 @@ når der skal kaldes attributter-->
 </header>
 
 <main>
-
+<div class="table-container">
   <h3>Overview - Assigned tasks</h3>
 
   <table>
@@ -66,11 +66,12 @@ når der skal kaldes attributter-->
     </tbody>
   </table>
   <form th:action="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProjectID}+'/create-task'}" method=get>
-    <button class="createResetPasswordButton" type="submit">Create new task</button>
+    <button class="create-back-button" type="submit">Create new task</button>
   </form>
   <a th:href="@{/user/{employeeID}/{projectID} (employeeID=${employeeID}, projectID=${projectID})}">
-    <button style="margin-right:5%" type="button">Go Back</button>
+    <button class="create-back-button" type="button">Go Back</button>
   </a>
+</div>
 </main>
 
 <sidebar>
