@@ -1,5 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
+import jakarta.servlet.http.HttpSession;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
@@ -120,7 +121,14 @@ public class ProjectController {
      */
 
     @GetMapping("/{projectID}")
-    public String showProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) throws SQLException {
+    public String showProject(@PathVariable int projectID, @PathVariable int employeeID, Model model, HttpSession session) throws SQLException {
+
+        String redirect = userService.redirectUserLoginAttributes(session, employeeID);
+        if (redirect != null) {
+            return redirect; // Hvis der returneres en redirect-string, sendes brugeren enten til login eller eget dashboard
+        }
+
+        //Hvis validering lykkes, så fortsættes flowet
         Project project = projectService.fetchSpecificProject(projectID);
         List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
         List<Task> listOfTasksWithEndDateLaterThanProjectDeadline = projectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, projectID);
@@ -218,7 +226,12 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}/{subProjectID}")
-    public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
+    public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model, HttpSession session) throws SQLException {
+
+        String redirect = userService.redirectUserLoginAttributes(session, employeeID);
+        if (redirect != null) {
+            return redirect; // Hvis der returneres en redirect-string, sendes brugeren enten til login eller eget dashboard
+        }
 
         if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
             model.addAttribute("subProject", projectService.showSubProject(subProjectID));
@@ -294,9 +307,14 @@ public class ProjectController {
     ###########---READ---###########
      */
     @GetMapping("/{projectID}/{subProjectID}/{taskID}")
-    public String showTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model) throws SQLException {
-        Task task = projectService.getTaskByID(taskID);
+    public String showTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model, HttpSession session) throws SQLException {
 
+        String redirect = userService.redirectUserLoginAttributes(session, employeeID);
+        if (redirect != null) {
+            return redirect; // Hvis der returneres en redirect-string, sendes brugeren enten til login eller eget dashboard
+        }
+
+        Task task = projectService.getTaskByID(taskID);
         model.addAttribute("task", task);
         model.addAttribute("employeeID", employeeID);
         model.addAttribute("projectID", projectID);

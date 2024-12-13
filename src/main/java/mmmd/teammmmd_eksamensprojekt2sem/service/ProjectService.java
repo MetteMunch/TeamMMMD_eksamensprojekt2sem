@@ -180,6 +180,7 @@ public class ProjectService {
     #####################################
     */
 
+
     public List<Task> tasksWithCalculatedEndDateLaterThanProjectDeadline(int employeeID, int projectID) {
        List<Task> tasksWithCalculatedEndDateLaterThanProjectDeadline = new ArrayList<>();
 
@@ -207,7 +208,6 @@ public class ProjectService {
     }
 
 
-
     public List<Task> listOfTasksSpecificProject(int employeeID, int projectID) {
 
         List<Task> listOfTasksSpecificPM = projectRepository.showAllTasksSpecificProjectManager(employeeID);
@@ -219,6 +219,32 @@ public class ProjectService {
             }
         }
         return listOfTasksSpecificProject;
+    }
+
+
+    public List<Task> listOfTasksSpecificPMWithNoAssignedEmployee(int employeeID) {
+
+        List<Task> listOfTasksSpecificPM = projectRepository.showAllTasksSpecificProjectManager(employeeID);
+        List<Task> listOfTasksSpecificPMWithNoAssignedEmployee = new ArrayList<>();
+
+        for(Task task: listOfTasksSpecificPM) {
+            if(task.getAssignedEmployee() == 0) {
+                listOfTasksSpecificPMWithNoAssignedEmployee.add(task);
+
+            }
+        }
+        return listOfTasksSpecificPMWithNoAssignedEmployee;
+    }
+
+    public Project getSpecificProject(int employeeID, int projectID) {
+        Project projectToBeReturned = null;
+        List<Project> listOfProjects = projectRepository.showAllProjectsSpecificEmployee(employeeID);//denne er en liste med ass emp
+        for(Project project: listOfProjects) {
+            if(project.getID() == projectID) {
+                projectToBeReturned = project;
+            }
+        }
+        return projectToBeReturned;
     }
 
 

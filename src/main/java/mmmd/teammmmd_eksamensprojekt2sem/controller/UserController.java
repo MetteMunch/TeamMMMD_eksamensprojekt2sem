@@ -88,6 +88,7 @@ public class UserController {
         model.addAttribute("tasks", projectService.showAllTasksSpecificEmployee(employeeID));
         model.addAttribute("PMprojects", projectService.showAllProjectSpecificProjectManager(employeeID));
         model.addAttribute("PMtasks",projectService.showAllTasksSpecificProjectManager(employeeID));
+        model.addAttribute("tasksNotAssigned", projectService.listOfTasksSpecificPMWithNoAssignedEmployee(employeeID));
         model.addAttribute("employeeID",employeeID);
 
         if(userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
