@@ -17,7 +17,7 @@
         <p th:text="${taskCreationError}" style="color:red"></p>
     </div>
 
-    <!-- Adjust the form action to include projectID and subProjectID -->
+
     <form class="input-form"
           th:action="@{/user/{employeeID}/{projectID}/{subProjectID}/save-task(employeeID=${employeeID}, projectID=${projectID}, subProjectID=${subProjectID})}"
           method="post">
@@ -60,7 +60,7 @@
         <label class="dependingOnTask" for="dependingOnTask">Depends on Task</label>
         <select id="dependingOnTask" name="dependingOnTask">
             <option value="" selected>Select a Task (Optional)</option>
-            <!-- Populate with tasks from the same project/subproject -->
+
             <option th:each="task : ${tasks}" th:value="${task.taskID}" th:text="${task.taskTitle}"></option>
         </select>
         <br>
@@ -69,7 +69,7 @@
         <label class="requiredRole" for="requiredRole">Required Role</label>
         <select id="requiredRole" name="requiredRole">
             <option value="" selected>Select Role (Optional)</option>
-            <!-- Populate with non-manager roles -->
+
             <option th:each="role : ${nonManagerRoles}" th:value="${role.roleID}" th:text="${role.roleTitle}"></option>
         </select>
         <br>
@@ -78,7 +78,7 @@
         <label class="status" for="status">Task Status</label>
         <select id="status" name="status" required>
             <option value="" disabled selected>Select Task Status</option>
-            <!-- Populate with status objects -->
+
             <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}"
                     th:text="${status.getStatus()}"></option>
         </select>

@@ -243,37 +243,33 @@ public class ProjectRepositoryIntegrationTest {
         assertEquals(expectedNumOfTasks, actualNumOfTasks);
     }
 
-
-    /*
     @Test
     void updateTask() throws Exception {
         // Arrange
-        Task taskToUpdate = new Task("Task Title", "Task Description", 1, 5.0, Date.valueOf("2024-12-12"),
+        Task newTask = new Task("Task Title", "Task Description", 1, 5.0, Date.valueOf("2024-12-12"),
                 null, null, 1, 1);
         int subProjectID = 1;
         int projectID = 1;
 
-        projectRepository.createTask(projectID, subProjectID, taskToUpdate);
-        int taskID = taskToUpdate.getTaskID(); // Assuming the TaskRepository assigns taskID automatically.
-        taskToUpdate.setTaskID(taskID);
-
-        taskToUpdate.setTaskTitle("Updated Task Title");
-        taskToUpdate.setEstimatedTime(10.0);
-
         // Act
-        projectRepository.updateTask(taskToUpdate);
-        List<Task> tasks = projectRepository.getAllTasksInSpecificSubProject(subProjectID);
+        projectRepository.createTask(projectID, subProjectID, newTask);
 
-        Task updatedTask = tasks.stream()
-                .filter(task -> task.getTaskID() == taskID)
-                .findFirst()
-                .orElse(null);
+        int taskID = projectRepository.findTaskIDFromDB(newTask);
+        newTask.setTaskID(taskID);
+
+        Task fetchedTask = projectRepository.fetchSpecificTask("Task Title");
+        fetchedTask.setTaskTitle("Updated Task Title");
+        fetchedTask.setEstimatedTime(10.0);
+        projectRepository.updateTask(fetchedTask);
+
+        Task updatedTask = projectRepository.fetchSpecificTask("Updated Task Title");
 
         // Assert
-        assertNotNull(updatedTask);
+        assertEquals(newTask.getTaskID(), updatedTask.getTaskID());
+        assertNotEquals(newTask.getTaskTitle(), updatedTask.getTaskTitle());
         assertEquals("Updated Task Title", updatedTask.getTaskTitle());
         assertEquals(10.0, updatedTask.getEstimatedTime());
-    }*/
+    }
 
     @Test
     void deleteTask() throws Exception {
@@ -295,7 +291,6 @@ public class ProjectRepositoryIntegrationTest {
 
         // Assert
         assertEquals(expectedNumOfTasksAfterDeletion, tasksAfter.size());
-        //assertFalse(tasksAfter.stream().anyMatch(task -> task.getTaskID() == taskID));
     }
 
     @Test

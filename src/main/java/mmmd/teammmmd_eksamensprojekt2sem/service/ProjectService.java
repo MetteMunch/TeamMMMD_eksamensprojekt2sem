@@ -151,6 +151,14 @@ public class ProjectService {
         projectRepository.deleteTask(taskID);
     }
 
+    public int findTaskIDFromDB(Task task) {
+        return projectRepository.findTaskIDFromDB(task);
+    }
+
+    public Task fetchSpecificTask(String taskTitle) {
+        return projectRepository.fetchSpecificTask(taskTitle);
+    }
+
 
     /*
     #####################################
