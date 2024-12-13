@@ -218,12 +218,16 @@ public class ProjectController {
     @GetMapping("/{projectID}/{subProjectID}/edit-subproject")
     public String goToEditSubProject(@PathVariable int employeeID,
                                      @PathVariable int subProjectID,
+                                     @PathVariable int projectID,
                                      Model model) {
         // Hent det specifikke subproject
         SubProject subProject = projectService.showSubProject(subProjectID);
 
         // Tilføj nødvendige data til modellen
         model.addAttribute("subProject", subProject);
+        model.addAttribute("employeeID", employeeID);
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjectID", subProjectID);
 //TODO: DER MANGLER NOGET HER...
         return "updateSubProject";
     }
