@@ -6,11 +6,7 @@
 </head>
 <body>
 <h1>Edit Task</h1>
-<div th:if="${taskUpdateError}">
-    <p th:text="${taskUpdateError}" style="color:red"></p>
-</div>
 
-<!-- Adjust the form action to include projectID and subProjectID -->
 <form th:action="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/update-task'}" method="post">
 
     <!-- Task Title -->
@@ -49,7 +45,7 @@
     <label class="dependingOnTask" for="dependingOnTask">Depends on Task: </label>
     <select id="dependingOnTask" name="dependingOnTask">
         <option value="" th:if="${task.dependingOnTask == null}" selected>Select a Task (Optional)</option>
-        <!-- Populate with tasks from the same project/subproject -->
+
         <option th:each="taskOption : ${tasks}" th:value="${taskOption.taskID}"
                 th:selected="${taskOption.taskID == task.dependingOnTask}"
                 th:text="${taskOption.taskTitle}"></option>
@@ -60,7 +56,7 @@
     <label class="requiredRole" for="requiredRole">Required Role: </label>
     <select id="requiredRole" name="requiredRole">
         <option value="" th:if="${task.requiredRole == null}" selected>Select Role (Optional)</option>
-        <!-- Populate with non-manager roles -->
+
         <option th:each="role : ${nonManagerRoles}" th:value="${role.roleID}"
                 th:selected="${role.roleID == task.requiredRole}"
                 th:text="${role.roleTitle}"></option>
@@ -71,7 +67,7 @@
     <label class="status" for="status">Task Status: </label>
     <select id="status" name="status" required>
         <option value="" disabled>Select Task Status</option>
-        <!-- Populate with status objects -->
+
         <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}"
                 th:selected="${status.getStatusID() == task.status}"
                 th:text="${status.getStatus()}"></option>

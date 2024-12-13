@@ -18,68 +18,64 @@
     <h3>Description</h3>
     <p th:text="${task.taskDescription}"></p>
 
+        <h3>Status</h3>
+        <select id="status" name="status" disabled>
+            <option th:each="status : ${statusobjects}"
+                    th:selected="${status.statusID == task.status}"
+                    th:value="${status.statusID}"
+                    th:text="${status.status}">
+            </option>
+        </select>
+
+        <h3>Assigned Employee</h3>
+        <select id="assignedEmployee" name="assignedEmployee" disabled>
+            <option th:each="employee : ${nonManagerEmployees}"
+                    th:selected="${employee.employeeID == task.assignedEmployee}"
+                    th:value="${employee.employeeID}"
+                    th:text="${employee.fullName}">
+            </option>
+            <option value="" th:if="${task.assignedEmployee == null}" selected>Not Assigned</option>
+        </select>
+
+        <h3>Estimated Time</h3>
+        <p th:text="${task.estimatedTime}"></p>
+
+        <h3>Actual Time</h3>
+        <div class="actual-time-container">
+            <p th:text="${task.actualTime}"></p>
+            <div th:unless="${isManager}">
+                <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/submit-hours'}">
+                    <button type="button">Submit Hours</button>
+                </a>
+            </div>
+        </div>
+
+        <h3>Planned Start Date</h3>
+        <p th:text="${task.plannedStartDate}"></p>
+
+        <h3>Depends on Task</h3>
+        <select id="dependingOnTask" name="dependingOnTask" disabled>
+            <option th:each="dependency : ${tasks}"
+                    th:selected="${dependency.taskID == task.dependingOnTask}"
+                    th:value="${dependency.taskID}"
+                    th:text="${dependency.taskTitle}">
+            </option>
+            <option value="" th:if="${task.dependingOnTask == null}" selected>None</option>
+        </select>
+
+        <h3>Required Role</h3>
+        <select id="requiredRole" name="requiredRole" disabled>
+            <option th:each="role : ${nonManagerRoles}"
+                    th:selected="${role.roleID == task.requiredRole}"
+                    th:value="${role.roleID}"
+                    th:text="${role.roleTitle}">
+            </option>
+            <option value="" th:if="${task.requiredRole == null}" selected>None</option>
+        </select>
 
 </header>
 
 <main>
-    <div class="table-container">
-        <!-- Task Details Section -->
-
-            <h3>Status</h3>
-            <select id="status" name="status" disabled>
-                <option th:each="status : ${statusobjects}"
-                        th:selected="${status.statusID == task.status}"
-                        th:value="${status.statusID}"
-                        th:text="${status.status}">
-                </option>
-            </select>
-
-            <h3>Assigned Employee</h3>
-            <select id="assignedEmployee" name="assignedEmployee" disabled>
-                <option th:each="employee : ${nonManagerEmployees}"
-                        th:selected="${employee.employeeID == task.assignedEmployee}"
-                        th:value="${employee.employeeID}"
-                        th:text="${employee.fullName}">
-                </option>
-                <option value="" th:if="${task.assignedEmployee == null}" selected>Not Assigned</option>
-            </select>
-
-            <h3>Estimated Time</h3>
-            <p th:text="${task.estimatedTime}"></p>
-
-            <h3>Actual Time</h3>
-            <div class="actual-time-container">
-                <p th:text="${task.actualTime}"></p>
-                <div th:unless="${isManager}">
-                    <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/submit-hours'}">
-                        <button class="vedikke" type="button">Submit Hours</button>
-                    </a>
-                </div>
-            </div>
-
-            <h3>Planned Start Date</h3>
-            <p th:text="${task.plannedStartDate}"></p>
-
-            <h3>Depends on Task</h3>
-            <select id="dependingOnTask" name="dependingOnTask" disabled>
-                <option th:each="dependency : ${tasks}"
-                        th:selected="${dependency.taskID == task.dependingOnTask}"
-                        th:value="${dependency.taskID}"
-                        th:text="${dependency.taskTitle}">
-                </option>
-                <option value="" th:if="${task.dependingOnTask == null}" selected>None</option>
-            </select>
-
-            <h3>Required Role</h3>
-            <select id="requiredRole" name="requiredRole" disabled>
-                <option th:each="role : ${nonManagerRoles}"
-                        th:selected="${role.roleID == task.requiredRole}"
-                        th:value="${role.roleID}"
-                        th:text="${role.roleTitle}">
-                </option>
-                <option value="" th:if="${task.requiredRole == null}" selected>None</option>
-            </select>
-        </div>
 
 
         <!-- Conditional Action Buttons -->
@@ -87,7 +83,7 @@
             <div th:if="${isManager}">
                 <p>
                     <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/edit-task'}">
-                        <button class="vedikke" type="button">Edit Task</button>
+                        <button type="button">Edit Task</button>
                     </a>
                 </p>
             </div>
@@ -100,7 +96,6 @@
 
 <!-- Sidebar -->
 <sidebar>
-    <h3>Her kommer diverse visninger af data</h3>
 
 </sidebar>
 

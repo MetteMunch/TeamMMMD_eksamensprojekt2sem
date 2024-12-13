@@ -61,12 +61,16 @@ public class Task {
         this.taskDescription = taskDescription;
         this.assignedEmployee = assignedEmployee;
         this.estimatedTime = estimatedTime != null ? estimatedTime : 0.0; // Default sat til 0.0 hvis den er null
-        this.actualTime = 0.0;
+        //this.actualTime = 0.0;
         this.plannedStartDate = plannedStartDate;
         this.dependingOnTask = dependingOnTask;
         this.requiredRole = requiredRole;
         this.subProjectID = subProjectID;
         this.status = status;
+    }
+
+    public Task() {
+        //Tom konstruktør til test
     }
 
     public int getTaskID() {

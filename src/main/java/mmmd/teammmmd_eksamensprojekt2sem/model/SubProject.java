@@ -8,6 +8,7 @@ public class SubProject {
     private int projectID;
     private int statusID;
     private String statusString;
+    private int countOfTasks;
 
     public SubProject (String subprojectTitle, String subprojectDescription, int projectID, int statusID) {
         this.subProjectTitle = subprojectTitle;
@@ -62,5 +63,13 @@ public class SubProject {
 
     public void setStatusString(String status) {
         this.statusString = status;
+    }
+
+    public int getCountOfTasks() {
+        return countOfTasks;
+    }
+
+    public void setCountOfTasks(int countOfTasks) {
+        this.countOfTasks = countOfTasks;
     }
 }
