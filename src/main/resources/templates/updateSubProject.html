@@ -20,7 +20,7 @@
             <!-- Skjult felt til Project ID -->
             <input type="hidden" th:value="${projectID}" name="projectID">
 
-            <h1>Update SubProject</h1>
+            <h1>Update Subproject</h1>
             <!-- Titel -->
             <label for="subProjectTitle">SubProject Title</label>
             <input type="text" id="subProjectTitle" name="subProjectTitle" required>
@@ -48,7 +48,7 @@
 
         </form>
 
-        <!--KNAPPEN VIRKKER :( -->
+        <!--KNAPPEN VIRKKER IKKE :( -->
         <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID=${subProjectID})}">
             <button class="go-back-input-button" type="button">Go Back</button>
         </a>
