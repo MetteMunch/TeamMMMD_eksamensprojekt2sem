@@ -74,7 +74,7 @@ når der skal kaldes attributter-->
             </a>
 
             <a th:href="@{/user/{employeeID}/{projectID}/edit (employeeID=${employeeID}, projectID=${project.getID()})}">
-                <button type="button">Update Project</button>
+                <button type="button">Edit Project</button>
             </a>
 
             <form th:action="@{/user/{employeeID}/{projectID}/delete (employeeID=${employeeID}, projectID=${project.getID()})}"
