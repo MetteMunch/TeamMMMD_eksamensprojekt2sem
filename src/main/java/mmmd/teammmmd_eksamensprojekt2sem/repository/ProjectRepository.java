@@ -174,13 +174,16 @@ public class ProjectRepository {
     }
 
     public List<Project> showAllProjectsSpecificEmployee(int employeeID) {
-        String SQL = "SELECT DISTINCT project.projectID, projectTitle, project.projectDescription, project.customer, customer.companyName, \n" +
-                "orderDate, deliveryDate, linkAgreement, project.companyRep, employee.fullName AS companyRepName, project.status, status.status FROM project\n" +
+        String SQL = "SELECT project.projectID, project.projectTitle, project.projectDescription, project.customer, customer.companyName, \n" +
+                "project.orderDate, project.deliveryDate, project.linkAgreement, project.companyRep, employee.fullName AS companyRepName, \n" +
+                "project.status, status.status, SUM(task.estimatedTime) AS estimatedTime, SUM(task.actualTime) AS actualTime FROM project\n" +
                 "INNER JOIN customer ON customer.customerID = project.customer\n" +
                 "INNER JOIN status ON status.statusID = project.status\n" +
-                "INNER JOIN subproject ON subproject.projectID = project.projectID\n" +
+                "LEFT JOIN subproject ON subproject.projectID = project.projectID\n" +
                 "INNER JOIN employee ON employee.employeeID = project.companyRep\n" +
-                "INNER JOIN task ON task.subProjectID = subproject.subProjectID WHERE task.assignedEmployee =?";
+                "LEFT JOIN task ON task.subProjectID = subproject.subProjectID WHERE task.assignedEmployee =?\n" +
+                "GROUP BY project.projectID, project.projectTitle, project.projectDescription, project.customer, customer.companyName, " +
+                "project.orderDate, project.deliveryDate, project.linkAgreement, project.status, status.status";
 
         List<Project> listOfProjectsSpecificEmployee = new ArrayList<>();
 
@@ -201,10 +204,14 @@ public class ProjectRepository {
                 String companyRepName = rs.getString(10);
                 int projectStatusID = rs.getInt(11);
                 String projectStatus = rs.getString(12);
+                double estimatedTimeTotal = rs.getDouble(13);
+                double actualTimeTotal = rs.getDouble(14);
                 Project project = new Project(projectID, projectTitle, projectDescription, customerID, orderDate, agreedDeliveryDate, linkAgreement, companyRep, projectStatusID);
                 project.setCompanyRepString(companyRepName);
                 project.setCustomerNameString(customerName);
                 project.setStatusString(projectStatus);
+                project.setEstimatedTimeTotal(estimatedTimeTotal);
+                project.setActualTimeTotal(actualTimeTotal);
 
                 listOfProjectsSpecificEmployee.add(project);
             }
@@ -215,10 +222,16 @@ public class ProjectRepository {
     }
 
     public List<Project> showAllProjectsSpecificProjectManager(int employeeID) {
-        String SQL = "SELECT DISTINCT project.projectID, projectTitle, project.projectDescription, project.customer, customer.companyName, \n" +
-                "orderDate, deliveryDate, linkAgreement, project.status, status.status FROM project\n" +
-                "INNER JOIN customer ON customer.customerID = project.customer\n" +
-                "INNER JOIN status ON status.statusID = project.status WHERE companyRep =?";
+        String SQL = "SELECT project.projectID, project.projectTitle, project.projectDescription, project.customer, customer.companyName, \n" +
+                "project.orderDate, project.deliveryDate, project.linkAgreement, project.status, status.status,\n" +
+                "SUM(task.estimatedTime) AS estimatedTime, SUM(task.actualTime) AS actualTime FROM project\n" +
+                "INNER JOIN customer ON project.customer = customer.customerID\n" +
+                "INNER JOIN status ON project.status = status.statusID\n" +
+                "LEFT JOIN subproject ON project.projectID = subproject.projectID\n" +
+                "LEFT JOIN task ON subproject.subprojectID = task.subprojectID\n" +
+                "WHERE companyRep =?\n" +
+                "GROUP BY project.projectID, project.projectTitle, project.projectDescription, project.customer, customer.companyName, " +
+                "project.orderDate, project.deliveryDate, project.linkAgreement, project.status, status.status";
 
         List<Project> listOfProjectsSpecificPM = new ArrayList<>();
 
@@ -237,9 +250,16 @@ public class ProjectRepository {
                 String linkAgreement = rs.getString(8);
                 int projectStatusID = rs.getInt(9);
                 String projectStatus = rs.getString(10);
+                double totalEstimatedTime = rs.getDouble(11);
+                double totalActualTime = rs.getDouble(12);
+
+
                 Project project = new Project(projectID, projectTitle, projectDescription, customerID, orderDate, agreedDeliveryDate, linkAgreement, employeeID, projectStatusID);
                 project.setCustomerNameString(customerName);
                 project.setStatusString(projectStatus);
+                project.setActualTimeTotal(totalActualTime);
+                project.setEstimatedTimeTotal(totalEstimatedTime);
+
 
                 listOfProjectsSpecificPM.add(project);
             }
@@ -270,13 +290,14 @@ public class ProjectRepository {
             e.printStackTrace();
         }
     }
+
     /*
     ###########---UPDATE CUSTOMER ID ON PROJECT USED IN CONNECTION WITH NEW AND INTERNAL---###########
      */
     public void updateProjectsCustomerID(int projectID, int customerID) {
         String SQL = "UPDATE project SET customer=? WHERE projectID=?";
 
-        try(PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
             ps.setInt(1, customerID);
             ps.setInt(2, projectID);
             ps.executeUpdate();
@@ -388,6 +409,7 @@ public class ProjectRepository {
                     SubProject subProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
                     subProject.setStatusString(statusString);
                     subProject.setSubProjectID(subProjectID);
+                    subProject.setCountOfTasks(countOfTasksWithinSubProject(subProjectID));
                     listOfSubProjects.add(subProject);
                 }
             }
@@ -395,6 +417,24 @@ public class ProjectRepository {
             e.printStackTrace();
         }
         return listOfSubProjects;
+    }
+
+    public int countOfTasksWithinSubProject(int subprojectID) {
+        int countOfTasks = 0;
+
+        String SQL = "SELECT COUNT(*) AS 'count of tasks within subproject' FROM task WHERE subprojectID = ?;";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
+            ps.setInt(1, subprojectID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    countOfTasks = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return countOfTasks;
     }
 
     public void updateSubProject() {
@@ -481,9 +521,9 @@ public class ProjectRepository {
 
     public List<Task> getAllTasksInSpecificSubProject(int subProjectID) {
         List<Task> tasks = new ArrayList<>();
-        String sql = "SELECT taskID, taskTitle, taskDescription, assignedEmployee, estimatedTime, " +
-                "actualTime, plannedStartDate, dependingOnTask, requiredRole, subProjectID, status " +
-                "FROM Task WHERE subProjectID = ?";
+        String sql = "SELECT task.taskID, task.taskTitle, task.taskDescription, task.assignedEmployee, employee.fullname, task.estimatedTime, " +
+                "task.actualTime, task.plannedStartDate, task.dependingOnTask, task.requiredRole, task.subProjectID, task.status FROM Task " +
+                "LEFT JOIN employee ON employee.employeeID = task.assignedEmployee WHERE subProjectID = ?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setInt(1, subProjectID);
@@ -496,6 +536,8 @@ public class ProjectRepository {
                     Double estimatedTime = rs.getObject("estimatedTime", Double.class);
                     Integer dependingOnTask = rs.getObject("dependingOnTask", Integer.class);
                     Integer requiredRole = rs.getObject("requiredRole", Integer.class);
+                    double actualTime = rs.getDouble("actualTime");
+                    String assignedEmpString = rs.getString("fullname");
 
                     Task task = new Task(
                             rs.getInt("taskID"),
@@ -509,8 +551,8 @@ public class ProjectRepository {
                             rs.getInt("subProjectID"),
                             rs.getInt("status")
                     );
-                    double actualTime = rs.getDouble("actualTime");
                     task.setActualTime(actualTime);
+                    task.setAssignedEmployeeString(assignedEmpString);
                     tasks.add(task);
                 }
             }
@@ -522,6 +564,7 @@ public class ProjectRepository {
     }
 
     public List<Task> showAllTasksSpecificEmployee(int employeeID) {
+        //Forespørgsel til at få alle tasks der er assigned til en specifik medarbejder
 
         List<Task> listOfTasksSpecificEmployee = new ArrayList<>();
 
@@ -577,6 +620,7 @@ public class ProjectRepository {
     }
 
     public List<Task> showAllTasksSpecificProjectManager(int employeeID) {
+        //Forespørgsel til at få alle tasks der er oprettet under projekter tilknyttet en specifik projekt manager
 
         List<Task> listOfTasksSpecificPM = new ArrayList<>();
 
@@ -732,11 +776,14 @@ public class ProjectRepository {
         Project project = null;
 
         String SQL = "SELECT projectTitle, projectDescription, project.customer, customer.companyName, orderDate, deliveryDate, " +
-                "linkAgreement, companyRep, employee.fullName, project.status AS statusID, status.status AS statusString FROM project " +
+                "linkAgreement, companyRep, employee.fullName, project.status AS statusID, status.status AS statusString," +
+                "SUM(task.estimatedTime) AS estimatedTime, SUM(task.actualTime) AS actualTime FROM project " +
                 "INNER JOIN customer ON customer.customerID = project.customer " +
                 "INNER JOIN status ON status.statusID = project.status " +
-                "INNER JOIN employee ON employee.employeeID = project.companyrep WHERE project.projectID=?";
-
+                "INNER JOIN employee ON employee.employeeID = project.companyrep " +
+                "LEFT JOIN subproject ON project.projectID = subproject.projectID " +
+                "LEFT JOIN task ON subproject.subprojectID = task.subprojectID " +
+                "WHERE project.projectID=?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(SQL)) {
             ps.setInt(1, projectID);
@@ -753,12 +800,16 @@ public class ProjectRepository {
                     String nameCompanyRep = rs.getString(9);
                     String status = rs.getString("statusString");
                     int statusID = rs.getInt("statusID");
+                    double totalEstimatedTime = rs.getDouble(12);
+                    double totalActualTime = rs.getDouble(13);
 
                     project = new Project(projectID, projectTitle, projectDescription, customerID, orderDate, agreedDeliveryDate,
                             linkAgreement, companyRep, statusID);
                     project.setStatusString(status);
                     project.setCustomerNameString(customerName);
                     project.setCompanyRepString(nameCompanyRep);
+                    project.setEstimatedTimeTotal(totalEstimatedTime);
+                    project.setActualTimeTotal(totalActualTime);
 
                     return project;
                 }
@@ -1019,6 +1070,12 @@ public class ProjectRepository {
         }
         return nonManagerEmployees;
     }
+
+    /*
+        #####################################
+        #          Calculation Methods      #
+        #####################################
+     */
 
 
 }
