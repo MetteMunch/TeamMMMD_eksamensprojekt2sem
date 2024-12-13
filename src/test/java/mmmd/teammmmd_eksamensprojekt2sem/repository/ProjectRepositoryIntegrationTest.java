@@ -291,7 +291,6 @@ public class ProjectRepositoryIntegrationTest {
 
         // Assert
         assertEquals(expectedNumOfTasksAfterDeletion, tasksAfter.size());
-        //assertFalse(tasksAfter.stream().anyMatch(task -> task.getTaskID() == taskID));
     }
 
     @Test
