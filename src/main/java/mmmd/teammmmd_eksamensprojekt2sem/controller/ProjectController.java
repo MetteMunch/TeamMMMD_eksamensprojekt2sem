@@ -196,7 +196,6 @@ public class ProjectController {
         } else {
             return "redirect:/user/{employeeID}";
         }
-
     }
 
     @PostMapping("/{projectID}/save-subproject")
