@@ -145,16 +145,21 @@ public class ProjectController {
     ###########---UPDATE---###########
      */
     @GetMapping("/{projectID}/edit") //button
-    public String goToEditProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) {
-        Project project = projectService.fetchSpecificProject(projectID);
-        model.addAttribute("project", project);
-        model.addAttribute("projectCustomer", projectService.getListOfCurrentCustomers());
-        model.addAttribute("projectPMEmployees", projectService.findPMEmployees());
-        model.addAttribute("projectBCEmployees", projectService.findBCEmployees());
-        model.addAttribute("projectStatusAll", projectService.fetchAllStatus());
-        model.addAttribute("employeeID", employeeID);
-        return "updateProject";
+    public String goToEditProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) throws SQLException {
+        if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
+            Project project = projectService.fetchSpecificProject(projectID);
+            model.addAttribute("project", project);
+            model.addAttribute("projectCustomer", projectService.getListOfCurrentCustomers());
+            model.addAttribute("projectPMEmployees", projectService.findPMEmployees());
+            model.addAttribute("projectBCEmployees", projectService.findBCEmployees());
+            model.addAttribute("projectStatusAll", projectService.fetchAllStatus());
+            model.addAttribute("employeeID", employeeID);
+            return "updateProject";
+        } else {
+            return "redirect:/user/{employeeID}";
+        }
     }
+
 
     @PostMapping("/update-project")
     public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
@@ -251,7 +256,7 @@ public class ProjectController {
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjects", projectService.showListOfSpecificSubProjects(projectID));
         return "showSpecificSubProjects";
-        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
+
     }
 
     /*
@@ -333,20 +338,24 @@ public class ProjectController {
      */
     @GetMapping("/{projectID}/{subProjectID}/{taskID}/edit-task")
     public String editTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model) throws SQLException {
-        Task task = projectService.getTaskByID(taskID);
-        if (task == null) {
-            throw new IllegalArgumentException("Task with ID " + taskID + " not found");
+        if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
+            Task task = projectService.getTaskByID(taskID);
+            if (task == null) {
+                throw new IllegalArgumentException("Task with ID " + taskID + " not found");
+            }
+            model.addAttribute("employeeID", employeeID);
+            model.addAttribute("taskID", taskID);
+            model.addAttribute("projectID", projectID);
+            model.addAttribute("subProjectID", subProjectID);
+            model.addAttribute("task", task);
+            model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+            model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
+            model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
+            model.addAttribute("statusobjects", projectService.fetchAllStatus());
+            return "updateTask";
+        } else {
+            return "redirect:/user/{employeeID}";
         }
-        model.addAttribute("employeeID", employeeID);
-        model.addAttribute("taskID", taskID);
-        model.addAttribute("projectID", projectID);
-        model.addAttribute("subProjectID", subProjectID);
-        model.addAttribute("task", task);
-        model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
-        model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
-        model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
-        model.addAttribute("statusobjects", projectService.fetchAllStatus());
-        return "updateTask";
     }
 
     @PostMapping("/{projectID}/{subProjectID}/{taskID}/update-task")
