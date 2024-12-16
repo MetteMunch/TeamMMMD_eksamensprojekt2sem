@@ -75,6 +75,7 @@ public class UserRepositoryTest {
     public void getIsEmployeeManagerInfoFromDB() throws SQLException {
         boolean expectedResult = true;
         boolean actualResult = userRepository.getIsEmployeeManagerInfoFromDB(4);
+        assertEquals(expectedResult,actualResult);
     }
 
 }

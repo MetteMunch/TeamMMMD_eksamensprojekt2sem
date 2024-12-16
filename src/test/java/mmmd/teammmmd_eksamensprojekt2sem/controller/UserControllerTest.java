@@ -80,7 +80,6 @@ public class UserControllerTest {
         //Arrange
         String username = "validUser";
         String password = "unvalidPass";
-        int employeeID = 2;
 
         when(userService.validateLogin(username,password)).thenReturn(false);
 
