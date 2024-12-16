@@ -4,6 +4,7 @@ import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
+import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,7 @@ public class ProjectControllerTest {
     String requestMapping = "/user/{employeeID}";
     private Project project;
     private int employeeID;
+    private SubProject subProject;
 
     @BeforeEach
     public void setup() {
@@ -61,6 +63,10 @@ public class ProjectControllerTest {
         project.setLinkAgreement("My link");
         project.setCompanyRep(4444);
         project.setStatus(1);
+        subProject.setSubProjectTitle("Test SubTitle");
+        subProject.setSubProjectDescription("Test SubDescription");
+        subProject.setSubProjectID(1);
+        subProject.setStatusID(1);
         when(mockProjectService.checkIfProjectNameAlreadyExists(anyString())).thenReturn(false);
         when(mockProjectService.findProjectIDFromDB(any(Project.class))).thenReturn(project.getID());
     }
@@ -231,5 +237,18 @@ public class ProjectControllerTest {
                         .param("employeeID", String.valueOf(employeeID)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, project.getID())); //Ændre mig til korrekt view
+    }
+
+    @Test
+    void createSubProjectActionSucces() throws Exception {
+        int projectID = 1;
+        employeeID = 1;
+        mockMvc.perform(get("/{projectID}/create-subproject", projectID)
+                        .param("subProjectTitle", subProject.getSubProjectTitle())
+                        .param("subProjectDescription", subProject.getSubProjectDescription())
+                        .param("subProject", String.valueOf(subProject.getProjectID()))
+                        .param("subProjectStatus", String.valueOf(subProject.getStatusID())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/user/{employeeID}/{projectID}", employeeID, subProject.getSubProjectID()));
     }
 }
