@@ -1,6 +1,6 @@
 # **Team MMMDs Eksamensprojekt**
 
-##  Hvad er projektet?
+## :denmark: Hvad er projektet?
 Projektet er udviklet i forbindelse med repo-ejer og tilhørende collaborators' 2. semestereksamen på Datamatiker.
   
 Det nærværende github-repository er et projektkalkulationsværktøj, der er designet mod projektledere og deres ansatte
@@ -27,7 +27,7 @@ den mængde af timer som de har brugt på en given task.
 Derudover har de adgang til at kunne se detaljerne på de enkelte projekter og subprojekter, hvor deres task(s) er tilknyttet.
 Dog, uden de samme muligheder for at redigere eller slette som en projektleder har.
   
-## What is the project?
+## :uk: What is the project?
 The project has been developed by the owner of the GitHub repository and its accompanying collaborators in order to 
 fulfill the requirements posed by the 2nd semester Computer Science exam.
   
