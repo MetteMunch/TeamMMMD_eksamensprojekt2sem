@@ -179,6 +179,7 @@ public class ProjectControllerTest {
     @Test
     void goToEditProject() throws Exception {
         when(mockProjectService.fetchSpecificProject(project.getID())).thenReturn(project);
+        when(mockUserService.getIsEmployeeManagerInfoFromDB(employeeID)).thenReturn(true);
 
         mockMvc.perform(get("/user/{employeeID}/{projectID}/edit", employeeID, project.getID()))
                 .andExpect(status().isOk())
