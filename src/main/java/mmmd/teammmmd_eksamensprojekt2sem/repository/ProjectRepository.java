@@ -438,12 +438,13 @@ public class ProjectRepository {
     }
 
     public void updateSubProject(SubProject subProject) {
-        String sql = "UPDATE subproject SET subProjectTitle=?, subProjectDescription=? WHERE subProjectID=?";
+        String sql = "UPDATE subproject SET subProjectTitle=?, subProjectDescription=?, status=? WHERE subProjectID=?";
         try (PreparedStatement ps = dbConnection.prepareStatement(sql)) {
             ps.setString(1, subProject.getSubProjectTitle());
             ps.setString(2, subProject.getSubProjectDescription());
-            ps.setInt(3, subProject.getSubProjectID());
-            ps.setInt(4, subProject.getStatusID());
+            ps.setInt(3, subProject.getStatusID());
+            ps.setInt(4, subProject.getSubProjectID());
+
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -241,6 +241,7 @@ public class ProjectController {
         model.addAttribute("employeeID", employeeID);
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
+        model.addAttribute("allStatus", projectService.fetchAllStatus());
 //TODO: DER MANGLER NOGET HER...
         return "updateSubProject";
     }
