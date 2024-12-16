@@ -132,9 +132,9 @@ public class ProjectController {
         Project project = projectService.fetchSpecificProject(projectID);
         List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
         List<Task> listOfTasksWithEndDateLaterThanProjectDeadline = projectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, projectID);
-        model.addAttribute("project",project);
-        model.addAttribute("listOfSubProjects",listOfSpecificSubProjects);
-        model.addAttribute("employeeID",employeeID);
+        model.addAttribute("project", project);
+        model.addAttribute("listOfSubProjects", listOfSpecificSubProjects);
+        model.addAttribute("employeeID", employeeID);
         model.addAttribute("isManager", userService.getIsEmployeeManagerInfoFromDB(employeeID));
         model.addAttribute("TasksWithEndDateToLate", listOfTasksWithEndDateLaterThanProjectDeadline);
         return "showProject";
@@ -219,7 +219,6 @@ public class ProjectController {
 
         return "redirect:/user/{employeeID}/{projectID}";
     }
-    //TODO: Lav et view der hvor vi lander efter at subproject er gemt fx. subprojectview
 
     @PostMapping("/{projectID}/{subProjectID}/delete-subproject")
     public String deleteSubProject(@PathVariable int employeeID, @PathVariable int subProjectID, @PathVariable int projectID, RedirectAttributes redirectAttributes) {
@@ -227,6 +226,37 @@ public class ProjectController {
         redirectAttributes.addAttribute("employeeID", employeeID);
         redirectAttributes.addAttribute("projectID", projectID);
         return "redirect:/user/{employeeID}/{projectID}";
+    }
+
+    @GetMapping("/{projectID}/{subProjectID}/edit-subproject")
+    public String goToEditSubProject(@PathVariable int employeeID,
+                                     @PathVariable int subProjectID,
+                                     @PathVariable int projectID,
+                                     Model model) {
+        // Hent det specifikke subproject
+        SubProject subProject = projectService.showSubProject(subProjectID);
+
+        // Tilføj nødvendige data til modellen
+        model.addAttribute("subProject", subProject);
+        model.addAttribute("employeeID", employeeID);
+        model.addAttribute("projectID", projectID);
+        model.addAttribute("subProjectID", subProjectID);
+//TODO: DER MANGLER NOGET HER...
+        return "updateSubProject";
+    }
+
+    @PostMapping("/{projectID}/{subProjectID}/update-subproject")
+    public String updateSubProject(@PathVariable int employeeID,
+                                   @PathVariable int subProjectID,
+                                   @PathVariable int projectID,
+                                   @RequestParam int statusID,
+                                   @RequestParam String subProjectTitle,
+                                   @RequestParam String subProjectDescription) {
+        SubProject updatedSubProject = new SubProject(subProjectTitle, subProjectDescription, projectID, statusID);
+        updatedSubProject.setSubProjectID(subProjectID);
+        projectService.updateSubProject(updatedSubProject);
+
+        return "redirect:/user/" + employeeID + "/" + projectID + "/" + subProjectID;
     }
 
     @GetMapping("/{projectID}/{subProjectID}")

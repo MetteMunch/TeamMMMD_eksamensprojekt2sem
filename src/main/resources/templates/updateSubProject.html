@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create SubProject</title>
+    <title>Update SubProject</title>
     <link rel="stylesheet" href="/input.css">
+
 </head>
 <body>
 
@@ -11,17 +12,15 @@
     <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
 </nav>
 
-
 <main>
     <div class="grid-container">
 
-        <!-- Formular til oprettelse af SubProject -->
         <form class="input-form" th:action="@{'/user/'+${employeeID}+'/'+${projectID} + '/save-subproject'}"
               method="post">
             <!-- Skjult felt til Project ID -->
             <input type="hidden" th:value="${projectID}" name="projectID">
 
-            <h1>Create SubProject</h1>
+            <h1>Update Subproject</h1>
             <!-- Titel -->
             <label for="subProjectTitle">SubProject Title</label>
             <input type="text" id="subProjectTitle" name="subProjectTitle" required>
@@ -45,12 +44,14 @@
             <br>
 
             <!-- Submit-knap -->
-            <button type="submit">Create SubProject</button>
+            <button type="submit">Update Subproject</button>
 
         </form>
 
-        <button class="go-back-input-button" th:href="@{'/project/' + ${projectID} + '/subProject'}">Go Back</button>
-
+        <!--KNAPPEN VIRKKER IKKE :( -->
+        <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID=${subProjectID})}">
+            <button class="go-back-input-button" type="button">Go Back</button>
+        </a>
     </div>
 </main>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Task Details</title>
-    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="/showtaskprojectsubproject.css">
 </head>
 <body>
 
@@ -77,10 +77,7 @@
 
 <main>
 
-
-        <!-- Conditional Action Buttons -->
-        <div class="action-buttons">
-            <div th:if="${isManager}">
+     <div th:if="${isManager}">
                 <p>
                     <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/edit-task'}">
                         <button type="button">Edit Task</button>
@@ -89,12 +86,10 @@
             </div>
 
             <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID = ${subProjectID})}">
-                <button class="createResetPasswordButton" style="margin-right:5%" type="button">Go Back</button>
+                <button class="go-back-button" style="margin-right:5%" type="button">Go Back</button>
             </a>
-        </div>
 </main>
 
-<!-- Sidebar -->
 <sidebar>
 
 </sidebar>

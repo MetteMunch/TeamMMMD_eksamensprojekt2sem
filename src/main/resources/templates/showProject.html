@@ -7,7 +7,7 @@ når der skal kaldes attributter-->
 <head>
     <meta charset="UTF-8">
     <title>Show Project</title>
-    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="/showtaskprojectsubproject.css">
 </head>
 <body>
 
@@ -16,23 +16,25 @@ når der skal kaldes attributter-->
 </nav>
 
 <header>
-    <h1>Project</h1>
-    <h2 th:text="${project.getProjectTitle()}"></h2>
+    <div class="container-project-view">
+        <h1>Project</h1>
+        <h2 th:text="${project.getProjectTitle()}"></h2>
 
-    <h3>Customer</h3>
-    <p th:text="${project.getCustomerNameString()}"></p>
+        <h3>Customer</h3>
+        <p th:text="${project.getCustomerNameString()}"></p>
 
-    <h3>Description</h3>
-    <p th:text="${project.getProjectDescription()}"></p>
+        <h3>Description</h3>
+        <p th:text="${project.getProjectDescription()}"></p>
 
-    <h3>Project startup date</h3>
-    <p th:text="${project.getOrderDate()}"></p>
+        <h3>Project startup date</h3>
+        <p th:text="${project.getOrderDate()}"></p>
 
-    <h3>Project agreed deliverydate</h3>
-    <p th:text="${project.getDeliveryDate()}"></p>
+        <h3>Project agreed deliverydate</h3>
+        <p th:text="${project.getDeliveryDate()}"></p>
 
-    <h3>Link to agreement</h3>
-    <a th:href="${project.getLinkAgreement()}" target="_blank" th:text="OrderConfirmation"></a>
+        <h3>Link to agreement</h3>
+        <a th:href="${project.getLinkAgreement()}" target="_blank" th:text="OrderConfirmation"></a>
+    </div>
 </header>
 
 <main>
@@ -54,6 +56,7 @@ når der skal kaldes attributter-->
                 <td th:text="${subProject.getCountOfTasks()}"></td>
                 <td th:text="${subProject.getStatusString()}"></td>
                 <td>
+                    <div class="buttons-container-under-table">
                     <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}}">
                         <button type="button">Show subproject</button>
                     </a>
@@ -63,12 +66,13 @@ når der skal kaldes attributter-->
                             <button type="submit">Delete</button>
                         </form>
                     </div>
+                    </div>
                 </td>
             </tr>
             </tbody>
         </table>
 
-        <div class="action-buttons" th:if="${isManager}">
+        <div class="buttons-container-under-table" th:if="${isManager}">
             <a th:href="@{'/user/'+${employeeID}+'/'+${projectID} +'/create-subproject'}">
                 <button type="button">Create New Subproject</button>
             </a>
@@ -84,7 +88,7 @@ når der skal kaldes attributter-->
         </div>
 
         <a th:href="@{/user/{employeeID} (employeeID=${employeeID})}">
-            <button style="margin-right:5%" type="button">Go Back</button>
+            <button class="go-back-button" type="button">Go Back</button>
         </a>
     </div>
 </main>
