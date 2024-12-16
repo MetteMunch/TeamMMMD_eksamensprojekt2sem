@@ -192,11 +192,10 @@ public class ProjectController {
     #####################################
     */
     @GetMapping("/{projectID}/create-subproject")
-    public String createSubProject(@PathVariable int projectID, @PathVariable int employeeID, Model model, RedirectAttributes redirectAttributes) throws SQLException {
+    public String createSubProject(@PathVariable int projectID, @PathVariable int employeeID, Model model) throws SQLException {
         if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
             model.addAttribute("projectID", projectID);
             model.addAttribute("employeeID", employeeID);
-            redirectAttributes.addFlashAttribute("message", "SubProject created succesfully");
             return "createSubProjectForm";
         } else {
             return "redirect:/user/{employeeID}";
@@ -241,6 +240,8 @@ public class ProjectController {
         model.addAttribute("employeeID", employeeID);
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
+        model.addAttribute("allStatus", projectService.fetchAllStatus());
+
 //TODO: DER MANGLER NOGET HER...
         return "updateSubProject";
     }

@@ -15,7 +15,7 @@
 <main>
     <div class="grid-container">
 
-        <form class="input-form" th:action="@{'/user/'+${employeeID}+'/'+${projectID} + '/save-subproject'}"
+        <form class="input-form" th:action="@{'/user/'+${employeeID}+'/'+${projectID} +'/' +${subProjectID} +'/update-subproject'}"
               method="post">
             <!-- Skjult felt til Project ID -->
             <input type="hidden" th:value="${projectID}" name="projectID">
@@ -23,12 +23,12 @@
             <h1>Update Subproject</h1>
             <!-- Titel -->
             <label for="subProjectTitle">SubProject Title</label>
-            <input type="text" id="subProjectTitle" name="subProjectTitle" required>
+            <input type="text" id="subProjectTitle" name="subProjectTitle" th:value="${subProject.getSubProjectTitle()}" required>
             <br>
 
             <!-- Beskrivelse -->
             <label for="subProjectDescription">Description</label>
-            <textarea id="subProjectDescription" name="subProjectDescription" required></textarea>
+            <textarea id="subProjectDescription" name="subProjectDescription" th:value="${subProject.getSubProjectDescription()}" th:text="${subProject.getSubProjectDescription()}" required></textarea>
             <br>
 
             <!-- Status ID -->
@@ -36,20 +36,21 @@
             <select id="statusID" name="statusID" required>
                 <option value="" disabled selected>Select status</option>
                 <!-- Eksempel på muligheder -->
-                <option value="1">Pending</option>
-                <option value="2">In Progress</option>
-                <option value="3">Awaiting approval</option>
-                <option value="4">Done</option>
+                <option th:each="status : ${allStatus}"
+                        th:value="${status.getStatusID()}"
+                        th:text="${status.getStatus()}"
+                        th:selected="${status.getStatusID() == subProject.getStatusID()}"
+                        ></option>
             </select>
             <br>
 
             <!-- Submit-knap -->
-            <button type="submit">Update Subproject</button>
+            <button type="submit">Save Subproject</button>
 
         </form>
 
         <!--KNAPPEN VIRKKER IKKE :( -->
-        <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID=${subProjectID})}">
+        <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID}}">
             <button class="go-back-input-button" type="button">Go Back</button>
         </a>
     </div>
