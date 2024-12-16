@@ -3,24 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Customer</title>
+    <link rel="stylesheet" href="/input.css">
+
 </head>
 <body>
-<h1>Create new customer</h1>
+<nav>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
+</nav>
+
+<main>
+    <div class="grid-container">
+        <div th:if="${errorMessage}" class="error"> <!-- Fejlbesked, hvis login failer -->
+            <p th:text="${errorMessage}" style="color: red;"></p>
+        </div>
 
 
+        <form class="input-form" th:action="@{/user/{employeeID}/create-customer (employeeID=${employeeID})}"
+              method="post">
+            <h1>Create new customer</h1>
 
+            <!--skjult felt for at medsende projectID ved save af formularen-->
+            <input type="hidden" name="projectID" th:value="${projectID}">
 
-<form th:action="@{/user/{employeeID}/create-customer (employeeID=${employeeID})}" method="post">
+            <input type="text" id="companyName" name="companyName" placeholder="Company Name" required>
+            <br>
+            <input type="text" id="repName" name="repName" placeholder="Company Representative" required>
+            <br>
+            <button type="submit">Create Customer</button>
+        </form>
+    </div>
+</main>
 
-    <!--skjult felt for at medsende projectID ved save af formularen-->
-    <input type="hidden" name="projectID" th:value="${projectID}">
-
-    <input type ="text" id="companyName" name="companyName" placeholder="Company Name" required>
-    <br>
-    <input type ="text" id="repName" name="repName" placeholder="Company Representative" required>
-    <br>
-    <button type="submit">Create Customer</button>
-</form>
+<footer>
+    <div th:insert="~{fragments.html :: footer}"></div>
+</footer>
 
 </body>
 </html>
