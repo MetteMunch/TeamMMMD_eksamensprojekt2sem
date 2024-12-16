@@ -29,11 +29,22 @@ når der skal kaldes attributter-->
         <h3>Project startup date</h3>
         <p th:text="${project.getOrderDate()}"></p>
 
-        <h3>Project agreed deliverydate</h3>
+        <h3>Project agreed deliver ydate</h3>
         <p th:text="${project.getDeliveryDate()}"></p>
 
         <h3>Link to agreement</h3>
         <a th:href="${project.getLinkAgreement()}" target="_blank" th:text="OrderConfirmation"></a>
+
+        <div class="buttons-container-under-table">
+        <a th:href="@{/user/{employeeID}/{projectID}/edit (employeeID=${employeeID}, projectID=${project.getID()})}">
+            <button type="button">Edit Project</button>
+        </a>
+
+        <form th:action="@{/user/{employeeID}/{projectID}/delete (employeeID=${employeeID}, projectID=${project.getID()})}"
+              method="post" onsubmit="confirmDeletion()">
+            <button type="submit">Delete Project</button>
+        </form>
+        </div>
     </div>
 </header>
 
@@ -77,14 +88,7 @@ når der skal kaldes attributter-->
                 <button type="button">Create New Subproject</button>
             </a>
 
-            <a th:href="@{/user/{employeeID}/{projectID}/edit (employeeID=${employeeID}, projectID=${project.getID()})}">
-                <button type="button">Edit Project</button>
-            </a>
 
-            <form th:action="@{/user/{employeeID}/{projectID}/delete (employeeID=${employeeID}, projectID=${project.getID()})}"
-                  method="post" onsubmit="confirmDeletion()">
-                <button type="submit">Delete Project</button>
-            </form>
         </div>
 
         <a th:href="@{/user/{employeeID} (employeeID=${employeeID})}">
