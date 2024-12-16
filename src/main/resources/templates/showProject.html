@@ -45,27 +45,27 @@ når der skal kaldes attributter-->
             <thead>
             <tr>
                 <th>Subproject Title</th>
-                <th>Tasks</th>
-                <th>Deadline</th>
+                <th>Tasks within subproject</th>
+                <th>Status</th>
                 <th>Functions</th>
             </tr>
             </thead>
             <tbody th:each="subProject : ${listOfSubProjects}">
             <tr>
                 <td th:text="${subProject.getSubProjectTitle()}"></td>
-                <td>Metode mangler til count af tasks på subproject</td>
-                <td>Metode mangler til at tage deadline fra task</td>
+                <td th:text="${subProject.getCountOfTasks()}"></td>
+                <td th:text="${subProject.getStatusString()}"></td>
                 <td>
                     <div class="buttons-container-under-table">
-                        <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}}">
-                            <button type="button">Show subproject</button>
-                        </a>
-                        <div th:if="${isManager}">
-                            <form th:action="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}+'/delete-subproject'}"
-                                  method="post" onsubmit="return confirmDeletion()">
-                                <button type="submit">Delete</button>
-                            </form>
-                        </div>
+                    <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}}">
+                        <button type="button">Show subproject</button>
+                    </a>
+                    <div th:if="${isManager}">
+                        <form th:action="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProject.getSubProjectID()}+'/delete-subproject'}"
+                              method="post" onsubmit="return confirmDeletion()">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
                     </div>
                 </td>
             </tr>
@@ -94,9 +94,10 @@ når der skal kaldes attributter-->
 </main>
 
 <sidebar>
-    <h3>Tasks which will cause delayed delivery!</h3>
-    <p>Change planned startdate or review estimated time</p>
     <div th:if="${isManager}">
+        <h3>Tasks which will cause delayed delivery!</h3>
+        <p>Change planned startdate or review estimated time</p>
+
         <table>
             <thead>
             <tr>
@@ -111,6 +112,23 @@ når der skal kaldes attributter-->
             </tr>
         </table>
     </div>
+
+    <h3>Overview Time</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Est Time (total hrs)</th>
+            <th>Act Time (total hrs)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${project.getEstimatedTimeTotal()}"></td>
+            <td th:text="${project.getActualTimeTotal()}"></td>
+        </tr>
+        </tbody>
+    </table>
 
 
 </sidebar>

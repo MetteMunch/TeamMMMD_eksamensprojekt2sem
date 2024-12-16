@@ -1,5 +1,6 @@
 package mmmd.teammmmd_eksamensprojekt2sem.controller;
 
+import jakarta.servlet.http.HttpSession;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
@@ -120,7 +121,14 @@ public class ProjectController {
      */
 
     @GetMapping("/{projectID}")
-    public String showProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) throws SQLException {
+    public String showProject(@PathVariable int projectID, @PathVariable int employeeID, Model model, HttpSession session) throws SQLException {
+
+        String redirect = userService.redirectUserLoginAttributes(session, employeeID);
+        if (redirect != null) {
+            return redirect; // Hvis der returneres en redirect-string, sendes brugeren enten til login eller eget dashboard
+        }
+
+        //Hvis validering lykkes, så fortsættes flowet
         Project project = projectService.fetchSpecificProject(projectID);
         List<SubProject> listOfSpecificSubProjects = projectService.showListOfSpecificSubProjects(projectID);
         List<Task> listOfTasksWithEndDateLaterThanProjectDeadline = projectService.tasksWithCalculatedEndDateLaterThanProjectDeadline(employeeID, projectID);
@@ -137,16 +145,21 @@ public class ProjectController {
     ###########---UPDATE---###########
      */
     @GetMapping("/{projectID}/edit") //button
-    public String goToEditProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) {
-        Project project = projectService.fetchSpecificProject(projectID);
-        model.addAttribute("project", project);
-        model.addAttribute("projectCustomer", projectService.getListOfCurrentCustomers());
-        model.addAttribute("projectPMEmployees", projectService.findPMEmployees());
-        model.addAttribute("projectBCEmployees", projectService.findBCEmployees());
-        model.addAttribute("projectStatusAll", projectService.fetchAllStatus());
-        model.addAttribute("employeeID", employeeID);
-        return "updateProject";
+    public String goToEditProject(@PathVariable int projectID, Model model, @PathVariable int employeeID) throws SQLException {
+        if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
+            Project project = projectService.fetchSpecificProject(projectID);
+            model.addAttribute("project", project);
+            model.addAttribute("projectCustomer", projectService.getListOfCurrentCustomers());
+            model.addAttribute("projectPMEmployees", projectService.findPMEmployees());
+            model.addAttribute("projectBCEmployees", projectService.findBCEmployees());
+            model.addAttribute("projectStatusAll", projectService.fetchAllStatus());
+            model.addAttribute("employeeID", employeeID);
+            return "updateProject";
+        } else {
+            return "redirect:/user/{employeeID}";
+        }
     }
+
 
     @PostMapping("/update-project")
     public String updateProjectAction(@RequestParam int projectID, @RequestParam String projectTitle, @RequestParam String projectDescription,
@@ -247,7 +260,12 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectID}/{subProjectID}")
-    public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model) throws SQLException {
+    public String showSubProject(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, Model model, HttpSession session) throws SQLException {
+
+        String redirect = userService.redirectUserLoginAttributes(session, employeeID);
+        if (redirect != null) {
+            return redirect; // Hvis der returneres en redirect-string, sendes brugeren enten til login eller eget dashboard
+        }
 
         if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
             model.addAttribute("subProject", projectService.showSubProject(subProjectID));
@@ -268,7 +286,7 @@ public class ProjectController {
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjects", projectService.showListOfSpecificSubProjects(projectID));
         return "showSpecificSubProjects";
-        //TODO: Html template bare til eksempelvisning for at se om det virker. Skal formentlig migreres til PM dashboard, når denne er færdig
+
     }
 
     /*
@@ -323,9 +341,14 @@ public class ProjectController {
     ###########---READ---###########
      */
     @GetMapping("/{projectID}/{subProjectID}/{taskID}")
-    public String showTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model) throws SQLException {
-        Task task = projectService.getTaskByID(taskID);
+    public String showTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model, HttpSession session) throws SQLException {
 
+        String redirect = userService.redirectUserLoginAttributes(session, employeeID);
+        if (redirect != null) {
+            return redirect; // Hvis der returneres en redirect-string, sendes brugeren enten til login eller eget dashboard
+        }
+
+        Task task = projectService.getTaskByID(taskID);
         model.addAttribute("task", task);
         model.addAttribute("employeeID", employeeID);
         model.addAttribute("projectID", projectID);
@@ -345,20 +368,24 @@ public class ProjectController {
      */
     @GetMapping("/{projectID}/{subProjectID}/{taskID}/edit-task")
     public String editTask(@PathVariable int employeeID, @PathVariable int projectID, @PathVariable int subProjectID, @PathVariable int taskID, Model model) throws SQLException {
-        Task task = projectService.getTaskByID(taskID);
-        if (task == null) {
-            throw new IllegalArgumentException("Task with ID " + taskID + " not found");
+        if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
+            Task task = projectService.getTaskByID(taskID);
+            if (task == null) {
+                throw new IllegalArgumentException("Task with ID " + taskID + " not found");
+            }
+            model.addAttribute("employeeID", employeeID);
+            model.addAttribute("taskID", taskID);
+            model.addAttribute("projectID", projectID);
+            model.addAttribute("subProjectID", subProjectID);
+            model.addAttribute("task", task);
+            model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
+            model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
+            model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
+            model.addAttribute("statusobjects", projectService.fetchAllStatus());
+            return "updateTask";
+        } else {
+            return "redirect:/user/{employeeID}";
         }
-        model.addAttribute("employeeID", employeeID);
-        model.addAttribute("taskID", taskID);
-        model.addAttribute("projectID", projectID);
-        model.addAttribute("subProjectID", subProjectID);
-        model.addAttribute("task", task);
-        model.addAttribute("nonManagerEmployees", projectService.findNonManagerEmployees());
-        model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
-        model.addAttribute("nonManagerRoles", projectService.getNonManagerRoles());
-        model.addAttribute("statusobjects", projectService.fetchAllStatus());
-        return "updateTask";
     }
 
     @PostMapping("/{projectID}/{subProjectID}/{taskID}/update-task")
@@ -406,12 +433,13 @@ public class ProjectController {
                               @PathVariable int subProjectID,
                               @PathVariable int taskID,
                               @PathVariable int employeeID,
-                              Model model) {
+                              Model model) throws SQLException {
 
         model.addAttribute("employeeID", employeeID);
         model.addAttribute("projectID", projectID);
         model.addAttribute("subProjectID", subProjectID);
         model.addAttribute("taskID", taskID);
+        model.addAttribute("task", projectService.getTaskByID(taskID));
 
         return "submitHours";
     }

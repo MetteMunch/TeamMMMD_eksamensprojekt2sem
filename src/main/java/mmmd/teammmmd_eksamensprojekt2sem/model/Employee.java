@@ -23,6 +23,10 @@ public class Employee {
         this.role = role;
     }
 
+    public Employee() {
+        //Tom konstruktør til test
+    }
+
 
     public int getEmployeeID() {
         return employeeID;

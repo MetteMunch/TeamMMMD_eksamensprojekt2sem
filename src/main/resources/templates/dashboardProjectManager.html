@@ -96,7 +96,48 @@ når der skal kaldes attributter-->
 </main2>
 
 <sidebar>
-    <h3>Her kommer diverse visninger af data</h3>
+    <h3>Overview Time</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Project Title</th>
+            <th>Est Time (total hrs)</th>
+            <th>Act Time (total hrs)</th>
+        </tr>
+        </thead>
+        <tbody th:each="project : ${PMprojects}">
+        <tr>
+            <td th:text="${project.getProjectTitle()}"></td>
+            <td th:text="${project.getEstimatedTimeTotal()}"></td>
+            <td th:text="${project.getActualTimeTotal()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Tasks not assigned</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Task Title</th>
+            <th>Planned StartDate</th>
+            <th>Est. Time</th>
+        </tr>
+        </thead>
+        <tbody th:each="task : ${tasksNotAssigned}">
+        <tr>
+            <td>
+                <a th:href="@{{employeeID}/{projectID}/{subprojectID}/{taskID}(employeeID = ${employeeID}, projectID=${task.getProjectID()},
+                subprojectID=${task.getSubProjectID()}, taskID=${task.getTaskID()})}"
+                   th:text="${task.getTaskTitle()}"></a>
+
+            </td>
+            <td th:text="${task.getPlannedStartDate()}"></td>
+            <td th:text="${task.getEstimatedTime()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
 
 </sidebar>
 

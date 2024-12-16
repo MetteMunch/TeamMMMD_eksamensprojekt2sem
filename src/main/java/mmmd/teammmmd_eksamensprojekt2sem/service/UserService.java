@@ -37,7 +37,9 @@ public class UserService {
     //////HJÆLPEMETODE TIL CONTROLLEREN////////
 
     public String redirectUserLoginAttributes(HttpSession session, int employeeID) throws SQLException {
-        Integer sessionEmpID = (Integer) session.getAttribute("employeeID");
+        Integer sessionEmpID = (Integer) session.getAttribute("employeeID"); //empID er i metoden loginValidation
+        //blevet gemt som et objekt på sessionen, derfor skal attributten omdannes til Integer, for at sammenligne
+        //med meployeeID
 
         if (sessionEmpID == null) {
             //Hvis brugeren ikke er logget ind ligger der ikke et ID gemt på session,
