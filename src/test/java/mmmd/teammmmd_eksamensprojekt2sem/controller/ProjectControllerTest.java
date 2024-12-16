@@ -4,6 +4,7 @@ import mmmd.teammmmd_eksamensprojekt2sem.model.Customer;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Project;
 import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.model.Task;
+import mmmd.teammmmd_eksamensprojekt2sem.model.SubProject;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,7 @@ public class ProjectControllerTest {
     String requestMapping = "/user/{employeeID}";
     private Project project;
     private int employeeID;
+    private SubProject subProject;
 
     @BeforeEach
     public void setup() {

@@ -49,7 +49,7 @@ når der skal kaldes attributter-->
             <td th:text="${task.getAssignedEmployeeString()}"></td>
             <td>
                 <a th:href="@{'/user/'+${employeeID}+'/'+${projectID}+'/'+${subProjectID}+'/'+${task.getTaskID()}}">
-                    <button class="vedikke" type="button">Show task</button>
+                    <button type="button">Show task</button>
                 </a>
                 <script>
                     function confirmDeletion() {
@@ -61,7 +61,7 @@ når der skal kaldes attributter-->
         </tbody>
     </table>
     <a th:href="@{/user/{employeeID}/{projectID} (employeeID=${employeeID}, projectID=${projectID})}">
-        <button class="createResetPasswordButton" style="margin-right:5%" type="button">Go Back</button>
+        <button class="go-back-button" type="button">Go Back</button>
     </a>
 </main>
 

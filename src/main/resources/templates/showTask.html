@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Task Details</title>
-    <link rel="stylesheet" href="/showtaskprojectsubproject.css">
+    <link rel="stylesheet" href="/showtask.css">
 </head>
 <body>
 
@@ -73,25 +73,22 @@
             <option value="" th:if="${task.requiredRole == null}" selected>None</option>
         </select>
 
+    <div th:if="${isManager}">
+        <p>
+            <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/edit-task'}">
+                <button type="button">Edit Task</button>
+            </a>
+        </p>
+    </div>
+<br>
+    <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID = ${subProjectID})}">
+        <button class="go-back-button" type="button">Go Back</button>
+    </a>
+
 </header>
 
-<main>
-
-     <div th:if="${isManager}">
-                <p>
-                    <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/edit-task'}">
-                        <button type="button">Edit Task</button>
-                    </a>
-                </p>
-            </div>
-
-            <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID = ${subProjectID})}">
-                <button class="go-back-button" style="margin-right:5%" type="button">Go Back</button>
-            </a>
-</main>
-
 <sidebar>
-
+    <h3>Her kan diverse data visualiseres</h3>
 </sidebar>
 
 <footer>
