@@ -51,7 +51,7 @@ public class ProjectController {
 
     @PostMapping("/create-customer")
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName,
-                                       @RequestParam int projectID, RedirectAttributes redirectAttributes, @PathVariable int employeeID, Model model) {
+                                       @RequestParam int projectID, RedirectAttributes redirectAttributes, @PathVariable int employeeID) {
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer);
 
