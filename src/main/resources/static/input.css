@@ -53,8 +53,8 @@ nav, main, footer {
 nav {
     grid-area: nav;
     gap: 20px;
-    align-items: center; /* Juster indholdet vertikalt */
-    display: flex; /* Aktiver flexbox */
+    align-items: center;
+    display: flex;
     background-color: var(--alpha-bg-color);
     height: 4em;
 }
@@ -115,7 +115,7 @@ footer h4 {
 /* INPUT MAIN */
 .grid-container {
     display: grid;
-    place-items: center; /* Centrerer indholdet i grid */
+    place-items: center;
     height: 100%;
     width: 100%;
 }
