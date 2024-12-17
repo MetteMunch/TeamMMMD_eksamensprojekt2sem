@@ -84,19 +84,16 @@
                 </select>
             </div>
         </div>
-    </div>
 
-    <div th:if="${isManager}">
-        <p>
-            <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/edit-task'}">
-                <button type="button">Edit Task</button>
-            </a>
-        </p>
+        <div th:if="${isManager}">
+                <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/edit-task'}">
+                    <button type="button">Edit Task</button>
+                </a>
+        </div>
+        <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID = ${subProjectID})}">
+            <button class="go-back-button" type="button">Go Back</button>
+        </a>
     </div>
-    <a th:href="@{/user/{employeeID}/{projectID}/{subProjectID} (employeeID=${employeeID}, projectID=${projectID}, subProjectID = ${subProjectID})}">
-        <button class="go-back-button" type="button">Go Back</button>
-    </a>
-
 </header>
 
 <sidebar>
