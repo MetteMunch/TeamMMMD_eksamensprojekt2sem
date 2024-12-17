@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -180,8 +180,8 @@ public class ProjectService {
             // datatype ændres til int, da vi kun er interesseret i hele dage og oprunding (derfor Math-ceil)
             int estimatedDaysOfWork = (int) Math.ceil(task.getEstimatedTime() / 6.0);
 
-            // Beregnet slutdato for denne task
-            LocalDate taskEndDate = startDate.plus(estimatedDaysOfWork, ChronoUnit.DAYS);
+            // Beregnet slutdato for denne task, der ekskluderer weekender
+            LocalDate taskEndDate = calculateEndDateExcludingWeekends(startDate, estimatedDaysOfWork);
 
             LocalDate agreedDeliveryDateProject = projectToBeChecked.getDeliveryDate().toLocalDate();
 
@@ -192,6 +192,25 @@ public class ProjectService {
             }
         }
         return tasksWithCalculatedEndDateLaterThanProjectDeadline;
+    }
+
+    public LocalDate calculateEndDateExcludingWeekends(LocalDate startDate, int estimatedDaysOfWork) {
+        LocalDate currentDate = startDate;
+        int daysAdded = 0;
+
+        while (daysAdded < estimatedDaysOfWork) {
+
+            // Spring weekender (lørdag og søndag) over
+            if (currentDate.getDayOfWeek() != DayOfWeek.SATURDAY && currentDate.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                daysAdded++;
+            }
+
+            // Flyt datoen én dag frem efter tjekket
+            if (daysAdded < estimatedDaysOfWork) {
+                currentDate = currentDate.plusDays(1);
+            }
+        }
+        return currentDate; // Returner slutdatoen
     }
 
 
