@@ -272,11 +272,13 @@ public class ProjectController {
             model.addAttribute("subProject", projectService.showSubProject(subProjectID));
             model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
             model.addAttribute("employeeID", employeeID);
+            model.addAttribute("projectID",projectID);
             return "showSubProject"; //Manager = true
         } else {
             model.addAttribute("subProject", projectService.showSubProject(subProjectID));
             model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
             model.addAttribute("employeeID", employeeID);
+            model.addAttribute("projectID",projectID);
             return "showSubProjectNotMgr"; //Manager = false
         }
 
