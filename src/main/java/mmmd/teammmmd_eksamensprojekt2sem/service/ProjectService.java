@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,10 +60,6 @@ public class ProjectService {
         return projectRepository.fetchSpecificProject(projectID);
     }
 
-    public Customer fetchInternalProjectCustomer() {
-        return projectRepository.fetchInternalProjectCustomer();
-    }
-
     public List<Status> fetchAllStatus() {
         return projectRepository.fetchAllStatus();
     }
@@ -73,7 +69,7 @@ public class ProjectService {
     }
 
     public int findProjectIDFromDB(Project project) {
-       return projectRepository.findProjectIDFromDB(project);
+        return projectRepository.findProjectIDFromDB(project);
     }
 
     public List<Project> showAllProjectsSpecificEmployee(int employeeID) {
@@ -95,10 +91,6 @@ public class ProjectService {
      */
     public void createSubproject(SubProject subProject) {
         projectRepository.createSubProject(subProject);
-    }
-
-    public boolean checkIfSubProjectNameAlreadyExists(int projectID, String subProjectTitle) {
-        return projectRepository.checkIfSubProjectNameAlreadyExists(subProjectTitle, projectID);
     }
 
     public List<SubProject> showListOfSpecificSubProjects(int projectID) {
@@ -127,10 +119,6 @@ public class ProjectService {
         projectRepository.createTask(projectID, subProjectID, task);
     }
 
-    public List<Task> getAllTasks() {
-        return projectRepository.getAllTasks();
-    }
-
     public List<Task> getAllTasksInSpecificSubProject(int subProjectID) {
         return projectRepository.getAllTasksInSpecificSubProject(subProjectID);
     }
@@ -150,15 +138,6 @@ public class ProjectService {
     public void deleteTask(int taskID) throws SQLException {
         projectRepository.deleteTask(taskID);
     }
-
-    public int findTaskIDFromDB(Task task) {
-        return projectRepository.findTaskIDFromDB(task);
-    }
-
-    public Task fetchSpecificTask(String taskTitle) {
-        return projectRepository.fetchSpecificTask(taskTitle);
-    }
-
 
     /*
     #####################################
@@ -190,19 +169,19 @@ public class ProjectService {
 
 
     public List<Task> tasksWithCalculatedEndDateLaterThanProjectDeadline(int employeeID, int projectID) {
-       List<Task> tasksWithCalculatedEndDateLaterThanProjectDeadline = new ArrayList<>();
+        List<Task> tasksWithCalculatedEndDateLaterThanProjectDeadline = new ArrayList<>();
 
         Project projectToBeChecked = projectRepository.fetchSpecificProject(projectID);
 
-        for(Task task: listOfTasksSpecificProject(employeeID,projectID)) {
+        for (Task task : listOfTasksSpecificProject(employeeID, projectID)) {
             LocalDate startDate = task.getPlannedStartDate().toLocalDate();
 
             // Beregn arbejdsdage baseret på estimatedTime og 6 timers effektiv arbejdstid pr. dag
             // datatype ændres til int, da vi kun er interesseret i hele dage og oprunding (derfor Math-ceil)
-            int estimatedDaysOfWork = (int) Math.ceil(task.getEstimatedTime()/ 6.0);
+            int estimatedDaysOfWork = (int) Math.ceil(task.getEstimatedTime() / 6.0);
 
-            // Beregnet slutdato for denne task
-            LocalDate taskEndDate = startDate.plus(estimatedDaysOfWork,ChronoUnit.DAYS);
+            // Beregnet slutdato for denne task, der ekskluderer weekender
+            LocalDate taskEndDate = calculateEndDateExcludingWeekends(startDate, estimatedDaysOfWork);
 
             LocalDate agreedDeliveryDateProject = projectToBeChecked.getDeliveryDate().toLocalDate();
 
@@ -215,14 +194,33 @@ public class ProjectService {
         return tasksWithCalculatedEndDateLaterThanProjectDeadline;
     }
 
+    public LocalDate calculateEndDateExcludingWeekends(LocalDate startDate, int estimatedDaysOfWork) {
+        LocalDate currentDate = startDate;
+        int daysAdded = 0;
+
+        while (daysAdded < estimatedDaysOfWork) {
+
+            // Spring weekender (lørdag og søndag) over
+            if (currentDate.getDayOfWeek() != DayOfWeek.SATURDAY && currentDate.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                daysAdded++;
+            }
+
+            // Flyt datoen én dag frem efter tjekket
+            if (daysAdded < estimatedDaysOfWork) {
+                currentDate = currentDate.plusDays(1);
+            }
+        }
+        return currentDate; // Returner slutdatoen
+    }
+
 
     public List<Task> listOfTasksSpecificProject(int employeeID, int projectID) {
 
         List<Task> listOfTasksSpecificPM = projectRepository.showAllTasksSpecificProjectManager(employeeID);
         List<Task> listOfTasksSpecificProject = new ArrayList<>();
 
-        for(Task task: listOfTasksSpecificPM) {
-            if(task.getProjectID()==projectID) {
+        for (Task task : listOfTasksSpecificPM) {
+            if (task.getProjectID() == projectID) {
                 listOfTasksSpecificProject.add(task);
             }
         }
@@ -235,26 +233,14 @@ public class ProjectService {
         List<Task> listOfTasksSpecificPM = projectRepository.showAllTasksSpecificProjectManager(employeeID);
         List<Task> listOfTasksSpecificPMWithNoAssignedEmployee = new ArrayList<>();
 
-        for(Task task: listOfTasksSpecificPM) {
-            if(task.getAssignedEmployee() == 0) {
+        for (Task task : listOfTasksSpecificPM) {
+            if (task.getAssignedEmployee() == 0) {
                 listOfTasksSpecificPMWithNoAssignedEmployee.add(task);
 
             }
         }
         return listOfTasksSpecificPMWithNoAssignedEmployee;
     }
-
-    public Project getSpecificProject(int employeeID, int projectID) {
-        Project projectToBeReturned = null;
-        List<Project> listOfProjects = projectRepository.showAllProjectsSpecificEmployee(employeeID);//denne er en liste med ass emp
-        for(Project project: listOfProjects) {
-            if(project.getID() == projectID) {
-                projectToBeReturned = project;
-            }
-        }
-        return projectToBeReturned;
-    }
-
 
     /*
     #####################################
