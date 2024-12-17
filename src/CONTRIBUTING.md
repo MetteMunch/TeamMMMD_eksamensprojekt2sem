@@ -15,6 +15,7 @@ Remember GitHub Flow:
 8. Reviewer reviews the changes
 9. Merge the changes
 10. Delete the feature branch
+11. When User Stories and Issues are validated and approved by PO, main can be merged to deploy branch (CD)
     
 *We have created a rule in Github, so it is not possible by mistake to push directly to main.*
 
