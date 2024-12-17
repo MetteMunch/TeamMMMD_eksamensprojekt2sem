@@ -218,16 +218,16 @@ tr:hover td {
     border: 1px solid black;
     border-radius: 4px;
     cursor: pointer;
-
 }
 
 .buttons-container-under-table {
     display: flex;
-    gap: 10px; /* Juster afstanden mellem knapperne */
+    gap: 10px;
 }
+
+/* === Project variabel views === */
 .project-container {
     width: 95%;
-    /*max-width: 1000px;*/
     margin: 40px auto;
     background-color: #fff;
     padding: 20px;

@@ -213,13 +213,13 @@ tr:hover td {
     border-radius: 4px;
     cursor: pointer;
 }
+
 .go-back-button {
     background-color: grey;
     color: white;
     border: 1px solid black;
     border-radius: 4px;
     cursor: pointer;
-
 }
 
 .buttons-container-under-table {
