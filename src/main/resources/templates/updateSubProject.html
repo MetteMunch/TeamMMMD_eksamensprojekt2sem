@@ -18,25 +18,23 @@
 
         <form class="input-form" th:action="@{'/user/'+${employeeID}+'/'+${projectID} +'/' +${subProjectID} +'/update-subproject'}"
               method="post">
-            <!-- Skjult felt til Project ID -->
+
             <input type="hidden" th:value="${projectID}" name="projectID">
 
             <h1>Update Subproject</h1>
-            <!-- Titel -->
+
             <label for="subProjectTitle">SubProject Title</label>
             <input type="text" id="subProjectTitle" name="subProjectTitle" th:value="${subProject.getSubProjectTitle()}" required>
             <br>
 
-            <!-- Beskrivelse -->
             <label for="subProjectDescription">Description</label>
             <textarea id="subProjectDescription" name="subProjectDescription" th:value="${subProject.getSubProjectDescription()}" th:text="${subProject.getSubProjectDescription()}" required></textarea>
             <br>
 
-            <!-- Status ID -->
             <label for="statusID">Status</label>
             <select id="statusID" name="statusID" required>
                 <option value="" disabled selected>Select status</option>
-                <!-- Eksempel på muligheder -->
+
                 <option th:each="status : ${allStatus}"
                         th:value="${status.getStatusID()}"
                         th:text="${status.getStatus()}"
@@ -45,9 +43,7 @@
             </select>
             <br>
 
-            <!-- Submit-knap -->
             <button type="submit">Save Subproject</button>
-
         </form>
 
         <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID}}">
