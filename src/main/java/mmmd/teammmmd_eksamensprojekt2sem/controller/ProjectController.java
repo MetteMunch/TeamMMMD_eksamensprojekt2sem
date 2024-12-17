@@ -51,7 +51,7 @@ public class ProjectController {
 
     @PostMapping("/create-customer")
     public String createCustomerAction(@RequestParam String companyName, @RequestParam String repName,
-                                       @RequestParam int projectID, RedirectAttributes redirectAttributes, @PathVariable int employeeID, Model model) {
+                                       @RequestParam int projectID, RedirectAttributes redirectAttributes, @PathVariable int employeeID) {
         Customer customer = new Customer(companyName, repName);
         projectService.createCustomer(customer);
 
@@ -272,11 +272,13 @@ public class ProjectController {
             model.addAttribute("subProject", projectService.showSubProject(subProjectID));
             model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
             model.addAttribute("employeeID", employeeID);
+            model.addAttribute("projectID",projectID);
             return "showSubProject"; //Manager = true
         } else {
             model.addAttribute("subProject", projectService.showSubProject(subProjectID));
             model.addAttribute("tasks", projectService.getAllTasksInSpecificSubProject(subProjectID));
             model.addAttribute("employeeID", employeeID);
+            model.addAttribute("projectID",projectID);
             return "showSubProjectNotMgr"; //Manager = false
         }
 

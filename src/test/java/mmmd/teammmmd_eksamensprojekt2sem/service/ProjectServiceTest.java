@@ -81,6 +81,24 @@ class ProjectServiceTest {
 
     }
 
+    @Test
+    public void taskEndDateCalculationTest() {
+        // Arrange
+        LocalDate startDate = LocalDate.of(2025, 01, 21); // Startdato: Tirsdag 21. januar
+        int estimatedDaysOfWork = 11; // 11 arbejdsdage
+
+        // Forventet slutdato: Når man springer weekender over
+        LocalDate expectedEndDate = LocalDate.of(2025, 02, 04); // Tirsdag 4. februar
+
+        // Act
+        LocalDate calculatedEndDate = projectService.calculateEndDateExcludingWeekends(startDate, estimatedDaysOfWork);
+        System.out.println("Forventet slutdato: " + expectedEndDate);
+        System.out.println("Beregnet slutdato: " + calculatedEndDate);
+
+        // Assert
+        assertEquals(expectedEndDate, calculatedEndDate); // Sammenlign forventet og beregnet dato
+
+    }
 
 
 }
