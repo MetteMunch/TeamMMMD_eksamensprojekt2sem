@@ -1,81 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Update Task</title>
     <link rel="stylesheet" href="/input.css">
 </head>
 <body>
-<h1>Edit Task</h1>
 
-<form th:action="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/update-task'}" method="post">
+<nav>
+    <div th:insert="~{fragments.html :: nav(employeeID=${employeeID})}"></div>
+</nav>
 
-    <!-- Task Title -->
-    <label class="taskTitle" for="taskTitle">Task Title: </label>
-    <input type="text" id="taskTitle" name="taskTitle" th:value="${task.taskTitle}" required>
-    <br>
+<main>
 
-    <!-- Task Description (Optional) -->
-    <label class="taskDescription" for="taskDescription">Task Description: </label>
-    <textarea id="taskDescription" name="taskDescription" th:text="${task.taskDescription}"></textarea>
-    <br>
+    <div class="grid-container">
+        <form class="input-form" th:action="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID} + '/update-task'}"
+              method="post">
 
-    <!-- Assigned Employee Dropdown (Optional) -->
-    <label class="assignedEmployee" for="assignedEmployee">Assigned Employee: </label>
-    <select id="assignedEmployee" name="assignedEmployee">
-        <option value="" th:if="${task.assignedEmployee == null}" selected>Select Employee (Optional)</option>
-        <!-- Populate with employees -->
-        <option th:each="employee : ${nonManagerEmployees}" th:value="${employee.employeeID}"
-                th:selected="${employee.employeeID == task.assignedEmployee}"
-                th:text="${employee.fullName}"></option>
-    </select>
-    <br>
+            <h1>Edit Task</h1>
+            <!-- Task Title -->
+            <label class="taskTitle" for="taskTitle">Task Title: </label>
+            <input type="text" id="taskTitle" name="taskTitle" th:value="${task.taskTitle}" required>
+            <br>
 
-    <!-- Estimated Time (Optional) -->
-    <label class="estimatedTime" for="estimatedTime">Estimated Time (hours): </label>
-    <input type="number" step="0.25" id="estimatedTime" name="estimatedTime" th:value="${task.estimatedTime}">
-    <br>
+            <!-- Task Description (Optional) -->
+            <label class="taskDescription" for="taskDescription">Task Description: </label>
+            <textarea id="taskDescription" name="taskDescription" th:text="${task.taskDescription}"></textarea>
+            <br>
 
-    <!-- Planned Start Date (Optional) -->
-    <label class="plannedStartDate" for="plannedStartDate">Planned Start Date: </label>
-    <input type="date" id="plannedStartDate" name="plannedStartDate"
-           th:value="${#dates.format(task.plannedStartDate, 'yyyy-MM-dd')}" required>
-    <br>
+            <!-- Assigned Employee Dropdown (Optional) -->
+            <label class="assignedEmployee" for="assignedEmployee">Assigned Employee: </label>
+            <select id="assignedEmployee" name="assignedEmployee">
+                <option value="" th:if="${task.assignedEmployee == null}" selected>Select Employee (Optional)</option>
+                <!-- Populate with employees -->
+                <option th:each="employee : ${nonManagerEmployees}" th:value="${employee.employeeID}"
+                        th:selected="${employee.employeeID == task.assignedEmployee}"
+                        th:text="${employee.fullName}"></option>
+            </select>
+            <br>
 
-    <!-- Depends on Task (Optional) -->
-    <label class="dependingOnTask" for="dependingOnTask">Depends on Task: </label>
-    <select id="dependingOnTask" name="dependingOnTask">
-        <option value="" th:if="${task.dependingOnTask == null}" selected>Select a Task (Optional)</option>
+            <!-- Estimated Time (Optional) -->
+            <label class="estimatedTime" for="estimatedTime">Estimated Time (hours): </label>
+            <input type="number" step="0.25" id="estimatedTime" name="estimatedTime" th:value="${task.estimatedTime}">
+            <br>
 
-        <option th:each="taskOption : ${tasks}" th:value="${taskOption.taskID}"
-                th:selected="${taskOption.taskID == task.dependingOnTask}"
-                th:text="${taskOption.taskTitle}"></option>
-    </select>
-    <br>
+            <!-- Planned Start Date (Optional) -->
+            <label class="plannedStartDate" for="plannedStartDate">Planned Start Date: </label>
+            <input type="date" id="plannedStartDate" name="plannedStartDate"
+                   th:value="${#dates.format(task.plannedStartDate, 'yyyy-MM-dd')}" required>
+            <br>
 
-    <!-- Required Role (Optional) -->
-    <label class="requiredRole" for="requiredRole">Required Role: </label>
-    <select id="requiredRole" name="requiredRole">
-        <option value="" th:if="${task.requiredRole == null}" selected>Select Role (Optional)</option>
+            <!-- Depends on Task (Optional) -->
+            <label class="dependingOnTask" for="dependingOnTask">Depends on Task: </label>
+            <select id="dependingOnTask" name="dependingOnTask">
+                <option value="" th:if="${task.dependingOnTask == null}" selected>Select a Task (Optional)</option>
 
-        <option th:each="role : ${nonManagerRoles}" th:value="${role.roleID}"
-                th:selected="${role.roleID == task.requiredRole}"
-                th:text="${role.roleTitle}"></option>
-    </select>
-    <br>
+                <option th:each="taskOption : ${tasks}" th:value="${taskOption.taskID}"
+                        th:selected="${taskOption.taskID == task.dependingOnTask}"
+                        th:text="${taskOption.taskTitle}"></option>
+            </select>
+            <br>
 
-    <!-- Status Dropdown -->
-    <label class="status" for="status">Task Status: </label>
-    <select id="status" name="status" required>
-        <option value="" disabled>Select Task Status</option>
+            <!-- Required Role (Optional) -->
+            <label class="requiredRole" for="requiredRole">Required Role: </label>
+            <select id="requiredRole" name="requiredRole">
+                <option value="" th:if="${task.requiredRole == null}" selected>Select Role (Optional)</option>
 
-        <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}"
-                th:selected="${status.getStatusID() == task.status}"
-                th:text="${status.getStatus()}"></option>
-    </select>
-    <br>
+                <option th:each="role : ${nonManagerRoles}" th:value="${role.roleID}"
+                        th:selected="${role.roleID == task.requiredRole}"
+                        th:text="${role.roleTitle}"></option>
+            </select>
+            <br>
 
-    <button type="submit">Save Changes</button>
-</form>
+            <!-- Status Dropdown -->
+            <label class="status" for="status">Task Status: </label>
+            <select id="status" name="status" required>
+                <option value="" disabled>Select Task Status</option>
+
+                <option th:each="status : ${statusobjects}" th:value="${status.getStatusID()}"
+                        th:selected="${status.getStatusID() == task.status}"
+                        th:text="${status.getStatus()}"></option>
+            </select>
+            <br>
+
+            <button type="submit">Save Task</button>
+        </form>
+
+        <a th:href="@{'/user/' + ${employeeID} + '/' + ${projectID} + '/' + ${subProjectID} + '/' + ${taskID}}">
+            <button class="go-back-input-button" type="button">Go Back</button>
+        </a>
+
+    </div>
+</main>
+
+<footer>
+    <div th:insert="~{fragments.html :: footer}"></div>
+</footer>
 </body>
 </html>
