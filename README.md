@@ -50,3 +50,16 @@ the hours they have worked on a given task.
 Employees are also given access to view projects and subprojects if their assigned tasks are associated.
 Employees are, however, not given the same privileges as project managers in regard to deleting / updating projects or
 subprojects.
+  
+# Software Requirements / Software Krav
+Software brugt til udvikling af applikation: 
+* IntelliJ IDEA Ultimate Edition 2023.3.7
+  * Java Development Kit(JDK) 21
+* Spring Boot 3.4.0
+  * Thymeleaf(Dependency)
+  * Spring Web(Dependency)
+* MySQL Connector/J 9.0.0
+* MySQL Workbench 8.0
+* Mockito 5.2.0(testing)
+* Maven
+* H2 Database
