@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        <div class="buttons-container-under-table">
+        <div class="buttons-container-under-table" th:if="${isManager}">
             <a th:href="@{/user/{employeeID}/{projectID}/edit (employeeID=${employeeID}, projectID=${project.getID()})}">
                 <button type="button">Edit Project</button>
             </a>
