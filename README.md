@@ -62,3 +62,4 @@ Software brugt til udvikling af applikation:
 * MySQL Workbench 8.0
 * Mockito 5.2.0(testing)
 * Maven
+* H2 Database
