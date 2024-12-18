@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import mmmd.teammmmd_eksamensprojekt2sem.service.ProjectService;
 import mmmd.teammmmd_eksamensprojekt2sem.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class UserController {
     private final ProjectService projectService;
     private HttpSession session;
 
-
+    @Autowired
     public UserController(UserService userService, ProjectService projectService, HttpSession session) {
         this.userService = userService;
         this.projectService = projectService;
@@ -87,25 +88,15 @@ public class UserController {
         model.addAttribute("employee", userService.getEmployee(employeeID));
         model.addAttribute("tasks", projectService.showAllTasksSpecificEmployee(employeeID));
         model.addAttribute("PMprojects", projectService.showAllProjectSpecificProjectManager(employeeID));
-        model.addAttribute("PMtasks",projectService.showAllTasksSpecificProjectManager(employeeID));
+        model.addAttribute("PMtasks", projectService.showAllTasksSpecificProjectManager(employeeID));
         model.addAttribute("tasksNotAssigned", projectService.listOfTasksSpecificPMWithNoAssignedEmployee(employeeID));
-        model.addAttribute("employeeID",employeeID);
+        model.addAttribute("employeeID", employeeID);
 
-        if(userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
+        if (userService.getIsEmployeeManagerInfoFromDB(employeeID)) {
             return "dashboardProjectManager";
         } else {
             return "dashboardEmployee";
         }
     }
-
-
-
-
-
-    /*
-    ###########---MANAGER---###########
-     */
-
-
 }
 
